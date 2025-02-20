@@ -1,5 +1,5 @@
-import { ChatInputCommandInteraction, InteractionEditReplyOptions, InteractionUpdateOptions, InteractionReplyOptions, Guild, GuildMember, MessageComponentInteraction, MessageEditOptions, Message, MessagePayload, MessageCreateOptions, User, InteractionResponse, GuildTextBasedChannel, Interaction, PartialGuildMember, TextBasedChannel, APIInteractionGuildMember, PartialUser, NonThreadGuildBasedChannel } from 'discord.js';
-import { Bot } from './Bot';
+import { ChatInputCommandInteraction, type InteractionEditReplyOptions, type InteractionUpdateOptions, type InteractionReplyOptions, type Guild, GuildMember, MessageComponentInteraction, type MessageEditOptions, Message, type MessagePayload, type MessageCreateOptions, User, type InteractionResponse, type GuildTextBasedChannel, type Interaction, type PartialGuildMember, type TextBasedChannel, type APIInteractionGuildMember, type PartialUser, type NonThreadGuildBasedChannel } from 'discord.js';
+import type { Bot } from './Bot';
 /**
  * Get the correct message payload for the given context.
  */
@@ -10,7 +10,7 @@ type GetEditPayload<T> = T extends Message ? MessageEditOptions : T extends Chat
 /**
  * Context setters.
  */
-interface ContextData<T extends unknown = unknown> {
+interface ContextData<T = unknown> {
     guild?: Guild | null;
     message?: Message | null;
     channel?: TextBasedChannel | GuildTextBasedChannel | NonThreadGuildBasedChannel | null;
@@ -22,7 +22,7 @@ interface ContextData<T extends unknown = unknown> {
 /**
  * Represents a context class.
  */
-export declare class Context<T extends unknown = unknown> {
+export declare class Context<T = unknown> {
     #private;
     client: Bot;
     raw: T;

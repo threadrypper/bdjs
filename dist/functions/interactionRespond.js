@@ -12,7 +12,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [options]) {
+    code: async (d, [options]) => {
         if ((d.commandType === 'anyInteraction' && !d.ctx?.interaction?.isAutocomplete()) || d.commandType !== 'autocompleteInteraction')
             throw new d.error(d, 'disallowed', d.function.name, 'autocompleteInteraction');
         if (options === undefined)

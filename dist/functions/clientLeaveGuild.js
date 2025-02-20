@@ -13,7 +13,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [guildID = d.ctx?.guild?.id]) {
+    code: async (d, [guildID = d.ctx?.guild?.id]) => {
         if (guildID === undefined)
             throw new d.error(d, 'invalid', 'guildID', d.function?.name);
         const guild = d.bot?.guilds.cache.get(guildID);

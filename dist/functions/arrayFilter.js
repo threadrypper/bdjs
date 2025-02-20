@@ -27,7 +27,7 @@ exports.default = new Function_1.BaseFunction({
             value: ','
         }
     ],
-    code: async function (d, [name, condition, sep = ',']) {
+    code: async (d, [name, condition, sep = ',']) => {
         if (condition === undefined)
             throw new d.error(d, 'required', 'Table Name', d.function?.name);
         const args = d.getEnvironmentVariable(name);

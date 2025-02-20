@@ -19,7 +19,7 @@ exports.default = new Function_1.BaseFunction({
             value: ','
         }
     ],
-    code: async function (d, [name, separator = ',']) {
+    code: async (d, [name, separator = ',']) => {
         if (name === undefined)
             throw new d.error(d, 'required', 'Array Name', d.function?.name);
         const args = d.getEnvironmentVariable(name);

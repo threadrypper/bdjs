@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import { Attachment, AttachmentBuilder, AttachmentPayload, APIAttachment, APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ActionRowData, BufferResolvable, JSONEncodable, MessageMentionOptions, MessageActionRowComponentData, MessageActionRowComponentBuilder, Snowflake, MessageMentionTypes } from 'discord.js';
-import { Stream } from 'stream';
+import type { Attachment, AttachmentBuilder, AttachmentPayload, APIAttachment, APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ActionRowData, BufferResolvable, JSONEncodable, MessageMentionOptions, MessageActionRowComponentData, MessageActionRowComponentBuilder, Snowflake, MessageMentionTypes } from 'discord.js';
+import type { Stream } from 'stream';
 /**
  * Represents a message container.
  */

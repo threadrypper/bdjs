@@ -26,12 +26,12 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [name, property, index]) {
+    code: async (d, [name, property, index]) => {
         if (name === undefined)
             throw new d.error(d, 'required', 'Object Name', d.function?.name);
         if (!d.hasEnvironmentVariable(name))
             throw new d.error(d, 'invalid', 'Object Name', d.function?.name);
-        let object = d.getEnvironmentVariable(name);
+        const object = d.getEnvironmentVariable(name);
         if (typeof object !== 'object')
             throw new d.error(d, 'invalid', 'Object', d.function?.name);
         if (!Object.prototype.hasOwnProperty.call(object, property))

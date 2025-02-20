@@ -37,7 +37,7 @@ exports.default = new Function_1.BaseFunction({
             value: ','
         }
     ],
-    code: async function (d, [code, catchCode, finallyCode, sep = ',']) {
+    code: async (d, [code, catchCode, finallyCode, sep = ',']) => {
         if (code === undefined)
             throw new d.error(d, 'required', 'code', d.function?.name);
         if (catchCode === undefined)
@@ -50,7 +50,7 @@ exports.default = new Function_1.BaseFunction({
             const data = d.extend(d);
             data.functions.set('error', new Function_1.BaseFunction({
                 description: 'Retrieves a property from the error.',
-                code: async function (subdata, [property = 'message']) {
+                code: async (subdata, [property = 'message']) => {
                     const properties = ['message', 'stack', 'raw'];
                     if (!properties.includes(property.toLowerCase()))
                         throw new subdata.error(d, 'invalid', 'property', subdata.function?.name);

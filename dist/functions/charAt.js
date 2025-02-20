@@ -19,7 +19,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [text, index]) {
+    code: async (d, [text, index]) => {
         if (text === undefined)
             throw new d.error(d, 'required', 'name', d.function?.name);
         if (isNaN(Number(index)) || Number(index) < 0 || Number(index) > text.length)

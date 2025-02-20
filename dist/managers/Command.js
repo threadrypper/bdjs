@@ -147,14 +147,14 @@ class CommandManager extends Map {
             }
             delete require.cache[require.resolve((0, path_1.join)(root, dir, file))];
         }
-        tslib_1.__classPrivateFieldGet(this, _CommandManager_instances, "m", _CommandManager_logCommands).call(this);
+        if (log)
+            tslib_1.__classPrivateFieldGet(this, _CommandManager_instances, "m", _CommandManager_logCommands).call(this);
     }
     /**
      * Reload commands from source.
-     * @param bot - BDJS client.
      * @returns {Promise<void>}
      */
-    async reload(bot) {
+    async reload() {
         if (!tslib_1.__classPrivateFieldGet(this, _CommandManager_directory, "f"))
             return BDJSLog_1.BDJSLog.error('Cannot find a commands directory.');
         this.clear();

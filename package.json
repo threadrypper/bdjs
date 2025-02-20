@@ -6,6 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "compile": "tsc -p tsconfig.json -w",
+    "lint": "pnpm biome lint --write ./src/",
+    "format": "pnpm biome format --write ./src/",
     "generate": "node ./dist/util/Generators.js"
   },
   "keywords": [
@@ -23,14 +25,12 @@
   "license": "MIT",
   "packageManager": "pnpm@8.8.0",
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@types/cli-color": "^2.0.6",
     "@types/hjson": "^2.4.6",
     "@types/lodash": "^4.14.202",
     "@types/ms": "^0.7.34",
     "@types/node": "^20.10.4",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
-    "eslint": "^8.55.0",
     "hjson": "^3.2.2",
     "typedoc": "^0.25.4",
     "typedoc-material-theme": "^1.0.1",

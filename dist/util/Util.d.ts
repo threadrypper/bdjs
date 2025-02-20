@@ -1,5 +1,5 @@
-import { Guild, GuildBasedChannel, GuildTextBasedChannel, PermissionsString, Snowflake, User } from 'discord.js';
-import { Bot } from 'src/structures/Bot';
+import { type Guild, type GuildBasedChannel, type GuildTextBasedChannel, type PermissionsString, type Snowflake, User } from 'discord.js';
+import type { Bot } from 'src/structures/Bot';
 export declare class Util {
     /**
      * Check if the provided string is bigint.
@@ -10,7 +10,7 @@ export declare class Util {
      * Parses string to its native type.
      * @param {string} text The string to parse.
      */
-    static parse(text: string): undefined | null | number | BigInt | Object | string;
+    static parse(text: string): undefined | null | number | bigint | object | string;
     /**
      * Validates all provided permissions names.
      * @param permissions - Permission names.
@@ -22,6 +22,11 @@ export declare class Util {
      * @param time - Time to sleep the code.
      */
     static sleep(time: number): Promise<unknown>;
+    /**
+     * Handles an .catch statement.
+     * @returns {null}
+     */
+    static noop(): null;
     /**
      * Get a guild automoderation rule.
      * @param guild - Guild to get the rule from.

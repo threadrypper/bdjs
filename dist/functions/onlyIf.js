@@ -20,7 +20,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [condition, code]) {
+    code: async (d, [condition, code]) => {
         if (condition === undefined)
             throw new d.error(d, 'required', 'Condition', d.function?.name);
         const solves = d.condition.evaluate(condition);

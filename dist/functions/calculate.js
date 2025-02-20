@@ -13,7 +13,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [expression]) {
+    code: async (d, [expression]) => {
         if (expression === undefined)
             throw new d.error(d, 'required', 'Math Expression', d.function?.name);
         expression = expression.replace(/ /g, '');

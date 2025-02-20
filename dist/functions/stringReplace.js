@@ -40,7 +40,7 @@ exports.default = new Function_1.BaseFunction({
             value: ''
         }
     ],
-    code: async function (d, [text, match, replacer = '', type = 'all', limit]) {
+    code: async (d, [text, match, replacer = '', type = 'all', limit]) => {
         if (text === undefined)
             throw new d.error(d, 'required', 'name', d.function?.name);
         if (match === undefined)

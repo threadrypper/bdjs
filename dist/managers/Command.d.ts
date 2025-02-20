@@ -1,5 +1,5 @@
-import { Bot, SlashCommandBuilder, StringCommandTypes } from '../index';
-import { RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import type { RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import type { SlashCommandBuilder, StringCommandTypes } from '../index';
 export interface CommandData {
     _path_?: string;
     data?: SlashCommandBuilder | RESTPostAPIApplicationCommandsJSONBody;
@@ -26,10 +26,9 @@ export declare class CommandManager extends Map<string, CommandData> {
     load(dir: string, providing_cwd?: boolean, log?: boolean): Promise<void>;
     /**
      * Reload commands from source.
-     * @param bot - BDJS client.
      * @returns {Promise<void>}
      */
-    reload(bot: Bot): Promise<void>;
+    reload(): Promise<void>;
     /**
      * Return all valid command types.
      */

@@ -99,6 +99,13 @@ class Util {
         return new Promise(res => setTimeout(res, time));
     }
     /**
+     * Handles an .catch statement.
+     * @returns {null}
+     */
+    static noop() {
+        return null;
+    }
+    /**
      * Get a guild automoderation rule.
      * @param guild - Guild to get the rule from.
      * @param query - Rule resolver.
@@ -107,7 +114,7 @@ class Util {
         if (!query)
             return null;
         const someId = query.replace(/[^\d]/g, '');
-        let rule = someId ? guild.autoModerationRules.cache.get(someId) || (await guild.autoModerationRules.fetch(someId).catch(e => null)) : null;
+        let rule = someId ? guild.autoModerationRules.cache.get(someId) || (await guild.autoModerationRules.fetch(someId).catch(Util.noop)) : null;
         if (!rule)
             rule = guild.autoModerationRules.cache.find(c => c.name.includes(query)) || null;
         return rule;
@@ -121,7 +128,7 @@ class Util {
         if (!query)
             return null;
         const someId = query.replace(/[^\d]/g, '');
-        let channel = someId ? guild.channels.cache.get(someId) || (await guild.channels.fetch(someId).catch(e => null)) : null;
+        let channel = someId ? guild.channels.cache.get(someId) || (await guild.channels.fetch(someId).catch(Util.noop)) : null;
         if (!channel)
             channel = guild.channels.cache.find(c => c.name.includes(query)) || null;
         return channel;
@@ -136,7 +143,7 @@ class Util {
         if (!query)
             return null;
         const someId = query.replace(/[^\d]/g, '');
-        let member = someId ? guild.members.cache.get(someId) || (await guild.members.fetch(someId).catch(e => null)) : null;
+        let member = someId ? guild.members.cache.get(someId) || (await guild.members.fetch(someId).catch(Util.noop)) : null;
         if (!member)
             member = guild.members.cache.find(m => m.user.username.includes(query)) || null;
         return member;
@@ -151,7 +158,7 @@ class Util {
         if (!query)
             return null;
         const someId = query.replace(/[^\d]/g, '');
-        let message = someId ? channel.messages.cache.get(someId) || (await channel.messages.fetch(someId).catch(e => null)) : null;
+        const message = someId ? channel.messages.cache.get(someId) || (await channel.messages.fetch(someId).catch(Util.noop)) : null;
         return message;
     }
     /**
@@ -164,7 +171,7 @@ class Util {
         if (!query)
             return null;
         const someId = query.replace(/[^\d]/g, '');
-        let role = someId ? guild.roles.cache.get(someId) || (await guild.roles.fetch(someId).catch(e => null)) : null;
+        let role = someId ? guild.roles.cache.get(someId) || (await guild.roles.fetch(someId).catch(Util.noop)) : null;
         if (!role)
             role = guild.roles.cache.find(r => r.name.includes(query)) || null;
         return role;
@@ -179,8 +186,8 @@ class Util {
     static async getUser(bot, id, strict = false) {
         if (!id)
             return null;
-        let some_id = id.replace(/[^\d]/g, '');
-        let user = some_id ? (bot.users.cache.get(some_id)) || (await bot.users.fetch(some_id).catch(e => null)) : null;
+        const some_id = id.replace(/[^\d]/g, '');
+        let user = some_id ? (bot.users.cache.get(some_id)) || (await bot.users.fetch(some_id).catch(Util.noop)) : null;
         if (!strict && !user)
             user = (bot.users.cache.find(u => u.username.includes(id)) || null);
         return user;
@@ -192,7 +199,7 @@ class Util {
      * @returns {Promise<boolean>}
      */
     static async hasDM(bot, user) {
-        let u = user instanceof discord_js_1.User ? user : (await this.getUser(bot, user, false));
+        const u = user instanceof discord_js_1.User ? user : (await this.getUser(bot, user, false));
         if (!u)
             return false;
         const c = await u.send(' ').catch(err => err.code);

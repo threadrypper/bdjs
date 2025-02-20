@@ -1,6 +1,6 @@
 import { ActivityType } from 'discord.js';
-import { Data } from '../structures/Data';
-import { Bot } from '../structures/Bot';
+import type { Data } from '../structures/Data';
+import type { Bot } from '../structures/Bot';
 interface StatusData {
     text: string;
     time?: string | number;

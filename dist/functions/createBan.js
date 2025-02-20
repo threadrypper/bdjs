@@ -31,7 +31,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [userID, guildID = d.ctx?.guild?.id, options]) {
+    code: async (d, [userID, guildID = d.ctx?.guild?.id, options]) => {
         if (userID === undefined)
             throw new d.error(d, 'required', 'name', d.function?.name);
         const member = await d.util.getMember(userID, d.ctx?.guild);

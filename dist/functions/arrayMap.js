@@ -34,7 +34,7 @@ exports.default = new Function_1.BaseFunction({
             value: ','
         }
     ],
-    code: async function (d, [name, variable, code, separator = ',']) {
+    code: async (d, [name, variable, code, separator = ',']) => {
         if (name === undefined)
             throw new d.error(d, 'required', 'Array Name', d.function?.name);
         if (variable === undefined)

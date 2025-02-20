@@ -28,7 +28,7 @@ exports.default = new Function_1.BaseFunction({
             value: ','
         }
     ],
-    code: async function (d, [directory, variable, sep = ',']) {
+    code: async (d, [directory, variable, sep = ',']) => {
         if (directory === undefined)
             throw new d.error(d, 'required', 'Directory', d.function?.name);
         if (variable === undefined)

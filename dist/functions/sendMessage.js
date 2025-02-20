@@ -36,7 +36,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'false'
         }
     ],
-    code: async function (d, [payload, channelID = d.ctx?.channel?.isTextBased() ? d.ctx.channel.id : undefined, guildID = d.ctx?.guild?.id, returnID = 'false']) {
+    code: async (d, [payload, channelID = d.ctx?.channel?.isTextBased() ? d.ctx.channel.id : undefined, guildID = d.ctx?.guild?.id, returnID = 'false']) => {
         if (payload === undefined)
             throw new d.error(d, 'required', 'Message Payload', d.function?.name);
         if (guildID === undefined)

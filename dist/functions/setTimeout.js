@@ -30,12 +30,12 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [duration, code, variable]) {
+    code: async (d, [duration, code, variable]) => {
         if (duration === undefined)
             throw new d.error(d, 'required', 'Duration', d.function?.name);
         if (code === undefined)
             throw new d.error(d, 'required', 'Code', d.function?.name);
-        let parsedDuration = (0, ms_1.default)(duration);
+        const parsedDuration = (0, ms_1.default)(duration);
         if (isNaN(parsedDuration))
             throw new d.error(d, 'invalid', 'Duration', d.function?.name);
         setTimeout(() => {

@@ -1,5 +1,5 @@
-import { RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
-import { Bot } from '../structures/Bot';
+import { type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import type { Bot } from '../structures/Bot';
 export declare class BDJSApplicationCommandManager {
     #private;
     constructor(bot: Bot);

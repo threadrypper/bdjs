@@ -28,7 +28,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [type, name, property]) {
+    code: async (d, [type, name, property]) => {
         if (type === undefined)
             throw new d.error(d, 'required', 'Command Type', d.function.name);
         if (name === undefined)

@@ -1,4 +1,4 @@
-import { Data } from './Data';
+import type { Data } from './Data';
 export interface BaseFieldOptions {
     /**
      * The field name.

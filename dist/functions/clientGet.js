@@ -14,7 +14,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [property]) {
+    code: async (d, [property]) => {
         if (property === undefined)
             throw new d.error(d, 'required', 'Property Name', d.function?.name);
         const types = Object.keys(Properties_1.default.Bot);

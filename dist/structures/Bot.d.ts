@@ -1,13 +1,13 @@
 import { BDJSApplicationCommandManager } from '../managers/ApplicationCommand';
-import { Client, ClientOptions } from 'discord.js';
+import { Client, type ClientOptions } from 'discord.js';
 import { FunctionManager } from '../managers/Function';
-import { VariableManager } from '../managers/Variable';
+import type { VariableManager } from '../managers/Variable';
 import { CommandManager } from '../managers/Command';
 import { StatusManager } from '../managers/Status';
 import { EventManager } from '../managers/Event';
-import { StringEventNames } from '../index';
+import type { StringEventNames } from '../index';
 import { Reader } from '../core/Reader';
-import { Plugin } from './Plugin';
+import type { Plugin } from './Plugin';
 /**
  * Convert BDJS names into RAW discord.js client.
  * @param names - Client events.

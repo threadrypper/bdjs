@@ -1,4 +1,4 @@
-import { Bot } from '../structures/Bot';
+import { type Bot } from '../structures/Bot';
 import { BaseEvent } from '../structures/Event';
 export declare class EventManager extends Map<string, BaseEvent<any>> {
     /**

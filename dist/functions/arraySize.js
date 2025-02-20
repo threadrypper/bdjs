@@ -12,7 +12,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [name]) {
+    code: async (d, [name]) => {
         if (name === undefined)
             throw new d.error(d, 'required', 'Array Name', d.function?.name);
         const args = d.getEnvironmentVariable(name);

@@ -34,7 +34,7 @@ exports.default = new Function_1.BaseFunction({
             value: ','
         }
     ],
-    code: async function (d, [name, variable, code, separator = ',']) {
+    code: async (d, [name, variable, code, separator = ',']) => {
         if (name === undefined)
             throw new d.error(d, 'required', 'Object Name', d.function?.name);
         if (variable === undefined)
@@ -43,7 +43,7 @@ exports.default = new Function_1.BaseFunction({
             throw new d.error(d, 'required', 'Code', d.function?.name);
         if (!d.hasEnvironmentVariable(name))
             throw new d.error(d, 'invalid', 'Object Name', d.function?.name);
-        let object = d.getEnvironmentVariable(name);
+        const object = d.getEnvironmentVariable(name);
         if (typeof object !== 'object' || (typeof object === 'object' && !(JSON.stringify(object).startsWith('{')) && !(JSON.stringify(object).endsWith('}'))))
             throw new d.error(d, 'invalid', 'Object', d.function?.name);
         const results = [];

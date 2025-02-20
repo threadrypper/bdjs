@@ -28,7 +28,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [title, customID, components]) {
+    code: async (d, [title, customID, components]) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction))
             throw new d.error(d, 'disallowed', d.function?.name, 'interactions');
         if (!(d.ctx?.raw.isMessageComponent() || d.ctx?.raw.isCommand()))

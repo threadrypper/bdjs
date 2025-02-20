@@ -26,7 +26,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [text, from, to]) {
+    code: async (d, [text, from, to]) => {
         if (text === undefined)
             throw new d.error(d, 'required', 'Text', d.function.name);
         if (from === undefined)

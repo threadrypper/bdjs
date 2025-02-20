@@ -46,7 +46,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'd.ctx?.message?.id'
         }
     ],
-    code: async function (d, [property, index = '1', guildID = d.ctx?.guild?.id, channelID = d.ctx?.channel?.id, messageID = d.ctx?.message?.id]) {
+    code: async (d, [property, index = '1', guildID = d.ctx?.guild?.id, channelID = d.ctx?.channel?.id, messageID = d.ctx?.message?.id]) => {
         if (property === undefined)
             throw new d.error(d, 'required', 'Property', d.function?.name);
         if (isNaN(Number(index)) || Number(index) < 0)

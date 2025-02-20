@@ -1,4 +1,4 @@
-import { Data } from '../structures/Data';
+import type { Data } from '../structures/Data';
 type ErrorTypes = 'client' | 'command' | 'custom' | 'disallowed' | 'internal' | 'invalid' | 'required';
 export declare class BDJSLog extends Error {
     name: string;

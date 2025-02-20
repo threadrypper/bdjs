@@ -1,8 +1,8 @@
-import DataBase from 'collie-db';
+import type DataBase from 'collie-db';
 /**
  * Represents a variable manager.
  */
-export declare class VariableManager<T extends unknown = DataBase> {
+export declare class VariableManager<T = DataBase> {
     _data: Record<string, Record<string, any>>;
     private tables;
     private db;

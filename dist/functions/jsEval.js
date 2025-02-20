@@ -22,7 +22,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [returnResults = 'false', ...codes]) {
+    code: async (d, [returnResults = 'false', ...codes]) => {
         if (returnResults === undefined)
             throw new d.error(d, 'required', 'name', d.function?.name);
         if (codes[0] === undefined)

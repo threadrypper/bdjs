@@ -1,4 +1,4 @@
-import { BaseFieldOptions } from '../structures/Function';
+import type { BaseFieldOptions } from '../structures/Function';
 interface FunctionExtraOptions {
     /** If function supports builders. */
     builders: boolean;

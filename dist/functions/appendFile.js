@@ -28,7 +28,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'utf-8'
         }
     ],
-    code: async function (d, [directory, content, encoding = 'utf-8']) {
+    code: async (d, [directory, content, encoding = 'utf-8']) => {
         if (directory === undefined)
             throw new d.error(d, 'required', 'Directory', d.function?.name);
         if (content === undefined)

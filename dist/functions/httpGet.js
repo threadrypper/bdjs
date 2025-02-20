@@ -35,12 +35,12 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [url, variable, responseType = 'json', ...raw_headers]) {
+    code: async (d, [url, variable, responseType = 'json', ...raw_headers]) => {
         if (url === undefined)
             throw new d.error(d, 'required', 'URL', d.function.name);
         if (variable === undefined)
             throw new d.error(d, 'required', 'Variable Name', d.function.name);
-        let headers = {};
+        const headers = {};
         if (raw_headers.length) {
             for (const header of raw_headers) {
                 const [name, value] = header.split(':');

@@ -1,14 +1,14 @@
 import { FunctionManager } from '../managers/Function';
-import { CommandData, StringCommandTypes } from '../index';
-import { CompiledData, Reader } from '../core/Reader';
+import type { CommandData, StringCommandTypes } from '../index';
+import { type CompiledData, Reader } from '../core/Reader';
 import { CellParser } from '../core/CellParser';
 import { Condition } from '../util/Condition';
 import { BDJSLog } from '../util/BDJSLog';
-import { BaseFunction } from './Function';
+import type { BaseFunction } from './Function';
 import { Container } from './Container';
-import { Context } from './Context';
+import type { Context } from './Context';
 import { Util } from '../util/Util';
-import { Bot } from './Bot';
+import type { Bot } from './Bot';
 interface DataOptions {
     /** BDJS client instance. */
     bot?: Bot;

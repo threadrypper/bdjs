@@ -19,7 +19,7 @@ exports.default = new Function_1.BaseFunction({
             value: '2'
         }
     ],
-    code: async function (d, [num, decimals = '2']) {
+    code: async (d, [num, decimals = '2']) => {
         if (num === undefined)
             throw new d.error(d, 'required', 'Number', d.function?.name);
         if (isNaN(Number(num)))

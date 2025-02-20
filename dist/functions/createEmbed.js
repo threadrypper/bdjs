@@ -15,7 +15,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [payload]) {
+    code: async (d, [payload]) => {
         if (payload === undefined)
             throw new d.error(d, 'required', 'payload', d.function?.name);
         const data = d.extend(d), embed = new discord_js_1.EmbedBuilder;

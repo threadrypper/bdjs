@@ -20,7 +20,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [interactionType, ...options]) {
+    code: async (d, [interactionType, ...options]) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction))
             throw new d.error(d, 'disallowed', d.function?.name, 'interactions');
         const int = d.ctx?.raw;

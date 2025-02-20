@@ -2,46 +2,50 @@ import { BaseFunction } from '../structures/Function'
 import ms from 'ms'
 
 export default new BaseFunction({
-    description: 'Executes a code after certain time.',
-    parameters: [
-        {
-            name: 'Time',
-            description: 'The time to execute the code.',
-            required: true,
-            resolver: 'String',
-            value: 'none'
-        },
-        {
-            name: 'Code',
-            description: 'The code to be executed.',
-            required: true,
-            compile: false,
-            resolver: 'String',
-            value: 'none'
-        },
-        {
-            name: 'Variable',
-            description: 'Environment variable name to load the code results to, if any.',
-            required: true,
-            compile: true,
-            resolver: 'String',
-            value: 'none'
-        }
-    ],
-    code: async function(d, [duration, code, variable]) {
-        if (duration === undefined) throw new d.error(d, 'required', 'Duration', d.function?.name!)
-        if (code === undefined) throw new d.error(d, 'required', 'Code', d.function?.name!)
+	description: 'Executes a code after certain time.',
+	parameters: [
+		{
+			name: 'Time',
+			description: 'The time to execute the code.',
+			required: true,
+			resolver: 'String',
+			value: 'none'
+		},
+		{
+			name: 'Code',
+			description: 'The code to be executed.',
+			required: true,
+			compile: false,
+			resolver: 'String',
+			value: 'none'
+		},
+		{
+			name: 'Variable',
+			description:
+				'Environment variable name to load the code results to, if any.',
+			required: true,
+			compile: true,
+			resolver: 'String',
+			value: 'none'
+		}
+	],
+	code: async (d, [duration, code, variable]) => {
+		if (duration === undefined)
+			throw new d.error(d, 'required', 'Duration', d.function?.name!)
+		if (code === undefined)
+			throw new d.error(d, 'required', 'Code', d.function?.name!)
 
-        let parsedDuration = ms(duration)
+		const parsedDuration = ms(duration)
 
-        if (isNaN(parsedDuration)) throw new d.error(d, 'invalid', 'Duration', d.function?.name!)
+		if (isNaN(parsedDuration))
+			throw new d.error(d, 'invalid', 'Duration', d.function?.name!)
 
-        setInterval(() => {
-            d.reader.compile(code, d).then((compiled) => {
-                if (compiled.code !== '')
-                    d.setEnvironmentVariable(variable, compiled.code), d.bot?.emit('interval', d.env)
-            })
-        }, ms(duration))
-
-    }
+		setInterval(() => {
+			d.reader.compile(code, d).then(compiled => {
+				if (compiled.code !== '')
+					d.setEnvironmentVariable(variable, compiled.code),
+						d.bot?.emit('interval', d.env)
+			})
+		}, ms(duration))
+	}
 })

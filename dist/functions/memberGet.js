@@ -28,7 +28,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'd.ctx?.guild?.id'
         }
     ],
-    code: async function (d, [property, memberID = d.ctx?.author?.id, guildID = d.ctx?.guild?.id]) {
+    code: async (d, [property, memberID = d.ctx?.author?.id, guildID = d.ctx?.guild?.id]) => {
         if (property === undefined)
             throw new d.error(d, 'required', 'Property Name', d.function?.name);
         if (memberID === undefined)

@@ -1,5 +1,5 @@
-import { StringEventNames } from '../index';
-import { Bot } from './Bot';
+import type { StringEventNames } from '../index';
+import type { Bot } from './Bot';
 export interface BaseEvent<T extends any[]> {
     name: StringEventNames;
     description?: string;

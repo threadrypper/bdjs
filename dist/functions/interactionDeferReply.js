@@ -30,7 +30,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'false'
         }
     ],
-    code: async function (d, [ephemeral = 'false', fetchReply = 'false', returnId = 'false']) {
+    code: async (d, [ephemeral = 'false', fetchReply = 'false', returnId = 'false']) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction))
             throw new d.error(d, 'disallowed', d.function?.name, 'interactions');
         if (!d.ctx?.raw.isRepliable())

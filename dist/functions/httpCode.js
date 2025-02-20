@@ -13,7 +13,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [variable]) {
+    code: async (d, [variable]) => {
         if (variable === undefined)
             throw new d.error(d, 'required', 'Variable Name', d.function.name);
         if (!d.hasEnvironmentVariable(variable))

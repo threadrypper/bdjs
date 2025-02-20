@@ -13,7 +13,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [channelID = d.ctx?.channel?.id]) {
+    code: async (d, [channelID = d.ctx?.channel?.id]) => {
         if (channelID === undefined)
             throw new d.error(d, 'required', 'Channel ID', d.function?.name);
         const channel = await d.util.getChannel(channelID, d.ctx?.guild);

@@ -14,7 +14,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [property]) {
+    code: async (d, [property]) => {
         if (d.commandType !== 'stickerUpdate')
             throw new d.error(d, 'disallowed', d.function.name, 'onStickerUpdate event');
         if (property === undefined)

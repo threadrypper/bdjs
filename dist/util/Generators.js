@@ -109,10 +109,10 @@ class Generators {
      * @param output - Ouput directory for markdown files.
      */
     static async documentFunctions(input, output) {
-        let input_providing_cwd = input.endsWith(':providing_cwd');
+        const input_providing_cwd = input.endsWith(':providing_cwd');
         if (input_providing_cwd)
             input = input.replaceAll(':providing_cwd', '');
-        let output_providing_cwd = output.endsWith(':providing_cwd');
+        const output_providing_cwd = output.endsWith(':providing_cwd');
         if (output_providing_cwd)
             output = output.replaceAll(':providing_cwd', '');
         const paths = output.split(/(\/|\\|\\\\)/g).filter(path => path.match(/\w+/));

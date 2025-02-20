@@ -29,7 +29,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'false'
         }
     ],
-    code: async function (d, [message, fetchReply = 'true', returnId = 'false']) {
+    code: async (d, [message, fetchReply = 'true', returnId = 'false']) => {
         if (!(d.ctx?.raw instanceof discord_js_1.MessageComponentInteraction))
             throw new d.error(d, 'disallowed', d.function?.name, 'component interactions');
         if (!d.ctx?.raw.isRepliable())

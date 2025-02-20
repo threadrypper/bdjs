@@ -61,7 +61,7 @@ class Reader {
     async compile(code, data) {
         data.setEnvironmentVariable('__BDJS__PERFORMANCE__', performance.now());
         const lines = code.trim().split('\n').map(line => line.trim()).join('\n');
-        let compiled = {
+        const compiled = {
             functions: [],
             strings: [],
             function: new Structures_1.RawFunction,
@@ -156,7 +156,7 @@ class Reader {
             compiled.temp = new Structures_1.RawString;
             compiled.type = 'any';
         }
-        let parsedFunctions = [], texts = compiled.strings.map(str => str.value);
+        const parsedFunctions = [], texts = compiled.strings.map(str => str.value);
         for (const dfunc of compiled.functions) {
             if (data.bot?.extraOptions.debug === true)
                 BDJSLog_1.BDJSLog.debug(`Parsing ${dfunc.name} => ${dfunc.toString}`);
@@ -181,7 +181,7 @@ class Reader {
                     '|-> Source: "' + dfunc.toString + '"',
                     '|-------------------------------------------------'
                 ].join('\n'));
-            let fields = dfunc.fields.map(field => field.value), newFields = [];
+            const fields = dfunc.fields.map(field => field.value), newFields = [];
             for (let idx = 0; idx < fields.length; idx++) {
                 const field = fields[idx];
                 const compile = typeof spec.parameters?.[idx] === 'undefined' ? true

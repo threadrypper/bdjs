@@ -14,7 +14,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [directory]) {
+    code: async (d, [directory]) => {
         if (directory === undefined)
             throw new d.error(d, 'required', 'Directory', d.function?.name);
         await (0, promises_1.unlink)(directory).catch(e => {

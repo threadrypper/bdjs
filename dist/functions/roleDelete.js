@@ -27,7 +27,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [roleID, guildID = d.ctx?.guild?.id, reason]) {
+    code: async (d, [roleID, guildID = d.ctx?.guild?.id, reason]) => {
         if (roleID === undefined)
             throw new d.error(d, 'invalid', 'Role ID', d.function?.name);
         if (guildID === undefined)

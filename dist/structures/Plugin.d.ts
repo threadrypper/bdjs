@@ -1,6 +1,6 @@
 import { FunctionManager } from '../managers/Function';
 import { EventManager } from '../managers/Event';
-import { Bot } from './Bot';
+import type { Bot } from './Bot';
 /**
  * Represents a BDJS plugin.
  */

@@ -1,6 +1,6 @@
-import { Data } from '../structures/Data';
+import type { Data } from '../structures/Data';
 import { RawFunction, RawString } from './Structures';
-import { BaseFieldOptions } from '../structures/Function';
+import type { BaseFieldOptions } from '../structures/Function';
 /**
  * Represents the compiled data by BDJS reader.
  */

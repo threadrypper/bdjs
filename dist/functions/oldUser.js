@@ -14,7 +14,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [property]) {
+    code: async (d, [property]) => {
         if (d.commandType !== 'userUpdate')
             throw new d.error(d, 'disallowed', d.function.name, 'onUserUpdate event');
         if (property === undefined)

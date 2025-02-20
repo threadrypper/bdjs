@@ -15,7 +15,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [components]) {
+    code: async (d, [components]) => {
         if (components === undefined)
             throw new d.error(d, 'required', 'components', d.function?.name);
         const row = new discord_js_1.ActionRowBuilder;

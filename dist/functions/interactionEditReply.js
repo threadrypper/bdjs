@@ -14,7 +14,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
-    code: async function (d, [message]) {
+    code: async (d, [message]) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction))
             throw new d.error(d, 'disallowed', d.function?.name, 'interactions');
         if (!d.ctx?.raw.isRepliable())

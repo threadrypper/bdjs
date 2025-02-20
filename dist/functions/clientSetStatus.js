@@ -42,7 +42,7 @@ exports.default = new Function_1.BaseFunction({
             value: 'false'
         }
     ],
-    code: async function (d, [text, type = 'playing', status = 'online', url, afk = 'false']) {
+    code: async (d, [text, type = 'playing', status = 'online', url, afk = 'false']) => {
         if (text === undefined)
             throw new d.error(d, 'required', 'URL', d.function?.name);
         if (!['online', 'idle', 'dnd', 'invisible'].includes(status.toLowerCase()))
