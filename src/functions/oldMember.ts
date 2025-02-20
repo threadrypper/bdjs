@@ -13,14 +13,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
+	allowFor: t => t === 'memberUpdate',
 	code: async (d, [property]) => {
-		if (d.commandType !== 'memberUpdate')
-			throw new d.error(
-				d,
-				'disallowed',
-				d.function!.name,
-				'onGuildMemberUpdate event'
-			)
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Property', d.function!.name)
 

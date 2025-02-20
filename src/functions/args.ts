@@ -27,9 +27,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
-	code: async (d, [index = '-1', endIndex]) => {
-		if (!ALLOWED_EVENTS.includes(d.commandType))
-			throw new d.error(d, 'disallowed', d.function!.name, 'Message Context')
+	allowFor: e => ALLOWED_EVENTS.includes(e),
+	code: async (d, [index = '-1', endIndex]) => {	
 		if (index === undefined)
 			throw new d.error(d, 'required', 'Index', d.function!.name)
 		if (Number.isNaN(Number(index)))

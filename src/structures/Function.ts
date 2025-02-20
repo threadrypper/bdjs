@@ -52,6 +52,12 @@ export interface BaseFunction {
 	 * Field specifications for this function.
 	 */
 	parameters?: BaseFieldOptions[]
+	/**
+	 * Command type allow filter.
+	 * @param type - The command type.
+	 * @returns {boolean}
+	 */
+	allowFor?: (type: Data['commandType']) => boolean
 	code: (d: Data, args: string[]) => Promise<any>
 }
 

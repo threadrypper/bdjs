@@ -13,14 +13,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
+	allowFor: commandType => commandType === 'channelUpdate',
 	code: async (d, [property]) => {
-		if (d.commandType !== 'channelUpdate')
-			throw new d.error(
-				d,
-				'disallowed',
-				d.function!.name,
-				'onChannelUpdate event'
-			)
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Property', d.function!.name)
 

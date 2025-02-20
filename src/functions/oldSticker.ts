@@ -13,14 +13,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
+	allowFor: t => t === 'stickerUpdate',
 	code: async (d, [property]) => {
-		if (d.commandType !== 'stickerUpdate')
-			throw new d.error(
-				d,
-				'disallowed',
-				d.function!.name,
-				'onStickerUpdate event'
-			)
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Property', d.function!.name)
 

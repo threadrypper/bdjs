@@ -13,14 +13,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
+	allowFor: t => t === 'emojiUpdate',
 	code: async (d, [property]) => {
-		if (d.commandType !== 'emojiUpdate')
-			throw new d.error(
-				d,
-				'disallowed',
-				d.function!.name,
-				'onEmojiUpdate event'
-			)
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Property', d.function!.name)
 

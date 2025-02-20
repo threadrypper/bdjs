@@ -13,9 +13,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
+	allowFor: commandType => commandType === 'roleUpdate',
 	code: async (d, [property]) => {
-		if (d.commandType !== 'roleUpdate')
-			throw new d.error(d, 'disallowed', d.function!.name, 'onRoleUpdate event')
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Property', d.function!.name)
 

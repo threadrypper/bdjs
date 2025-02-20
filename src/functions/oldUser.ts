@@ -13,9 +13,8 @@ export default new BaseFunction({
 			value: 'none'
 		}
 	],
+	allowFor: t => t === 'userUpdate',
 	code: async (d, [property]) => {
-		if (d.commandType !== 'userUpdate')
-			throw new d.error(d, 'disallowed', d.function!.name, 'onUserUpdate event')
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Property', d.function!.name)
 

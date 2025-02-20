@@ -230,6 +230,20 @@ export class Reader {
 					].join('\n')
 				)
 
+			if (spec.allowFor && !spec.allowFor(data.commandType)) {
+				throw new data.error(
+					data,
+					`custom`,
+					[
+						'|-> Invalid function context.',
+						`|-> Function "${dfunc.name}" expects to be used meeting the following callback: ${spec.allowFor.toString()}`,
+						`|-> Line: ${dfunc.line}`,
+						`|-> Source: "${dfunc.toString}"`,
+						'|-------------------------------------------------'
+					].join('\n')
+				)
+			}
+
 			const fields = dfunc.fields.map(field => field.value)
 			const newFields: string[] = []
 
