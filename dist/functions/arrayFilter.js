@@ -29,11 +29,12 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, condition, sep = ',']) => {
         if (condition === undefined)
-            throw new d.error(d, 'required', 'Table Name', d.function?.name);
+            throw new d.error(d, 'required', 'Table Name', d.function!.name);
         const args = d.getEnvironmentVariable(name);
         if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-            throw new d.error(d, 'invalid', 'Array Name', d.function?.name);
+            throw new d.error(d, 'invalid', 'Array Name', d.function!.name);
         const results = [];
+        
         // Filling cells.
         for (const element of args) {
             d.cells.data.push({

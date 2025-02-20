@@ -33,10 +33,10 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [userID, guildID = d.ctx?.guild?.id, options]) => {
         if (userID === undefined)
-            throw new d.error(d, 'required', 'name', d.function?.name);
+            throw new d.error(d, 'required', 'name', d.function!.name);
         const member = await d.util.getMember(userID, d.ctx?.guild);
         if (!member)
-            throw new d.error(d, 'invalid', 'member', d.function?.name);
+            throw new d.error(d, 'invalid', 'member', d.function!.name);
         const ban = {};
         if (options) {
             const data = d.extend(d);
@@ -45,7 +45,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the messages to be deleted after the ban. In seconds.',
                 code: async (t, [seconds]) => {
                     if (seconds === undefined)
-                        throw new t.error(t, 'required', 'delete message seconds', t.function?.name);
+                        throw new t.error(t, 'required', 'delete message seconds', t.function!.name);
                     ban.deleteMessageSeconds = (0, ms_1.default)(seconds);
                 }
             }).add({
@@ -53,7 +53,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the ban reason.',
                 code: async (t, [reason]) => {
                     if (reason === undefined)
-                        throw new t.error(t, 'required', 'reason', t.function?.name);
+                        throw new t.error(t, 'required', 'reason', t.function!.name);
                     ban.reason = reason;
                 }
             });

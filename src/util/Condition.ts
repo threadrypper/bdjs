@@ -20,10 +20,10 @@ export class Condition {
 
 				switch (operator) {
 					case '==':
-						orResults.push(left == right)
+						orResults.push(left === right)
 						break
 					case '!=':
-						orResults.push(left != right)
+						orResults.push(left !== right)
 						break
 					case '>=':
 						orResults.push(Number(left) >= Number(right))

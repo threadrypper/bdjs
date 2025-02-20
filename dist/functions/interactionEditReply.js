@@ -16,7 +16,7 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [message]) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction))
-            throw new d.error(d, 'disallowed', d.function?.name, 'interactions');
+            throw new d.error(d, 'disallowed', d.function!.name, 'interactions');
         if (!d.ctx?.raw.isRepliable())
             throw new d.error(d, 'custom', `${d.commandType} is not repliable.`);
         if (!d.ctx?.raw.deferred)

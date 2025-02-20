@@ -24,7 +24,7 @@ class FunctionField {
 	 * @returns {string}
 	 */
 	toString() {
-		return typeof this.value === undefined ? 'undefined' : this.value
+		return typeof this.value === 'undefined' ? 'undefined' : this.value
 	}
 
 	/**
@@ -142,7 +142,7 @@ export class RawFunction {
 			this.name +
 			(this.fields.length === 0
 				? ''
-				: '[' + this.fields.map(f => f.value) + ']')
+				: `[${this.fields.map(f => f.value)}]`)
 		)
 	}
 }

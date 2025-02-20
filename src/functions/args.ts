@@ -32,9 +32,9 @@ export default new BaseFunction({
 			throw new d.error(d, 'disallowed', d.function!.name, 'Message Context')
 		if (index === undefined)
 			throw new d.error(d, 'required', 'Index', d.function!.name)
-		if (isNaN(Number(index)))
+		if (Number.isNaN(Number(index)))
 			throw new d.error(d, 'invalid', 'Index', d.function!.name)
-		if (endIndex && isNaN(Number(endIndex)))
+		if (endIndex && Number.isNaN(Number(endIndex)))
 			throw new d.error(d, 'invalid', 'End Index', d.function!.name)
 
 		const args = d.getEnvironmentVariable('__BDJS__ARGS__')

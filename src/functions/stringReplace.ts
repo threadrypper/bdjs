@@ -41,11 +41,11 @@ export default new BaseFunction({
 	],
 	code: async (d, [text, match, replacer = '', type = 'all', limit]) => {
 		if (text === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 		if (match === undefined)
-			throw new d.error(d, 'required', 'query', d.function?.name!)
+			throw new d.error(d, 'required', 'query', d.function!.name)
 		if (!['all', 'limited'].includes(type))
-			throw new d.error(d, 'invalid', 'type', d.function?.name!)
+			throw new d.error(d, 'invalid', 'type', d.function!.name)
 
 		if (type === 'all') text = text.split(match).join(replacer)
 		else if (type === 'limited') {

@@ -1,5 +1,5 @@
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Deletes a ban for the provided user ID in a guild.',
@@ -28,16 +28,16 @@ export default new BaseFunction({
 	],
 	code: async (d, [userID, guildID = d.ctx?.guild?.id, reason]) => {
 		if (userID === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'guild ID', d.function!.name)
 
 		const guild = d.bot?.guilds.cache.get(guildID!)
-		if (!guild) throw new d.error(d, 'invalid', 'guild ID', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'guild ID', d.function!.name)
 
 		const user =
 			d.bot?.users.cache.get(userID) || (await d.bot?.users.fetch(userID))
-		if (!user) throw new d.error(d, 'invalid', 'user ID', d.function?.name!)
+		if (!user) throw new d.error(d, 'invalid', 'user ID', d.function!.name)
 
 		const ban = guild.bans.cache.find(ban => ban.user.id === userID)
 		if (!ban)

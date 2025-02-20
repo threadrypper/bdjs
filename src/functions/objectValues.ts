@@ -20,10 +20,10 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, separator = ',']) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Object Name', d.function!.name)
 
 		if (!d.hasEnvironmentVariable(name))
-			throw new d.error(d, 'invalid', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object Name', d.function!.name)
 
 		const object = d.getEnvironmentVariable(name)
 
@@ -33,7 +33,7 @@ export default new BaseFunction({
 				!JSON.stringify(object).startsWith('{') &&
 				!JSON.stringify(object).endsWith('}'))
 		)
-			throw new d.error(d, 'invalid', 'Object', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object', d.function!.name)
 
 		return Object.values(object).join(separator)
 	}

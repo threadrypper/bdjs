@@ -15,17 +15,17 @@ export default new BaseFunction({
 	],
 	code: async (d, [expression]) => {
 		if (expression === undefined)
-			throw new d.error(d, 'required', 'Math Expression', d.function?.name!)
+			throw new d.error(d, 'required', 'Math Expression', d.function!.name)
 
 		expression = expression.replace(/ /g, '')
 
 		if (expression.replace(MATH_REGEX, '') !== expression)
-			throw new d.error(d, 'invalid', 'Math Expression', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Math Expression', d.function!.name)
 
 		try {
 			return eval(expression.replace(MATH_REGEX, ''))
 		} catch {
-			throw new d.error(d, 'invalid', 'Math Expression', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Math Expression', d.function!.name)
 		}
 	}
 })

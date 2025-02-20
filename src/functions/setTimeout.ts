@@ -31,14 +31,14 @@ export default new BaseFunction({
 	],
 	code: async (d, [duration, code, variable]) => {
 		if (duration === undefined)
-			throw new d.error(d, 'required', 'Duration', d.function?.name!)
+			throw new d.error(d, 'required', 'Duration', d.function!.name)
 		if (code === undefined)
-			throw new d.error(d, 'required', 'Code', d.function?.name!)
+			throw new d.error(d, 'required', 'Code', d.function!.name)
 
 		const parsedDuration = ms(duration)
 
-		if (isNaN(parsedDuration))
-			throw new d.error(d, 'invalid', 'Duration', d.function?.name!)
+		if (Number.isNaN(parsedDuration))
+			throw new d.error(d, 'invalid', 'Duration', d.function!.name)
 
 		setTimeout(() => {
 			d.reader.compile(code, d).then(compiled => {

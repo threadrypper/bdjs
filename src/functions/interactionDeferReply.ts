@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
 import { BaseInteraction } from 'discord.js'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Defers an interaction.',
@@ -34,7 +34,7 @@ export default new BaseFunction({
 		[ephemeral = 'false', fetchReply = 'false', returnId = 'false']
 	) => {
 		if (!(d.ctx?.raw instanceof BaseInteraction))
-			throw new d.error(d, 'disallowed', d.function?.name!, 'interactions')
+			throw new d.error(d, 'disallowed', d.function!.name, 'interactions')
 		if (!d.ctx?.raw.isRepliable())
 			throw new d.error(d, 'custom', `${d.commandType} is not repliable.`)
 		if (d.ctx?.raw.deferred)
@@ -53,6 +53,6 @@ export default new BaseFunction({
 				throw new d.error(d, 'custom', inspect(e, { depth: 4 }))
 			})
 
-		if (data && data.id && returnId === 'true') return data.id
+		if (data?.id && returnId === 'true') return data.id
 	}
 })

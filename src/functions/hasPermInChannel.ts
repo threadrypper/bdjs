@@ -47,32 +47,32 @@ export default new BaseFunction({
 		]
 	) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Permission Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Permission Name', d.function!.name)
 		if (userID === undefined)
-			throw new d.error(d, 'invalid', 'Member ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Member ID', d.function!.name)
 		if (channelID === undefined)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const guild = d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const channel = await d.util.getChannel<GuildTextBasedChannel>(
 			channelID,
 			guild
 		)
 		if (!channel)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 
 		const member =
 			(await d.util.getMember(userID, guild)) ??
 			(await d.util.getRole(userID, guild))
-		if (!member) throw new d.error(d, 'invalid', 'Member ID', d.function?.name!)
+		if (!member) throw new d.error(d, 'invalid', 'Member ID', d.function!.name)
 
 		const permissions = Object.keys(PermissionsBitField.Flags)
 		if (!permissions.includes(name))
-			throw new d.error(d, 'invalid', 'Permission Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Permission Name', d.function!.name)
 
 		return channel.permissionsFor(member).has(name as PermissionResolvable)
 	}

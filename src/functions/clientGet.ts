@@ -14,11 +14,11 @@ export default new BaseFunction({
 	],
 	code: async (d, [property]) => {
 		if (property === undefined)
-			throw new d.error(d, 'required', 'Property Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Property Name', d.function!.name)
 
 		const types = Object.keys(Properties.Bot)
 		if (!types.includes(property.toLowerCase()))
-			throw new d.error(d, 'invalid', 'Property', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Property', d.function!.name)
 
 		return Properties.Bot[property.toLowerCase()].code(d.bot!)
 	}

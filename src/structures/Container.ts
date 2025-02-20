@@ -15,7 +15,7 @@ import type {
 	Snowflake,
 	MessageMentionTypes
 } from 'discord.js'
-import type { Stream } from 'stream'
+import type { Stream } from 'node:stream'
 
 /**
  * Represents a message container.

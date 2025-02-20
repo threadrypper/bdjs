@@ -130,9 +130,9 @@ export class Context<T = unknown> {
 	async defer(ephemeral = false, fetchReply = false) {
 		if (this.raw instanceof CommandInteraction) {
 			return await this.raw.deferReply({ ephemeral, fetchReply })
-		} else if (this.raw instanceof MessageComponentInteraction) {
+		}if (this.raw instanceof MessageComponentInteraction) {
 			return await this.raw.deferUpdate({ fetchReply })
-		} else if (this.channel && 'sendTyping' in this.channel) {
+		}if (this.channel && 'sendTyping' in this.channel) {
 			return await this.channel.sendTyping().catch((e: Error) => null)
 		}
 	}
@@ -144,11 +144,11 @@ export class Context<T = unknown> {
 	async edit(options: GetEditPayload<T> | string) {
 		if (this.interaction instanceof CommandInteraction) {
 			return await this.interaction.editReply(options)
-		} else if (this.interaction instanceof MessageComponentInteraction) {
+		}if (this.interaction instanceof MessageComponentInteraction) {
 			return await this.interaction.update(options)
-		} else if (this.#hold instanceof Message) {
+		}if (this.#hold instanceof Message) {
 			return await this.#hold.edit(options)
-		} else return null
+		}return null
 	}
 
 	/**
@@ -158,11 +158,11 @@ export class Context<T = unknown> {
 	async followUp(options: GetPayload<T> | string) {
 		if (this.interaction instanceof CommandInteraction) {
 			return await this.interaction.followUp(options)
-		} else if (this.interaction instanceof MessageComponentInteraction) {
+		}if (this.interaction instanceof MessageComponentInteraction) {
 			return await this.interaction.reply(options)
-		} else if (this.#hold instanceof Message) {
+		}if (this.#hold instanceof Message) {
 			return await this.#hold.reply(options)
-		} else return null
+		}return null
 	}
 
 	/**
@@ -181,27 +181,27 @@ export class Context<T = unknown> {
 			)
 				this.#setMessage(reply as unknown as Message)
 			return reply
-		} else if (this.raw instanceof MessageComponentInteraction) {
+		}if (this.raw instanceof MessageComponentInteraction) {
 			const reply = await this.raw.reply(payload)
 			this.#setMessage(reply)
 			return reply
-		} else if (this.raw instanceof ModalSubmitInteraction) {
+		}if (this.raw instanceof ModalSubmitInteraction) {
 			const reply = await this.raw.reply(payload)
 			this.#setMessage(reply)
 			return reply
-		} else if (this.raw instanceof Message) {
+		}if (this.raw instanceof Message) {
 			const reply = await this.raw.channel.send(payload)
 			this.#setMessage(reply)
 			return reply
-		} else if (isValidInstance(this.raw as any)) {
+		}if (isValidInstance(this.raw as any)) {
 			const reply = (await (this.raw as any).send(payload)) as Message
 			this.#setMessage(reply)
 			return reply
-		} else if (this.raw instanceof GuildMember) {
+		}if (this.raw instanceof GuildMember) {
 			const reply = await this.raw.user.send(payload)
 			this.#setMessage(reply)
 			return reply
-		} else return null
+		}return null
 	}
 
 	/**

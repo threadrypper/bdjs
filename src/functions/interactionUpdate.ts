@@ -1,6 +1,6 @@
 import { Message, MessageComponentInteraction } from 'discord.js'
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Updates an interaction.',
@@ -33,7 +33,7 @@ export default new BaseFunction({
 			throw new d.error(
 				d,
 				'disallowed',
-				d.function?.name!,
+				d.function!.name,
 				'component interactions'
 			)
 		if (!d.ctx?.raw.isRepliable())

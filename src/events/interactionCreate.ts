@@ -20,19 +20,20 @@ export default new BaseEvent<[Interaction]>({
 		)
 
 		// Any interaction commands.
-		Array.from(bot.commands.values())
+		const anyInteractionCommands = Array.from(bot.commands.values())
 			.filter(cmd => cmd.type === 'anyInteraction')
-			.forEach(async cmd => {
-				const data = new Data({
-					bot,
-					commandType: 'anyInteraction',
-					ctx: context,
-					command: cmd,
-					functions: bot.functions,
-					reader: bot.reader
-				})
-				await data.reader.compile(cmd.code, data)
+
+		for (const anyInteractionCommand of anyInteractionCommands) {
+			const data = new Data({
+				bot,
+				commandType: 'anyInteraction',
+				ctx: context,
+				command: anyInteractionCommand,
+				functions: bot.functions,
+				reader: bot.reader
 			})
+			await data.reader.compile(anyInteractionCommand.code, data)
+		}
 
 		// Button interactions.
 		if (interaction.isButton()) {

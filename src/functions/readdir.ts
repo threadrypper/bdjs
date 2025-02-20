@@ -1,5 +1,5 @@
 import { BaseFunction } from '../structures/Function'
-import { readdir } from 'fs/promises'
+import { readdir } from 'node:fs/promises'
 
 export default new BaseFunction({
 	description:
@@ -31,9 +31,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [directory, variable, sep = ',']) => {
 		if (directory === undefined)
-			throw new d.error(d, 'required', 'Directory', d.function?.name!)
+			throw new d.error(d, 'required', 'Directory', d.function!.name)
 		if (variable === undefined)
-			throw new d.error(d, 'required', 'Variable Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Variable Name', d.function!.name)
 
 		const files = await readdir(directory)
 

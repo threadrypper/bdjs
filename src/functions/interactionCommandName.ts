@@ -8,7 +8,7 @@ export default new BaseFunction({
 			throw new d.error(
 				d,
 				'disallowed',
-				d.function?.name!,
+				d.function!.name,
 				'command interactions'
 			)
 		return d.ctx?.raw.commandName

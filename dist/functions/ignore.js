@@ -15,6 +15,6 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [inside]) => {
         if (inside === undefined)
-            throw new d.error(d, 'required', 'Inside', d.function?.name);
+            throw new d.error(d, 'required', 'Inside', d.function!.name);
     }
 });

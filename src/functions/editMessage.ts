@@ -1,7 +1,7 @@
 import { BaseFunction } from '../structures/Function'
 import { Container } from '../structures/Container'
 import type { GuildTextBasedChannel } from 'discord.js'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Retrieves data from an embed message.',
@@ -45,27 +45,27 @@ export default new BaseFunction({
 		]
 	) => {
 		if (payload === undefined)
-			throw new d.error(d, 'required', 'Message Payload', d.function?.name!)
+			throw new d.error(d, 'required', 'Message Payload', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 		if (channelID === undefined)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 		if (messageID === undefined)
-			throw new d.error(d, 'invalid', 'Message ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Message ID', d.function!.name)
 
 		const guild = await d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const channel = await d.util.getChannel<GuildTextBasedChannel>(
 			channelID,
 			guild
 		)
 		if (!channel)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 
 		const message = await d.util.getMessage(channel, messageID)
 		if (!message)
-			throw new d.error(d, 'invalid', 'Message ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Message ID', d.function!.name)
 
 		const container = new Container()
 

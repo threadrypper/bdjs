@@ -1,5 +1,5 @@
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description:
@@ -39,9 +39,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [code, catchCode, finallyCode, sep = ',']) => {
 		if (code === undefined)
-			throw new d.error(d, 'required', 'code', d.function?.name!)
+			throw new d.error(d, 'required', 'code', d.function!.name)
 		if (catchCode === undefined)
-			throw new d.error(d, 'required', 'catch code', d.function?.name!)
+			throw new d.error(d, 'required', 'catch code', d.function!.name)
 
 		const results: string[] = []
 
@@ -63,7 +63,7 @@ export default new BaseFunction({
 									d,
 									'invalid',
 									'property',
-									subdata.function?.name!
+									subdata.function!.name
 								)
 
 							const error = inspect(

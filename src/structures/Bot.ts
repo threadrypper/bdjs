@@ -23,7 +23,7 @@ export function reformulateEvents(
 	names = [...names]
 	for (let i = 0; i < names.length; i++) {
 		if (type === 'BDJS')
-			names[i] = 'on' + names[i][0].toUpperCase() + names[i].slice(1)
+			names[i] = `on${names[i][0].toUpperCase()}${names[i].slice(1)}`
 		else if (type === 'DJS')
 			names[i] =
 				names[i].toLowerCase().slice(2, 1) +

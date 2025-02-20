@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
 import { BaseInteraction, Message } from 'discord.js'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Follow up an interaction reply.',
@@ -39,7 +39,7 @@ export default new BaseFunction({
 		[message, ephemeral = 'false', fetchReply = 'true', returnId = 'false']
 	) => {
 		if (!(d.ctx?.raw instanceof BaseInteraction))
-			throw new d.error(d, 'disallowed', d.function?.name!, 'interactions')
+			throw new d.error(d, 'disallowed', d.function!.name, 'interactions')
 		if (!d.ctx?.raw.isRepliable())
 			throw new d.error(d, 'custom', `${d.commandType} is not repliable.`)
 		if (!d.ctx?.raw.replied)

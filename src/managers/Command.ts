@@ -1,10 +1,10 @@
 import type { RESTPostAPIApplicationCommandsJSONBody } from 'discord.js'
 import type { SlashCommandBuilder, StringCommandTypes } from '../index'
 import { AsciiTable3, AlignmentEnum } from 'ascii-table3'
-import { lstat, readdir } from 'fs/promises'
+import { lstat, readdir } from 'node:fs/promises'
 import { BDJSLog } from '../util/BDJSLog'
-import { randomUUID } from 'crypto'
-import { join } from 'path'
+import { randomUUID } from 'node:crypto'
+import { join } from 'node:path'
 import clc from 'cli-color'
 
 export interface CommandData {
@@ -51,15 +51,14 @@ export class CommandManager extends Map<string, CommandData> {
 			command.name = command.name ?? randomUUID().slice(0, 13).toUpperCase()
 			if (!command.code) {
 				BDJSLog.error(
-					`"${command.name}" can't be loaded!` +
-						['|-> at: ' + command.name].join('\n')
+					`"${command.name}" can't be loaded!${[`|-> at: ${command.name}`].join('\n')}`
 				)
 				continue
-			} else if (!this.#validateType(command.type)) {
+			}if (!this.#validateType(command.type)) {
 				BDJSLog.error(
 					[
 						`Invalid command type "${command.type}" provided`,
-						'|-> at: ' + command._path_ + ' => ' + command.name
+						`|-> at: ${command._path_} => ${command.name}`
 					].join('\n')
 				)
 				continue
@@ -102,15 +101,14 @@ export class CommandManager extends Map<string, CommandData> {
 				for (const cmd of command) {
 					if (!('code' in cmd)) {
 						BDJSLog.error(
-							`"${file}" can't be loaded!` +
-								['|-> at: ' + join(root, dir, file)].join('\n')
+							`"${file}" can't be loaded!${[`|-> at: ${join(root, dir, file)}`].join('\n')}`
 						)
 						continue
-					} else if (!this.#validateType(cmd.type)) {
+					}if (!this.#validateType(cmd.type)) {
 						BDJSLog.error(
 							[
 								`Invalid command type "${cmd.type}" provided`,
-								'|-> at: ' + join(root, dir, file)
+								`|-> at: ${join(root, dir, file)}`
 							].join('\n')
 						)
 						continue
@@ -133,15 +131,14 @@ export class CommandManager extends Map<string, CommandData> {
 			} else {
 				if (!('code' in command)) {
 					BDJSLog.error(
-						`"${file}" can't be loaded!` +
-							['|-> at: ' + join(root, dir, file)].join('\n')
+						`"${file}" can't be loaded!${[`|-> at: ${join(root, dir, file)}`].join('\n')}`
 					)
 					continue
-				} else if (!this.#validateType(command.type)) {
+				}if (!this.#validateType(command.type)) {
 					BDJSLog.error(
 						[
 							`Invalid command type "${command.type}" provided`,
-							'|-> at: ' + join(root, dir, file)
+							`|-> at: ${join(root, dir, file)}`
 						].join('\n')
 					)
 					continue

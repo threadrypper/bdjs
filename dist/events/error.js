@@ -26,7 +26,7 @@ exports.default = new Event_1.BaseEvent({
                 code: async (d, [property]) => {
                     const properties = ['message', 'stack', 'raw'];
                     if (!properties.includes(property.toLowerCase()))
-                        throw new data.error(data, 'invalid', 'property', data.function?.name);
+                        throw new data.error(data, 'invalid', 'property', data.function!.name);
                     const err = (0, util_1.inspect)(property.toLowerCase() === 'raw' ? error : error[property], { depth: 4 });
                     return err;
                 }

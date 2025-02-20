@@ -37,14 +37,14 @@ export class StatusManager {
 			if (!text) {
 				BDJSLog.error('Missing status text!')
 				break
-			} else if (typeof time !== 'string' && typeof time !== 'number') {
+			}if (typeof time !== 'string' && typeof time !== 'number') {
 				BDJSLog.error('Invalid status time provided!')
 				break
 			}
 
 			if (typeof time === 'string') time = ms(time)
 
-			if (time === null || isNaN(Number(time))) {
+			if (time === null || Number.isNaN(Number(time))) {
 				BDJSLog.error('Invalid status time provided!')
 				break
 			}
@@ -72,7 +72,7 @@ export class StatusManager {
 			this.#bot.user.presence.set({
 				activities: [
 					{
-						name: text!.code,
+						name: text?.code,
 						type: data.type
 					}
 				],

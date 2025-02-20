@@ -16,10 +16,10 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [duration]) => {
         if (duration === undefined)
-            throw new d.error(d, 'required', 'Duration', d.function?.name);
+            throw new d.error(d, 'required', 'Duration', d.function!.name);
         const parsedDuration = (0, ms_1.default)(duration);
         if (isNaN(parsedDuration))
-            throw new d.error(d, 'invalid', 'Duration', d.function?.name);
+            throw new d.error(d, 'invalid', 'Duration', d.function!.name);
         await d.util.sleep(parsedDuration);
     }
 });

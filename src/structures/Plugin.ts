@@ -1,7 +1,7 @@
 import { FunctionManager } from '../managers/Function'
 import { EventManager } from '../managers/Event'
-import { lstat, readdir } from 'fs/promises'
-import { join } from 'path'
+import { lstat, readdir } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { Bot } from './Bot'
 import { BaseFunction } from './Function'
 import { BaseEvent } from './Event'
@@ -30,7 +30,7 @@ export class Plugin {
 			if (stat.isDirectory()) {
 				await this.load(join(dir, file), providing_cwd)
 				continue
-			} else if (!file.endsWith('.js')) continue
+			}if (!file.endsWith('.js')) continue
 
 			const mod = require(join(root, dir, file)).default
 			if (mod instanceof BaseFunction) {

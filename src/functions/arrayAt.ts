@@ -20,19 +20,20 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, index]) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Array Name', d.function!.name)
 		if (index === undefined)
-			throw new d.error(d, 'required', 'Index', d.function?.name!)
+			throw new d.error(d, 'required', 'Index', d.function!.name)
 
 		const args = d.getEnvironmentVariable(name)
 		if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-			throw new d.error(d, 'invalid', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Array Name', d.function!.name)
 		if (
+			Number.
 			isNaN(Number(index)) ||
 			Number(index) < 0 ||
 			Number(index) > args.length
 		)
-			throw new d.error(d, 'invalid', 'Index', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Index', d.function!.name)
 
 		return args.at(Number(index))
 	}

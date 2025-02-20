@@ -36,20 +36,20 @@ export default new BaseFunction({
 	],
 	code: async (d, [title, customID, components]) => {
 		if (!(d.ctx?.raw instanceof BaseInteraction))
-			throw new d.error(d, 'disallowed', d.function?.name!, 'interactions')
+			throw new d.error(d, 'disallowed', d.function!.name, 'interactions')
 		if (!(d.ctx?.raw.isMessageComponent() || d.ctx?.raw.isCommand()))
 			throw new d.error(
 				d,
 				'disallowed',
-				d.function?.name!,
+				d.function!.name,
 				'message component/command interactions'
 			)
 		if (title === undefined)
-			throw new d.error(d, 'required', 'Title', d.function?.name!)
+			throw new d.error(d, 'required', 'Title', d.function!.name)
 		if (customID === undefined)
-			throw new d.error(d, 'required', 'Custom ID', d.function?.name!)
+			throw new d.error(d, 'required', 'Custom ID', d.function!.name)
 		if (components === undefined)
-			throw new d.error(d, 'required', 'Components', d.function?.name!)
+			throw new d.error(d, 'required', 'Components', d.function!.name)
 
 		const modal = new ModalBuilder()
 		const data = d.extend(d)
@@ -69,7 +69,7 @@ export default new BaseFunction({
 			],
 			async code(sub, [component]) {
 				if (component === undefined)
-					throw new d.error(d, 'required', 'Component', d.function?.name!)
+					throw new d.error(d, 'required', 'Component', d.function!.name)
 
 				const row = new ActionRowBuilder<ModalActionRowComponentBuilder>()
 				const ex = sub.extend(sub)
@@ -81,15 +81,15 @@ export default new BaseFunction({
 						[customID, style, label, placeholder, min, max, required, value]
 					) => {
 						if (customID === undefined)
-							throw new o.error(o, 'required', 'Custom ID', o.function?.name!)
+							throw new o.error(o, 'required', 'Custom ID', o.function!.name)
 						if (style === undefined)
-							throw new o.error(o, 'required', 'Style', o.function?.name!)
+							throw new o.error(o, 'required', 'Style', o.function!.name)
 						if (!['short', 'paragraph'].includes(style.toLowerCase()))
-							throw new o.error(o, 'invalid', 'Style', o.function?.name!)
+							throw new o.error(o, 'invalid', 'Style', o.function!.name)
 						if (label === undefined)
-							throw new o.error(o, 'required', 'Label', o.function?.name!)
+							throw new o.error(o, 'required', 'Label', o.function!.name)
 						if (placeholder === undefined)
-							throw new o.error(o, 'required', 'Placeholder', o.function?.name!)
+							throw new o.error(o, 'required', 'Placeholder', o.function!.name)
 
 						const textInput = new TextInputBuilder()
 						textInput

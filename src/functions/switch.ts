@@ -88,6 +88,6 @@ export default new BaseFunction({
 			)
 
 		if (cases.has(text)) return await d.reader.compile(cases.get(text)!, d)
-		else return await d.reader.compile(cases.get('__BDJS__DEFAULT__')!, d)
+		return await d.reader.compile(cases.get('__BDJS__DEFAULT__')!, d)
 	}
 })

@@ -27,15 +27,15 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, method = 'alpha', separator = ',']) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Array Name', d.function!.name)
 		if (method === undefined)
-			throw new d.error(d, 'required', 'Method', d.function?.name!)
+			throw new d.error(d, 'required', 'Method', d.function!.name)
 		if (!['alpha', 'asc', 'desc'].includes(method.toLowerCase()))
-			throw new d.error(d, 'invalid', 'Method', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Method', d.function!.name)
 
 		const args = d.getEnvironmentVariable(name)
 		if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-			throw new d.error(d, 'invalid', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Array Name', d.function!.name)
 
 		method = method.toLowerCase()
 

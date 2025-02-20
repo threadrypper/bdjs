@@ -1,7 +1,7 @@
 import { BaseEvent } from '../structures/Event'
 import { Data } from '../structures/Data'
 
-export default new BaseEvent<[Record<string, any>]>({
+export default new BaseEvent<[Record<string, unknown>]>({
 	name: 'onInterval',
 	description: 'Executed when an interval is emitted.',
 	async listener(bot, env) {

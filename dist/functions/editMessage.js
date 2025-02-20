@@ -37,22 +37,22 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [payload, guildID = d.ctx?.guild?.id, channelID = d.ctx?.channel?.id, messageID = d.ctx?.message?.id]) => {
         if (payload === undefined)
-            throw new d.error(d, 'required', 'Message Payload', d.function?.name);
+            throw new d.error(d, 'required', 'Message Payload', d.function!.name);
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
         if (channelID === undefined)
-            throw new d.error(d, 'invalid', 'Channel ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Channel ID', d.function!.name);
         if (messageID === undefined)
-            throw new d.error(d, 'invalid', 'Message ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Message ID', d.function!.name);
         const guild = await d.bot?.guilds.cache.get(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
         const channel = await d.util.getChannel(channelID, guild);
         if (!channel)
-            throw new d.error(d, 'invalid', 'Channel ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Channel ID', d.function!.name);
         const message = await d.util.getMessage(channel, messageID);
         if (!message)
-            throw new d.error(d, 'invalid', 'Message ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Message ID', d.function!.name);
         const container = new Container_1.Container;
         const result = await d.reader.compile(payload, d);
         if (result?.code)

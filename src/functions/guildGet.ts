@@ -21,19 +21,19 @@ export default new BaseFunction({
 	],
 	code: async (d, [property, guildID = d.ctx?.guild?.id]) => {
 		if (property === undefined)
-			throw new d.error(d, 'required', 'Property Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Property Name', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		if (property.toLowerCase() === 'exists')
 			return d.bot?.guilds.cache.has(guildID)
 
 		const guild = d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Property', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Property', d.function!.name)
 
 		const types = Object.keys(Properties.Guild)
 		if (!types.includes(property.toLowerCase()))
-			throw new d.error(d, 'invalid', 'Property', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Property', d.function!.name)
 
 		return Properties.Guild[property.toLowerCase()].code(guild)
 	}

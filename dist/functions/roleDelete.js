@@ -29,15 +29,15 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [roleID, guildID = d.ctx?.guild?.id, reason]) => {
         if (roleID === undefined)
-            throw new d.error(d, 'invalid', 'Role ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Role ID', d.function!.name);
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
         const guild = await d.bot?.guilds.fetch(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild', d.function!.name);
         const role = await guild.roles.cache.get(roleID);
         if (!role)
-            throw new d.error(d, 'invalid', 'Role', d.function?.name);
+            throw new d.error(d, 'invalid', 'Role', d.function!.name);
         await role.delete(reason).catch((e) => {
             throw new d.error(d, 'custom', (0, util_1.inspect)(e));
         });

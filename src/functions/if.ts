@@ -29,9 +29,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [condition, then, _else]) => {
 		if (condition === undefined)
-			throw new d.error(d, 'required', 'condition', d.function?.name!)
+			throw new d.error(d, 'required', 'condition', d.function!.name)
 		if (then === undefined)
-			throw new d.error(d, 'required', 'then code', d.function?.name!)
+			throw new d.error(d, 'required', 'then code', d.function!.name)
 
 		const evaluated = d.condition.evaluate(condition)
 

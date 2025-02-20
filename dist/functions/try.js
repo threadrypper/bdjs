@@ -39,9 +39,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [code, catchCode, finallyCode, sep = ',']) => {
         if (code === undefined)
-            throw new d.error(d, 'required', 'code', d.function?.name);
+            throw new d.error(d, 'required', 'code', d.function!.name);
         if (catchCode === undefined)
-            throw new d.error(d, 'required', 'catch code', d.function?.name);
+            throw new d.error(d, 'required', 'catch code', d.function!.name);
         const results = [];
         d.reader.compile(code, d).then((compiled) => {
             if (compiled.code !== '')
@@ -53,7 +53,7 @@ exports.default = new Function_1.BaseFunction({
                 code: async (subdata, [property = 'message']) => {
                     const properties = ['message', 'stack', 'raw'];
                     if (!properties.includes(property.toLowerCase()))
-                        throw new subdata.error(d, 'invalid', 'property', subdata.function?.name);
+                        throw new subdata.error(d, 'invalid', 'property', subdata.function!.name);
                     const error = (0, util_1.inspect)(property.toLowerCase() === 'raw' ? e : e[property], { depth: 4 });
                     return error;
                 }

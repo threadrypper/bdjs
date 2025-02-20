@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
 import { Message } from 'discord.js'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Sends a message to the provided channel.',
@@ -45,18 +45,18 @@ export default new BaseFunction({
 		]
 	) => {
 		if (payload === undefined)
-			throw new d.error(d, 'required', 'Message Payload', d.function?.name!)
+			throw new d.error(d, 'required', 'Message Payload', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 		if (channelID === undefined)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 
 		const guild = d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild', d.function!.name)
 
 		const channel = await d.util.getChannel(channelID, guild)
 		if (!channel || (channel && !channel.isTextBased()))
-			throw new d.error(d, 'invalid', 'Channel', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel', d.function!.name)
 
 		const compiled = await d.reader.compile(payload, d)
 		if (compiled.code) d.container.pushContent(compiled.code)

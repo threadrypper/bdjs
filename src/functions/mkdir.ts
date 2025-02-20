@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
-import { mkdir } from 'fs/promises'
-import { inspect } from 'util'
+import { mkdir } from 'node:fs/promises'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Makes a directory.',
@@ -15,7 +15,7 @@ export default new BaseFunction({
 	],
 	code: async (d, [directory]) => {
 		if (directory === undefined)
-			throw new d.error(d, 'required', 'Directory', d.function?.name!)
+			throw new d.error(d, 'required', 'Directory', d.function!.name)
 
 		await mkdir(directory).catch(e => {
 			throw new d.error(d, 'custom', inspect(e, { depth: 1 }))

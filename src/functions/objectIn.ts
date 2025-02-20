@@ -20,12 +20,12 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, key]) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Object Name', d.function!.name)
 		if (key === undefined)
-			throw new d.error(d, 'required', 'Object Key', d.function?.name!)
+			throw new d.error(d, 'required', 'Object Key', d.function!.name)
 
 		if (!d.hasEnvironmentVariable(name))
-			throw new d.error(d, 'invalid', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object Name', d.function!.name)
 
 		const object = d.getEnvironmentVariable(name)
 
@@ -35,7 +35,7 @@ export default new BaseFunction({
 				!JSON.stringify(object).startsWith('{') &&
 				!JSON.stringify(object).endsWith('}'))
 		)
-			throw new d.error(d, 'invalid', 'Object', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object', d.function!.name)
 
 		return key in object
 	}

@@ -1,7 +1,7 @@
 import { BaseEvent } from '../structures/Event'
 import { BDJSLog } from '../util/BDJSLog'
 import { Data } from '../structures/Data'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseEvent<[Error]>({
 	name: 'onError',
@@ -33,7 +33,7 @@ export default new BaseEvent<[Error]>({
 							data,
 							'invalid',
 							'property',
-							data.function?.name!
+							data.function!.name
 						)
 
 					const err = inspect(

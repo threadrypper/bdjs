@@ -30,9 +30,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [directory, content, encoding = 'utf-8']) => {
         if (directory === undefined)
-            throw new d.error(d, 'required', 'Directory', d.function?.name);
+            throw new d.error(d, 'required', 'Directory', d.function!.name);
         if (content === undefined)
-            throw new d.error(d, 'required', 'Content', d.function?.name);
+            throw new d.error(d, 'required', 'Content', d.function!.name);
         await (0, promises_1.appendFile)(directory, content, {
             encoding: encoding
         }).catch(e => {

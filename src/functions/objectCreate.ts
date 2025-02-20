@@ -20,17 +20,17 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, object]) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Object Name', d.function!.name)
 		if (object === undefined)
-			throw new d.error(d, 'required', 'Object', d.function?.name!)
+			throw new d.error(d, 'required', 'Object', d.function!.name)
 
 		if (!object.startsWith('{') && !object.endsWith('}'))
-			throw new d.error(d, 'invalid', 'Object', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object', d.function!.name)
 
 		try {
 			d.setEnvironmentVariable(name, JSON.parse(object))
 		} catch {
-			throw new d.error(d, 'invalid', 'Object', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object', d.function!.name)
 		}
 	}
 })

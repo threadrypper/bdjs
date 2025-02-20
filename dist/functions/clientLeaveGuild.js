@@ -15,10 +15,10 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [guildID = d.ctx?.guild?.id]) => {
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'guildID', d.function?.name);
+            throw new d.error(d, 'invalid', 'guildID', d.function!.name);
         const guild = d.bot?.guilds.cache.get(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild', d.function!.name);
         await guild.leave().catch(e => {
             throw new d.error(d, 'custom', (0, util_1.inspect)(e));
         });

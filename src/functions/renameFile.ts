@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
-import { rename } from 'fs/promises'
-import { inspect } from 'util'
+import { rename } from 'node:fs/promises'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Renames a file.',
@@ -23,9 +23,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [old, _new]) => {
 		if (old === undefined)
-			throw new d.error(d, 'required', 'Old Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Old Name', d.function!.name)
 		if (_new === undefined)
-			throw new d.error(d, 'required', 'New Name', d.function?.name!)
+			throw new d.error(d, 'required', 'New Name', d.function!.name)
 
 		await rename(old, _new).catch(e => {
 			throw new d.error(d, 'custom', inspect(e, { depth: 1 }))

@@ -32,22 +32,22 @@ export default new BaseFunction({
 		[property, memberID = d.ctx?.author?.id, guildID = d.ctx?.guild?.id]
 	) => {
 		if (property === undefined)
-			throw new d.error(d, 'required', 'Property Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Property Name', d.function!.name)
 		if (memberID === undefined)
-			throw new d.error(d, 'invalid', 'member ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'member ID', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const guild = d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild', d.function!.name)
 
 		const member = (await guild.members.fetch(memberID)) as GuildMember &
 			Record<string, string>
-		if (!member) throw new d.error(d, 'invalid', 'member', d.function?.name!)
+		if (!member) throw new d.error(d, 'invalid', 'member', d.function!.name)
 
 		const types = Object.keys(Properties.Member)
 		if (!types.includes(property.toLowerCase()))
-			throw new d.error(d, 'invalid', 'Property', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Property', d.function!.name)
 
 		return Properties.Member[property.toLowerCase()].code(member)
 	}

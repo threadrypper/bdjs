@@ -1,8 +1,8 @@
 import { type Bot, reformulateEvents } from '../structures/Bot'
 import { BaseEvent } from '../structures/Event'
-import { lstat, readdir } from 'fs/promises'
+import { lstat, readdir } from 'node:fs/promises'
 import { BDJSLog } from '../util/BDJSLog'
-import { join } from 'path'
+import { join } from 'node:path'
 
 export class EventManager extends Map<string, BaseEvent<any>> {
 	/**

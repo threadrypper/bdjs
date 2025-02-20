@@ -30,8 +30,8 @@ export default new BaseFunction({
 		if (options === undefined)
 			throw new d.error(d, 'required', 'Options', d.function!.name)
 
-		const data = d.extend(d),
-			choices: ApplicationCommandOptionChoiceData[] = []
+		const data = d.extend(d)
+		const choices: ApplicationCommandOptionChoiceData[] = []
 		data.functions.add({
 			name: 'appendOption',
 			description: 'Appends an option to the response.',

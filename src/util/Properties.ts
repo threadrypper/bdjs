@@ -150,7 +150,7 @@ export default {
 				return b.application.fetch().then(app => {
 					if (app.owner instanceof User) {
 						return app.owner.id
-					} else return app.owner?.members.map(t => t.id).join(',')
+					}return app.owner?.members.map(t => t.id).join(',')
 				})
 			}
 		},

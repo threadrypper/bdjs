@@ -20,11 +20,11 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, separator = ',']) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Array Name', d.function!.name)
 
 		const args = d.getEnvironmentVariable(name)
 		if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-			throw new d.error(d, 'invalid', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Array Name', d.function!.name)
 
 		return args.join(separator)
 	}

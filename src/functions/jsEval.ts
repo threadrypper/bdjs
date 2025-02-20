@@ -1,5 +1,5 @@
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Evaluates JavaScript code.',
@@ -23,9 +23,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [returnResults = 'false', ...codes]) => {
 		if (returnResults === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 		if (codes[0] === undefined)
-			throw new d.error(d, 'required', 'code', d.function?.name!)
+			throw new d.error(d, 'required', 'code', d.function!.name)
 
 		let result: string
 

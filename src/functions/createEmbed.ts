@@ -16,9 +16,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [payload]) => {
 		if (payload === undefined)
-			throw new d.error(d, 'required', 'payload', d.function?.name!)
-		const data = d.extend(d),
-			embed = new EmbedBuilder()
+			throw new d.error(d, 'required', 'payload', d.function!.name)
+		const data = d.extend(d)
+		const embed = new EmbedBuilder()
 		data.functions
 			.set(
 				'settitle',
@@ -30,7 +30,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'title',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setTitle(title)
 					}
@@ -46,7 +46,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'description',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setDescription(text)
 					}
@@ -62,7 +62,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'image URL',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setThumbnail(url)
 					}
@@ -78,7 +78,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'image URL',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setImage(url)
 					}
@@ -94,7 +94,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'footer text',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setFooter({
 							text,
@@ -113,7 +113,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'author name',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setAuthor({
 							name: text,
@@ -132,7 +132,7 @@ export default new BaseFunction({
 								d,
 								'required',
 								'hex code',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.setColor(resolveColor(hex as ColorResolvable))
 					}
@@ -148,14 +148,14 @@ export default new BaseFunction({
 								d,
 								'required',
 								'field name',
-								extended.function?.name!
+								extended.function!.name
 							)
 						if (value === undefined)
 							throw new extended.error(
 								d,
 								'required',
 								'field value',
-								extended.function?.name!
+								extended.function!.name
 							)
 						embed.addFields({
 							name,

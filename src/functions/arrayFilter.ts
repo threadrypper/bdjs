@@ -28,35 +28,33 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, condition, sep = ',']) => {
 		if (condition === undefined)
-			throw new d.error(d, 'required', 'Table Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Table Name', d.function!.name)
 
 		const args = d.getEnvironmentVariable(name)
 		if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-			throw new d.error(d, 'invalid', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Array Name', d.function!.name)
 
 		const results: string[] = []
+		const cells: Record<'name' | 'value', string>[] = []
 
 		// Filling cells.
 		for (const element of args) {
-			d.cells.data.push({
+			cells.push({
 				name: 'element',
 				value: element
 			})
 		}
 
 		// Filtering cells.
-		for (const cell of d.cells.data) {
+		for (const cell of cells) {
 			const compiled = await d.reader.compile(
-				d.cells.parse(condition.trim(), cell.name, cell.value),
+				d.cells(condition.trim(), cell.name, cell.value),
 				d
 			)
 
 			const mets = d.condition.evaluate(compiled.code)
 			if (mets) results.push(cell.value)
 		}
-
-		// Cleaning cached cells.
-		d.cells.data.length = 0
 
 		if (results.length > 0) return results.join(sep)
 	}

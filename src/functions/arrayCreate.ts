@@ -27,9 +27,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, text, separator = ',']) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Array Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Array Name', d.function!.name)
 		if (text === undefined)
-			throw new d.error(d, 'required', 'Text', d.function?.name!)
+			throw new d.error(d, 'required', 'Text', d.function!.name)
 
 		d.setEnvironmentVariable(name, text.split(separator))
 	}

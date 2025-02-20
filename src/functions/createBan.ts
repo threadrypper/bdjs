@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
 import type { BanOptions } from 'discord.js'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 import ms from 'ms'
 
 export default new BaseFunction({
@@ -32,10 +32,10 @@ export default new BaseFunction({
 	],
 	code: async (d, [userID, guildID = d.ctx?.guild?.id, options]) => {
 		if (userID === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 
 		const member = await d.util.getMember(userID, d.ctx?.guild!)
-		if (!member) throw new d.error(d, 'invalid', 'member', d.function?.name!)
+		if (!member) throw new d.error(d, 'invalid', 'member', d.function!.name)
 
 		const ban = {} as BanOptions
 
@@ -52,7 +52,7 @@ export default new BaseFunction({
 								t,
 								'required',
 								'delete message seconds',
-								t.function?.name!
+								t.function!.name
 							)
 						ban.deleteMessageSeconds = ms(seconds)
 					}
@@ -62,7 +62,7 @@ export default new BaseFunction({
 					description: 'Set the ban reason.',
 					code: async (t, [reason]) => {
 						if (reason === undefined)
-							throw new t.error(t, 'required', 'reason', t.function?.name!)
+							throw new t.error(t, 'required', 'reason', t.function!.name)
 						ban.reason = reason
 					}
 				})

@@ -21,9 +21,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [text, ...values]) => {
         if (text === undefined)
-            throw new d.error(d, 'required', 'name', d.function?.name);
+            throw new d.error(d, 'required', 'name', d.function!.name);
         if (values[0] === undefined)
-            throw new d.error(d, 'required', 'values', d.function?.name);
+            throw new d.error(d, 'required', 'values', d.function!.name);
         return values.some(word => text.startsWith(word));
     }
 });

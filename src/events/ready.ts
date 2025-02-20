@@ -3,8 +3,8 @@ import { Plugin } from '../structures/Plugin'
 import { Data } from '../structures/Data'
 import { BDJSLog } from '../util/BDJSLog'
 import { Agent, request } from 'undici'
-import { exec } from 'child_process'
-import { inspect } from 'util'
+import { exec } from 'node:child_process'
+import { inspect } from 'node:util'
 
 export default new BaseEvent({
 	name: 'onReady',
@@ -29,7 +29,7 @@ export default new BaseEvent({
 					BDJSLog.info(`Plugin loaded: "${plugin.name}" - ${plugin.version}`)
 				}
 				// @ts-ignore
-				else BDJSLog.error('Cannot load plugin: ' + plugin.constructor.name)
+				else BDJSLog.error(`Cannot load plugin: ${plugin.constructor.name}`)
 			}
 		}
 
@@ -55,13 +55,13 @@ export default new BaseEvent({
 			BDJSLog.warn(
 				[
 					'You are using an outdated version of BDJS!',
-					'Last version: ' + fetchedVersion,
-					'Current version: ' + currentVersion
+					`Last version: ${fetchedVersion}`,
+					`Current version: ${currentVersion}`
 				].join('\n')
 			)
 		} else if (fetchedVersion === currentVersion && disableLogs === false) {
 			BDJSLog.info(
-				['Using the latest version of BDJS: ' + currentVersion].join('\n')
+				[`Using the latest version of BDJS: ${currentVersion}`].join('\n')
 			)
 		}
 

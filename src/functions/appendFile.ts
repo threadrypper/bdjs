@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
-import { appendFile } from 'fs/promises'
-import { inspect } from 'util'
+import { appendFile } from 'node:fs/promises'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Appends content to the end of a file.',
@@ -29,9 +29,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [directory, content, encoding = 'utf-8']) => {
 		if (directory === undefined)
-			throw new d.error(d, 'required', 'Directory', d.function?.name!)
+			throw new d.error(d, 'required', 'Directory', d.function!.name)
 		if (content === undefined)
-			throw new d.error(d, 'required', 'Content', d.function?.name!)
+			throw new d.error(d, 'required', 'Content', d.function!.name)
 
 		await appendFile(directory, content, {
 			encoding: encoding as BufferEncoding

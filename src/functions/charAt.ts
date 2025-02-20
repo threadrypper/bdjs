@@ -20,13 +20,14 @@ export default new BaseFunction({
 	],
 	code: async (d, [text, index]) => {
 		if (text === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 		if (
+			Number.
 			isNaN(Number(index)) ||
 			Number(index) < 0 ||
 			Number(index) > text.length
 		)
-			throw new d.error(d, 'invalid', 'Index', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Index', d.function!.name)
 		return text[Number(index)]
 	}
 })

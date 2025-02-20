@@ -22,7 +22,7 @@ export default new BaseFunction({
 	],
 	code: async (d, [interactionType, ...options]) => {
 		if (!(d.ctx?.raw instanceof BaseInteraction))
-			throw new d.error(d, 'disallowed', d.function?.name!, 'interactions')
+			throw new d.error(d, 'disallowed', d.function!.name, 'interactions')
 
 		const int = d.ctx?.raw
 
@@ -59,11 +59,11 @@ export default new BaseFunction({
 						'anyInteraction and autocompleteInteraction'
 					)
 				if (options[0] === undefined)
-					throw new d.error(d, 'required', 'Option Name', d.function?.name!)
+					throw new d.error(d, 'required', 'Option Name', d.function!.name)
 				if (!['name', 'type', 'value'].includes(options[0].toLowerCase()))
-					throw new d.error(d, 'invalid', 'Option Name', d.function?.name!)
-				const name = options[0].toLowerCase(),
-					focused = int.options.getFocused(true)
+					throw new d.error(d, 'invalid', 'Option Name', d.function!.name)
+				const name = options[0].toLowerCase()
+				const focused = int.options.getFocused(true)
 				return name === 'name'
 					? focused.name
 					: name === 'type'
@@ -85,12 +85,12 @@ export default new BaseFunction({
 					)
 				if (
 					options[0] &&
-					(isNaN(Number(options[0])) ||
+					(Number.isNaN(Number(options[0])) ||
 						Number(options[0]) < 0 ||
 						Number(options[0]) > int.values.length)
 				)
-					throw new d.error(d, 'invalid', 'Index', d.function?.name!)
-				else if (!options[0]) options[0] = 'all'
+					throw new d.error(d, 'invalid', 'Index', d.function!.name)
+				if (!options[0]) options[0] = 'all'
 				return options[0] === 'all'
 					? int.values.join(',')
 					: int.values[Number(options[0])]
@@ -114,17 +114,17 @@ export default new BaseFunction({
 						d,
 						'required',
 						'Modal Component Type',
-						d.function?.name!
+						d.function!.name
 					)
 				if (!['textInput'].includes(type))
 					// In case discord add more supported components.
-					throw new d.error(d, 'invalid', 'modalComponent', d.function?.name!)
+					throw new d.error(d, 'invalid', 'modalComponent', d.function!.name)
 				if (customId === undefined)
 					throw new d.error(
 						d,
 						'required',
 						'Modal Component Custom ID',
-						d.function?.name!
+						d.function!.name
 					)
 				return int.fields.getTextInputValue(customId)
 			}
@@ -140,7 +140,7 @@ export default new BaseFunction({
 						'anyInteraction and commandInteraction'
 					)
 				if (options[0] === undefined)
-					throw new d.error(d, 'required', 'Option Name', d.function?.name!)
+					throw new d.error(d, 'required', 'Option Name', d.function!.name)
 				return int.options.get(options[0])?.value
 			}
 			case 'subcommand': {
@@ -170,7 +170,7 @@ export default new BaseFunction({
 				return int.options.getSubcommandGroup(false)
 			}
 			default:
-				throw new d.error(d, 'invalid', 'Option Type', d.function?.name!)
+				throw new d.error(d, 'invalid', 'Option Type', d.function!.name)
 		}
 	}
 })

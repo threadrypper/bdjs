@@ -41,12 +41,12 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, options, guildID = d.ctx?.guild?.id, returnID = 'false']) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'Texts', d.function?.name);
+            throw new d.error(d, 'required', 'Texts', d.function!.name);
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
         const guild = d.bot?.guilds.cache.get(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild', d.function!.name);
         const data = {};
         data.name = name;
         if (options) {
@@ -55,7 +55,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the color for this role.',
                 code: async (t, [hex]) => {
                     if (hex === undefined)
-                        throw new t.error(d, 'required', 'color', t.function?.name);
+                        throw new t.error(d, 'required', 'color', t.function!.name);
                     try {
                         const color = (0, discord_js_1.resolveColor)(hex);
                         data.color = color;
@@ -73,7 +73,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the icon for this role.',
                 code: async (t, [source]) => {
                     if (source === undefined)
-                        throw new t.error(d, 'required', 'icon', t.function?.name);
+                        throw new t.error(d, 'required', 'icon', t.function!.name);
                     data.icon = source;
                 }
             })).set('setmentionable', new Function_1.BaseFunction({
@@ -85,25 +85,25 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the permissions for this role.',
                 code: async (t, [...permissions]) => {
                     if (permissions[0] === undefined)
-                        throw new t.error(d, 'required', 'permission', t.function?.name);
+                        throw new t.error(d, 'required', 'permission', t.function!.name);
                     if (!t.util.validatePermissions(...permissions))
-                        throw new t.error(d, 'invalid', 'permission', t.function?.name);
+                        throw new t.error(d, 'invalid', 'permission', t.function!.name);
                     data.permissions = [...permissions];
                 }
             })).set('setposition', new Function_1.BaseFunction({
                 description: 'Set the position for this role.',
                 code: async (t, [position]) => {
                     if (position === undefined)
-                        throw new t.error(d, 'required', 'position', t.function?.name);
+                        throw new t.error(d, 'required', 'position', t.function!.name);
                     if (isNaN(Number(position)) || Number(position) < 1)
-                        throw new t.error(d, 'invalid', 'position', t.function?.name);
+                        throw new t.error(d, 'invalid', 'position', t.function!.name);
                     data.position = Number(position);
                 }
             })).set('setreason', new Function_1.BaseFunction({
                 description: 'Set the role creation reason.',
                 code: async (t, [reason]) => {
                     if (reason === undefined)
-                        throw new t.error(d, 'required', 'reason', t.function?.name);
+                        throw new t.error(d, 'required', 'reason', t.function!.name);
                     data.reason = reason;
                 }
             }));

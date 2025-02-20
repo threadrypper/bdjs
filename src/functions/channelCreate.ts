@@ -6,7 +6,7 @@ import {
 	PermissionsBitField
 } from 'discord.js'
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	builders: true,
@@ -59,15 +59,15 @@ export default new BaseFunction({
 		]
 	) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Channel Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Channel Name', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const guild = d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
-		const channelOptions = {} as GuildChannelCreateOptions,
-			channelTypes: Record<string, any> = {
+		const channelOptions = {} as GuildChannelCreateOptions
+		const channelTypes: Record<string, any> = {
 				announcement: ChannelType.GuildAnnouncement,
 				category: ChannelType.GuildCategory,
 				directory: ChannelType.GuildDirectory,
@@ -79,7 +79,7 @@ export default new BaseFunction({
 			}
 
 		if (!Object.keys(channelTypes).includes(type.toLowerCase()))
-			throw new d.error(d, 'invalid', 'Channel Type', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel Type', d.function!.name)
 
 		channelOptions.name = name
 		channelOptions.type = channelTypes[type.toLowerCase()]
@@ -95,13 +95,13 @@ export default new BaseFunction({
 							throw new t.error(
 								t,
 								'disallowed',
-								t.function?.name!,
+								t.function!.name,
 								'Guild Voice Channels'
 							)
 						if (bitrate === undefined)
-							throw new t.error(t, 'required', 'Bitrate', t.function?.name!)
-						if (isNaN(Number(bitrate)))
-							throw new t.error(t, 'invalid', 'Bitrate', t.function?.name!)
+							throw new t.error(t, 'required', 'Bitrate', t.function!.name)
+						if (Number.isNaN(Number(bitrate)))
+							throw new t.error(t, 'invalid', 'Bitrate', t.function!.name)
 
 						channelOptions.bitrate = Number(bitrate)
 					}
@@ -118,7 +118,7 @@ export default new BaseFunction({
 					description: 'Set the parent channel for this channel.',
 					async code(t, [parentID]) {
 						if (parentID === undefined)
-							throw new t.error(t, 'required', 'Parent ID', t.function?.name!)
+							throw new t.error(t, 'required', 'Parent ID', t.function!.name)
 
 						channelOptions.parent = parentID
 					}
@@ -128,7 +128,7 @@ export default new BaseFunction({
 					description: 'Set permissions for this channels.',
 					async code(t, [target, ...permissions]) {
 						if (target === undefined)
-							throw new t.error(t, 'required', 'Target', t.function?.name!)
+							throw new t.error(t, 'required', 'Target', t.function!.name)
 						if (target.toLowerCase() === 'everyone') target = guild.id
 
 						const validPermissions = Object.keys(PermissionsBitField.Flags)
@@ -143,12 +143,12 @@ export default new BaseFunction({
 								throw new t.error(
 									t,
 									'custom',
-									`Invalid target ID in "${t.function?.name!}" provided, must be GuildID string, RoleID string or MemberID string.`
+									`Invalid target ID in "${t.function!.name}" provided, must be GuildID string, RoleID string or MemberID string.`
 								)
 						}
 
-						const allow: PermissionResolvable[] = [],
-							deny: PermissionResolvable[] = []
+						const allow: PermissionResolvable[] = []
+						const deny: PermissionResolvable[] = []
 
 						for (let permission of permissions) {
 							if (permission.startsWith('+')) {
@@ -158,7 +158,7 @@ export default new BaseFunction({
 										t,
 										'invalid',
 										'Permission Name',
-										t.function?.name!
+										t.function!.name
 									)
 
 								allow.push(permission as PermissionResolvable)
@@ -169,7 +169,7 @@ export default new BaseFunction({
 										t,
 										'invalid',
 										'Permission Name',
-										t.function?.name!
+										t.function!.name
 									)
 
 								deny.push(permission as PermissionResolvable)
@@ -178,7 +178,7 @@ export default new BaseFunction({
 									t,
 									'invalid',
 									'Permission Grant Type (+|-)',
-									t.function?.name!
+									t.function!.name
 								)
 						}
 
@@ -200,14 +200,14 @@ export default new BaseFunction({
 								t,
 								'required',
 								'Channel Position',
-								t.function?.name!
+								t.function!.name
 							)
-						if (isNaN(Number(position)))
+						if (Number.isNaN(Number(position)))
 							throw new t.error(
 								t,
 								'invalid',
 								'Channel Position',
-								t.function?.name!
+								t.function!.name
 							)
 
 						channelOptions.position = Number(position)
@@ -221,13 +221,13 @@ export default new BaseFunction({
 							throw new t.error(
 								t,
 								'disallowed',
-								t.function?.name!,
+								t.function!.name,
 								'Guild Voice Channels'
 							)
 						if (ratelimit === undefined)
-							throw new t.error(t, 'required', 'Ratelimit', t.function?.name!)
-						if (isNaN(Number(ratelimit)))
-							throw new t.error(t, 'invalid', 'Ratelimit', t.function?.name!)
+							throw new t.error(t, 'required', 'Ratelimit', t.function!.name)
+						if (Number.isNaN(Number(ratelimit)))
+							throw new t.error(t, 'invalid', 'Ratelimit', t.function!.name)
 
 						channelOptions.rateLimitPerUser = Number(ratelimit)
 					}
@@ -237,7 +237,7 @@ export default new BaseFunction({
 					description: 'Set the reason for the channel creation.',
 					async code(t, [reason]) {
 						if (reason === undefined)
-							throw new t.error(t, 'required', 'Reason', t.function?.name!)
+							throw new t.error(t, 'required', 'Reason', t.function!.name)
 
 						channelOptions.reason = reason
 					}
@@ -247,7 +247,7 @@ export default new BaseFunction({
 					description: 'Set the RTC region for the channel.',
 					async code(t, [region]) {
 						if (region === undefined)
-							throw new t.error(t, 'required', 'RTC Region', t.function?.name!)
+							throw new t.error(t, 'required', 'RTC Region', t.function!.name)
 
 						channelOptions.rtcRegion = region
 					}
@@ -261,7 +261,7 @@ export default new BaseFunction({
 								t,
 								'required',
 								'Channel Topic',
-								t.function?.name!
+								t.function!.name
 							)
 
 						channelOptions.topic = topic
@@ -276,13 +276,13 @@ export default new BaseFunction({
 							throw new t.error(
 								t,
 								'disallowed',
-								t.function?.name!,
+								t.function!.name,
 								'Guild Voice Channels'
 							)
 						if (limit === undefined)
-							throw new t.error(t, 'required', 'User Limit', t.function?.name!)
-						if (isNaN(Number(limit)))
-							throw new t.error(t, 'invalid', 'User Limit', t.function?.name!)
+							throw new t.error(t, 'required', 'User Limit', t.function!.name)
+						if (Number.isNaN(Number(limit)))
+							throw new t.error(t, 'invalid', 'User Limit', t.function!.name)
 
 						channelOptions.userLimit = Number(limit)
 					}

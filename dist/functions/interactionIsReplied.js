@@ -6,7 +6,7 @@ exports.default = new Function_1.BaseFunction({
     description: 'Check whether interaction is replied or not.',
     code: async (d) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction))
-            throw new d.error(d, 'disallowed', d.function?.name, 'interactions');
+            throw new d.error(d, 'disallowed', d.function!.name, 'interactions');
         return d.ctx?.raw.isRepliable() && d.ctx?.raw.replied;
     }
 });

@@ -16,10 +16,10 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [property]) => {
         if (property === undefined)
-            throw new d.error(d, 'required', 'Property Name', d.function?.name);
+            throw new d.error(d, 'required', 'Property Name', d.function!.name);
         const types = Object.keys(Properties_1.default.Bot);
         if (!types.includes(property.toLowerCase()))
-            throw new d.error(d, 'invalid', 'Property', d.function?.name);
+            throw new d.error(d, 'invalid', 'Property', d.function!.name);
         return Properties_1.default.Bot[property.toLowerCase()].code(d.bot);
     }
 });

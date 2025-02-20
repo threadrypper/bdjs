@@ -26,23 +26,22 @@ export class Util {
 		text: string
 	): undefined | null | number | bigint | object | string {
 		if (text === undefined) return undefined
-		else if (text === null) return null
+		if (text === null) return null
 
 		text = text.trim()
 
 		if (text === 'undefined') return undefined
-		else if (text === 'null') return null
-		else if (isNaN(Number(text)) && Number.isSafeInteger(text))
+		if (text === 'null') return null
+		if (Number.isNaN(Number(text)) && Number.isSafeInteger(text))
 			return Number(text)
-		else if (text.endsWith('n') && this.isBigInt(text))
+		if (text.endsWith('n') && Util.isBigInt(text))
 			return BigInt(text.replace('n', ''))
-		else {
+		
 			try {
 				return JSON.parse(text)
 			} catch {
 				return text
 			}
-		}
 	}
 
 	/*static deepClone<T>(input: T): T {
@@ -235,10 +234,10 @@ export class Util {
 	 * @returns {Promise<boolean>}
 	 */
 	static async hasDM(bot: Bot, user: string | User): Promise<boolean> {
-		const u = user instanceof User ? user : await this.getUser(bot, user, false)
+		const u = user instanceof User ? user : await Util.getUser(bot, user, false)
 		if (!u) return false
 		const c = await u.send(' ').catch(err => err.code)
-		return c === 50007 ? false : true
+		return c !==50007
 	}
 
 	/**

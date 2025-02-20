@@ -1,5 +1,5 @@
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	builders: true,
@@ -30,10 +30,10 @@ export default new BaseFunction({
 	],
 	code: async (d, [userID, guildID = d.ctx?.guild?.id, reason]) => {
 		if (userID === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 
 		const member = await d.util.getMember(userID, d.ctx?.guild!)
-		if (!member) throw new d.error(d, 'invalid', 'member', d.function?.name!)
+		if (!member) throw new d.error(d, 'invalid', 'member', d.function!.name)
 
 		await member.kick(reason).catch(e => {
 			throw new d.error(d, 'custom', inspect(e))

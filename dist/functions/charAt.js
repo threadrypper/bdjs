@@ -21,9 +21,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [text, index]) => {
         if (text === undefined)
-            throw new d.error(d, 'required', 'name', d.function?.name);
+            throw new d.error(d, 'required', 'name', d.function!.name);
         if (isNaN(Number(index)) || Number(index) < 0 || Number(index) > text.length)
-            throw new d.error(d, 'invalid', 'Index', d.function?.name);
+            throw new d.error(d, 'invalid', 'Index', d.function!.name);
         return text[Number(index)];
     }
 });

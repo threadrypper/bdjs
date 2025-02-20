@@ -13,7 +13,7 @@ export default new BaseFunction({
 	],
 	code: async (d, [url]) => {
 		if (url === undefined)
-			throw new d.error(d, 'required', 'URL', d.function?.name!)
+			throw new d.error(d, 'required', 'URL', d.function!.name)
 
 		await d.bot?.user.setAvatar(url)
 	}

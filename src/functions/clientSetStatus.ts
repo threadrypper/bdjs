@@ -1,6 +1,6 @@
 import { ActivityType, type PresenceStatusData } from 'discord.js'
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Set the presence for the client.',
@@ -46,9 +46,9 @@ export default new BaseFunction({
 		[text, type = 'playing', status = 'online', url, afk = 'false']
 	) => {
 		if (text === undefined)
-			throw new d.error(d, 'required', 'URL', d.function?.name!)
+			throw new d.error(d, 'required', 'URL', d.function!.name)
 		if (!['online', 'idle', 'dnd', 'invisible'].includes(status.toLowerCase()))
-			throw new d.error(d, 'invalid', 'status', d.function?.name!)
+			throw new d.error(d, 'invalid', 'status', d.function!.name)
 
 		const activityTypes = {
 			competing: ActivityType.Competing,
@@ -60,7 +60,7 @@ export default new BaseFunction({
 		} as Record<string, any>
 
 		if (!Object.keys(activityTypes).includes(type.toLowerCase()))
-			throw new d.error(d, 'invalid', 'activity type', d.function?.name!)
+			throw new d.error(d, 'invalid', 'activity type', d.function!.name)
 
 		try {
 			d.bot?.user.setPresence({

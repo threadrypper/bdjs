@@ -4,10 +4,10 @@ import {
 	type RESTPostAPIApplicationCommandsJSONBody,
 	SlashCommandBuilder
 } from 'discord.js'
-import { lstat, readdir } from 'fs/promises'
+import { lstat, readdir } from 'node:fs/promises'
 import type { Bot } from '../structures/Bot'
 import { BDJSLog } from '../util/BDJSLog'
-import { join } from 'path'
+import { join } from 'node:path'
 import type { CommandData } from './Command'
 
 interface ExtendedCommandData extends CommandData {
@@ -47,20 +47,20 @@ export class BDJSApplicationCommandManager {
 			if (!Array.isArray(spec)) {
 				if (!('data' in spec)) continue
 				this.#commands.set(
-					spec.data!.name,
+					spec.data?.name,
 					spec.data instanceof SlashCommandBuilder ||
 						spec.data instanceof ContextMenuCommandBuilder
-						? spec.data!.toJSON()
+						? spec.data?.toJSON()
 						: spec.data!
 				)
 			} else {
 				for (const cmd of spec) {
 					if (!('data' in cmd)) continue
 					this.#commands.set(
-						cmd.data!.name,
+						cmd.data?.name,
 						cmd.data instanceof SlashCommandBuilder ||
 							cmd.data instanceof ContextMenuCommandBuilder
-							? cmd.data!.toJSON()
+							? cmd.data?.toJSON()
 							: cmd.data!
 					)
 				}
@@ -81,7 +81,7 @@ export class BDJSApplicationCommandManager {
 					(await this.#bot.guilds.fetch(guildID))
 				if (!guild) {
 					BDJSLog.error(
-						'Cannot sync command specifications to "' + guildID + '"'
+						`Cannot sync command specifications to "${guildID}"`
 					)
 					continue
 				}

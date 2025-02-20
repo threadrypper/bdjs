@@ -30,9 +30,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [directory, variable, sep = ',']) => {
         if (directory === undefined)
-            throw new d.error(d, 'required', 'Directory', d.function?.name);
+            throw new d.error(d, 'required', 'Directory', d.function!.name);
         if (variable === undefined)
-            throw new d.error(d, 'required', 'Variable Name', d.function?.name);
+            throw new d.error(d, 'required', 'Variable Name', d.function!.name);
         const files = await (0, promises_1.readdir)(directory);
         if (files.length === 0)
             throw new d.error(d, 'custom', `${directory} is empty.`);

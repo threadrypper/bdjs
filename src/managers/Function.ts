@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
-import { readdir } from 'fs/promises'
-import { join } from 'path'
+import { readdir } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export class FunctionManager extends Map<string, BaseFunction> {
 	#injections: Record<
@@ -13,8 +13,8 @@ export class FunctionManager extends Map<string, BaseFunction> {
 	 * @returns {Promise<void>}
 	 */
 	async loadNatives() {
-		const root = __dirname.replace('managers', 'functions'),
-			files = await readdir(root)
+		const root = __dirname.replace('managers', 'functions')
+		const files = await readdir(root)
 
 		for (const file of files) {
 			if (file.endsWith('.js')) {
@@ -37,8 +37,8 @@ export class FunctionManager extends Map<string, BaseFunction> {
 	 */
 	add(...data: (BaseFunction & { name: string })[]) {
 		for (const func of data) {
-			const name = func.name.toLowerCase(),
-				body = func as BaseFunction
+			const name = func.name.toLowerCase()
+			const body = func as BaseFunction
 			this.set(name.startsWith('$') ? name.slice(1) : name, body)
 		}
 		return this

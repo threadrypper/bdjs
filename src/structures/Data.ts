@@ -1,10 +1,10 @@
 import { FunctionManager } from '../managers/Function'
 import type { CommandData, StringCommandTypes } from '../index'
 import { type CompiledData, Reader } from '../core/Reader'
-import { CellParser } from '../core/CellParser'
 import { Condition } from '../util/Condition'
 import { BDJSLog } from '../util/BDJSLog'
 import type { BaseFunction } from './Function'
+import { parcells } from '../core/CellParser'
 import { Container } from './Container'
 import type { Context } from './Context'
 import { Util } from '../util/Util'
@@ -47,7 +47,7 @@ export class Data {
 	container: Container
 	reader: Reader
 	stop: boolean
-	cells: typeof CellParser
+	cells: typeof parcells
 	util: typeof Util
 	error: typeof BDJSLog
 	constructor(options: DataOptions) {
@@ -65,7 +65,7 @@ export class Data {
 		this.reader = options.reader ?? new Reader()
 		this.stop = false
 		this.condition = Condition
-		this.cells = CellParser
+		this.cells = parcells
 		this.error = BDJSLog
 		this.util = Util
 	}

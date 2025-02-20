@@ -40,10 +40,11 @@ const escapers = [
  * @returns {string}
  */
 function EscapeText(text: string) {
+	let result = text
 	for (const escaper of escapers) {
-		text = text.replace(new RegExp(`${escaper[1]}`, 'ig'), escaper[0])
+		result = result.replace(new RegExp(`${escaper[1]}`, 'ig'), escaper[0])
 	}
-	return text
+	return result
 }
 
 /**
@@ -52,10 +53,11 @@ function EscapeText(text: string) {
  * @returns {string}
  */
 function UnescapeText(text: string) {
+	let result = text
 	for (const escaper of escapers) {
-		text = text.replace(new RegExp(`${escaper[0]}`, 'ig'), escaper[1])
+		result = result.replace(new RegExp(`${escaper[0]}`, 'ig'), escaper[1])
 	}
-	return text
+	return result
 }
 
 /**
@@ -99,8 +101,8 @@ export class Reader {
 
 		// Reading each line character.
 		for (let i = 0; i < lines.length; i++) {
-			const char = lines[i],
-				next = lines[i + 1]
+			const char = lines[i]
+			const next = lines[i + 1]
 
 			if (char === '\n') compiled.line++
 
@@ -188,8 +190,8 @@ export class Reader {
 			compiled.type = 'any'
 		}
 
-		const parsedFunctions: string[] = [],
-			texts = compiled.strings.map(str => str.value)
+		const parsedFunctions: string[] = []
+		const texts = compiled.strings.map(str => str.value)
 
 		for (const dfunc of compiled.functions) {
 			if (data.bot?.extraOptions.debug === true)
@@ -228,8 +230,8 @@ export class Reader {
 					].join('\n')
 				)
 
-			const fields = dfunc.fields.map(field => field.value),
-				newFields: string[] = []
+			const fields = dfunc.fields.map(field => field.value)
+			const newFields: string[] = []
 
 			for (let idx = 0; idx < fields.length; idx++) {
 				const field = fields[idx]

@@ -27,7 +27,7 @@ export default new BaseFunction({
 	],
 	code: async (d, [components]) => {
 		if (components === undefined)
-			throw new d.error(d, 'required', 'components', d.function?.name!)
+			throw new d.error(d, 'required', 'components', d.function!.name)
 		const row = new ActionRowBuilder()
 
 		const data = d.extend(d)
@@ -40,9 +40,9 @@ export default new BaseFunction({
 					[customID, style, label, disabled = 'false', emoji]
 				) => {
 					if (customID === undefined)
-						throw new t.error(t, 'required', 'Custom ID', t.function?.name!)
+						throw new t.error(t, 'required', 'Custom ID', t.function!.name)
 					if (style === undefined)
-						throw new t.error(t, 'required', 'Style', t.function?.name!)
+						throw new t.error(t, 'required', 'Style', t.function!.name)
 
 					const buttonStyles = {
 						primary: ButtonStyle.Primary,
@@ -54,7 +54,7 @@ export default new BaseFunction({
 					} as Record<string, any>
 
 					if (!Object.keys(buttonStyles).includes(style))
-						throw new t.error(t, 'invalid', 'Style', t.function?.name!)
+						throw new t.error(t, 'invalid', 'Style', t.function!.name)
 
 					const button = new ButtonBuilder()
 
@@ -78,25 +78,25 @@ export default new BaseFunction({
 					[customID, placeholder, min = '1', max, disabled = 'false', ...types]
 				) => {
 					if (customID === undefined)
-						throw new t.error(t, 'required', 'Custom ID', t.function?.name!)
+						throw new t.error(t, 'required', 'Custom ID', t.function!.name)
 					if (placeholder === undefined)
-						throw new t.error(t, 'required', 'Placeholder', t.function?.name!)
-					if (isNaN(Number(min)) || Number(min) < 0)
+						throw new t.error(t, 'required', 'Placeholder', t.function!.name)
+					if (Number.isNaN(Number(min)) || Number(min) < 0)
 						throw new t.error(
 							t,
 							'invalid',
 							'Minimum Options',
-							t.function?.name!
+							t.function!.name
 						)
 					if (
 						max &&
-						(isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
+						(Number.isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
 					)
 						throw new t.error(
 							t,
 							'invalid',
 							'Maximum Options',
-							t.function?.name!
+							t.function!.name
 						)
 
 					const menu = new ChannelSelectMenuBuilder()
@@ -118,7 +118,7 @@ export default new BaseFunction({
 									d,
 									'invalid',
 									'Channel Type',
-									d.function?.name!
+									d.function!.name
 								)
 							menu.addChannelTypes(channelTypes[type.toLowerCase()] as any)
 						}
@@ -151,25 +151,25 @@ export default new BaseFunction({
 					]
 				) => {
 					if (customID === undefined)
-						throw new t.error(t, 'required', 'Custom ID', t.function?.name!)
+						throw new t.error(t, 'required', 'Custom ID', t.function!.name)
 					if (placeholder === undefined)
-						throw new t.error(t, 'required', 'Placeholder', t.function?.name!)
-					if (isNaN(Number(min)) || Number(min) < 0)
+						throw new t.error(t, 'required', 'Placeholder', t.function!.name)
+					if (Number.isNaN(Number(min)) || Number(min) < 0)
 						throw new t.error(
 							t,
 							'invalid',
 							'Minimum Options',
-							t.function?.name!
+							t.function!.name
 						)
 					if (
 						max &&
-						(isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
+						(Number.isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
 					)
 						throw new t.error(
 							t,
 							'invalid',
 							'Maximum Options',
-							t.function?.name!
+							t.function!.name
 						)
 
 					const menu = new MentionableSelectMenuBuilder()
@@ -194,25 +194,25 @@ export default new BaseFunction({
 					[customID, placeholder, min = '1', max, disabled = 'false']
 				) => {
 					if (customID === undefined)
-						throw new t.error(t, 'required', 'Custom ID', t.function?.name!)
+						throw new t.error(t, 'required', 'Custom ID', t.function!.name)
 					if (placeholder === undefined)
-						throw new t.error(t, 'required', 'Placeholder', t.function?.name!)
-					if (isNaN(Number(min)) || Number(min) < 0)
+						throw new t.error(t, 'required', 'Placeholder', t.function!.name)
+					if (Number.isNaN(Number(min)) || Number(min) < 0)
 						throw new t.error(
 							t,
 							'invalid',
 							'Minimum Options',
-							t.function?.name!
+							t.function!.name
 						)
 					if (
 						max &&
-						(isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
+						(Number.isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
 					)
 						throw new t.error(
 							t,
 							'invalid',
 							'Maximum Options',
-							t.function?.name!
+							t.function!.name
 						)
 
 					const menu = new RoleSelectMenuBuilder()
@@ -251,25 +251,25 @@ export default new BaseFunction({
 					[customID, placeholder, min = '1', max, disabled = 'false', options]
 				) => {
 					if (customID === undefined)
-						throw new t.error(t, 'required', 'Custom ID', t.function?.name!)
+						throw new t.error(t, 'required', 'Custom ID', t.function!.name)
 					if (placeholder === undefined)
-						throw new t.error(t, 'required', 'Placeholder', t.function?.name!)
-					if (isNaN(Number(min)) || Number(min) < 0)
+						throw new t.error(t, 'required', 'Placeholder', t.function!.name)
+					if (Number.isNaN(Number(min)) || Number(min) < 0)
 						throw new t.error(
 							t,
 							'invalid',
 							'Minimum Options',
-							t.function?.name!
+							t.function!.name
 						)
 					if (
 						max &&
-						(isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
+						(Number.isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
 					)
 						throw new t.error(
 							t,
 							'invalid',
 							'Maximum Options',
-							t.function?.name!
+							t.function!.name
 						)
 
 					const menu = new StringSelectMenuBuilder()
@@ -288,14 +288,14 @@ export default new BaseFunction({
 									egg,
 									'required',
 									'Option Label',
-									egg.function?.name!
+									egg.function!.name
 								)
 							if (value === undefined)
 								throw new egg.error(
 									egg,
 									'required',
 									'Option Value',
-									egg.function?.name!
+									egg.function!.name
 								)
 
 							const opt = new StringSelectMenuOptionBuilder()
@@ -333,25 +333,25 @@ export default new BaseFunction({
 					[customID, placeholder, min = '1', max, disabled = 'false', options]
 				) => {
 					if (customID === undefined)
-						throw new t.error(t, 'required', 'Custom ID', t.function?.name!)
+						throw new t.error(t, 'required', 'Custom ID', t.function!.name)
 					if (placeholder === undefined)
-						throw new t.error(t, 'required', 'Placeholder', t.function?.name!)
-					if (isNaN(Number(min)) || Number(min) < 0)
+						throw new t.error(t, 'required', 'Placeholder', t.function!.name)
+					if (Number.isNaN(Number(min)) || Number(min) < 0)
 						throw new t.error(
 							t,
 							'invalid',
 							'Minimum Options',
-							t.function?.name!
+							t.function!.name
 						)
 					if (
 						max &&
-						(isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
+						(Number.isNaN(Number(max)) || Number(max) < 0 || Number(max) < Number(min))
 					)
 						throw new t.error(
 							t,
 							'invalid',
 							'Maximum Options',
-							t.function?.name!
+							t.function!.name
 						)
 
 					const menu = new UserSelectMenuBuilder()

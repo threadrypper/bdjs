@@ -44,9 +44,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [text, type = 'playing', status = 'online', url, afk = 'false']) => {
         if (text === undefined)
-            throw new d.error(d, 'required', 'URL', d.function?.name);
+            throw new d.error(d, 'required', 'URL', d.function!.name);
         if (!['online', 'idle', 'dnd', 'invisible'].includes(status.toLowerCase()))
-            throw new d.error(d, 'invalid', 'status', d.function?.name);
+            throw new d.error(d, 'invalid', 'status', d.function!.name);
         const activityTypes = {
             competing: discord_js_1.ActivityType.Competing,
             custom: discord_js_1.ActivityType.Custom,
@@ -56,7 +56,7 @@ exports.default = new Function_1.BaseFunction({
             watching: discord_js_1.ActivityType.Watching
         };
         if (!Object.keys(activityTypes).includes(type.toLowerCase()))
-            throw new d.error(d, 'invalid', 'activity type', d.function?.name);
+            throw new d.error(d, 'invalid', 'activity type', d.function!.name);
         try {
             d.bot?.user.setPresence({
                 activities: [{

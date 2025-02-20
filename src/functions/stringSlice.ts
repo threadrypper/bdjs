@@ -30,7 +30,7 @@ export default new BaseFunction({
 			throw new d.error(d, 'required', 'Text', d.function!.name)
 		if (from === undefined)
 			throw new d.error(d, 'required', 'Start Index', d.function!.name)
-		if (isNaN(Number(from)) || (to && isNaN(Number(to))))
+		if (Number.isNaN(Number(from)) || (to && Number.isNaN(Number(to))))
 			throw new d.error(d, 'required', 'Indexes', d.function!.name)
 
 		return text.slice(Number(from), to ? Number(to) : undefined)

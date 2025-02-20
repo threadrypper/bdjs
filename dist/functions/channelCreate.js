@@ -45,12 +45,12 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, type = 'text', guildID = d.ctx?.guild?.id, options, returnID = 'false']) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'Channel Name', d.function?.name);
+            throw new d.error(d, 'required', 'Channel Name', d.function!.name);
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
         const guild = d.bot?.guilds.cache.get(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function?.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
         const channelOptions = {}, channelTypes = {
             announcement: discord_js_1.ChannelType.GuildAnnouncement,
             category: discord_js_1.ChannelType.GuildCategory,
@@ -62,7 +62,7 @@ exports.default = new Function_1.BaseFunction({
             voice: discord_js_1.ChannelType.GuildVoice
         };
         if (!Object.keys(channelTypes).includes(type.toLowerCase()))
-            throw new d.error(d, 'invalid', 'Channel Type', d.function?.name);
+            throw new d.error(d, 'invalid', 'Channel Type', d.function!.name);
         channelOptions.name = name;
         channelOptions.type = channelTypes[type.toLowerCase()];
         if (options) {
@@ -72,11 +72,11 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the maximum bitrate for a voice channel.',
                 async code(t, [bitrate]) {
                     if (channelOptions.type !== discord_js_1.ChannelType.GuildVoice)
-                        throw new t.error(t, 'disallowed', t.function?.name, 'Guild Voice Channels');
+                        throw new t.error(t, 'disallowed', t.function!.name, 'Guild Voice Channels');
                     if (bitrate === undefined)
-                        throw new t.error(t, 'required', 'Bitrate', t.function?.name);
+                        throw new t.error(t, 'required', 'Bitrate', t.function!.name);
                     if (isNaN(Number(bitrate)))
-                        throw new t.error(t, 'invalid', 'Bitrate', t.function?.name);
+                        throw new t.error(t, 'invalid', 'Bitrate', t.function!.name);
                     channelOptions.bitrate = Number(bitrate);
                 }
             }).add({
@@ -90,7 +90,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the parent channel for this channel.',
                 async code(t, [parentID]) {
                     if (parentID === undefined)
-                        throw new t.error(t, 'required', 'Parent ID', t.function?.name);
+                        throw new t.error(t, 'required', 'Parent ID', t.function!.name);
                     channelOptions.parent = parentID;
                 }
             }).add({
@@ -98,7 +98,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set permissions for this channels.',
                 async code(t, [target, ...permissions]) {
                     if (target === undefined)
-                        throw new t.error(t, 'required', 'Target', t.function?.name);
+                        throw new t.error(t, 'required', 'Target', t.function!.name);
                     if (target.toLowerCase() === 'everyone')
                         target = guild.id;
                     const validPermissions = Object.keys(discord_js_1.PermissionsBitField.Flags);
@@ -107,24 +107,24 @@ exports.default = new Function_1.BaseFunction({
                     if (target !== guild.id) {
                         role = await d.util.getRole(target, guild) ?? await d.util.getMember(target, guild);
                         if (!role)
-                            throw new t.error(t, 'custom', `Invalid target ID in "${t.function?.name}" provided, must be GuildID string, RoleID string or MemberID string.`);
+                            throw new t.error(t, 'custom', `Invalid target ID in "${t.function!.name}" provided, must be GuildID string, RoleID string or MemberID string.`);
                     }
                     const allow = [], deny = [];
                     for (let permission of permissions) {
                         if (permission.startsWith('+')) {
                             permission = permission.slice(1);
                             if (!validPermissions.includes(permission))
-                                throw new t.error(t, 'invalid', 'Permission Name', t.function?.name);
+                                throw new t.error(t, 'invalid', 'Permission Name', t.function!.name);
                             allow.push(permission);
                         }
                         else if (permission.startsWith('-')) {
                             permission = permission.slice(1);
                             if (!validPermissions.includes(permission))
-                                throw new t.error(t, 'invalid', 'Permission Name', t.function?.name);
+                                throw new t.error(t, 'invalid', 'Permission Name', t.function!.name);
                             deny.push(permission);
                         }
                         else
-                            throw new t.error(t, 'invalid', 'Permission Grant Type (+|-)', t.function?.name);
+                            throw new t.error(t, 'invalid', 'Permission Grant Type (+|-)', t.function!.name);
                     }
                     channelOptions.permissionOverwrites.push({
                         id: target,
@@ -136,9 +136,9 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the position for this channel.',
                 async code(t, [position]) {
                     if (position === undefined)
-                        throw new t.error(t, 'required', 'Channel Position', t.function?.name);
+                        throw new t.error(t, 'required', 'Channel Position', t.function!.name);
                     if (isNaN(Number(position)))
-                        throw new t.error(t, 'invalid', 'Channel Position', t.function?.name);
+                        throw new t.error(t, 'invalid', 'Channel Position', t.function!.name);
                     channelOptions.position = Number(position);
                 }
             }).add({
@@ -146,11 +146,11 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the channel ratelimit per user.',
                 async code(t, [ratelimit]) {
                     if (channelOptions.type !== discord_js_1.ChannelType.GuildVoice)
-                        throw new t.error(t, 'disallowed', t.function?.name, 'Guild Voice Channels');
+                        throw new t.error(t, 'disallowed', t.function!.name, 'Guild Voice Channels');
                     if (ratelimit === undefined)
-                        throw new t.error(t, 'required', 'Ratelimit', t.function?.name);
+                        throw new t.error(t, 'required', 'Ratelimit', t.function!.name);
                     if (isNaN(Number(ratelimit)))
-                        throw new t.error(t, 'invalid', 'Ratelimit', t.function?.name);
+                        throw new t.error(t, 'invalid', 'Ratelimit', t.function!.name);
                     channelOptions.rateLimitPerUser = Number(ratelimit);
                 }
             }).add({
@@ -158,7 +158,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the reason for the channel creation.',
                 async code(t, [reason]) {
                     if (reason === undefined)
-                        throw new t.error(t, 'required', 'Reason', t.function?.name);
+                        throw new t.error(t, 'required', 'Reason', t.function!.name);
                     channelOptions.reason = reason;
                 }
             }).add({
@@ -166,7 +166,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the RTC region for the channel.',
                 async code(t, [region]) {
                     if (region === undefined)
-                        throw new t.error(t, 'required', 'RTC Region', t.function?.name);
+                        throw new t.error(t, 'required', 'RTC Region', t.function!.name);
                     channelOptions.rtcRegion = region;
                 }
             }).add({
@@ -174,7 +174,7 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the topic for the channel creation.',
                 async code(t, [topic]) {
                     if (topic === undefined)
-                        throw new t.error(t, 'required', 'Channel Topic', t.function?.name);
+                        throw new t.error(t, 'required', 'Channel Topic', t.function!.name);
                     channelOptions.topic = topic;
                 }
             }).add({
@@ -182,11 +182,11 @@ exports.default = new Function_1.BaseFunction({
                 description: 'Set the limit of users that can connect to the channel.',
                 async code(t, [limit]) {
                     if (channelOptions.type !== discord_js_1.ChannelType.GuildVoice)
-                        throw new t.error(t, 'disallowed', t.function?.name, 'Guild Voice Channels');
+                        throw new t.error(t, 'disallowed', t.function!.name, 'Guild Voice Channels');
                     if (limit === undefined)
-                        throw new t.error(t, 'required', 'User Limit', t.function?.name);
+                        throw new t.error(t, 'required', 'User Limit', t.function!.name);
                     if (isNaN(Number(limit)))
-                        throw new t.error(t, 'invalid', 'User Limit', t.function?.name);
+                        throw new t.error(t, 'invalid', 'User Limit', t.function!.name);
                     channelOptions.userLimit = Number(limit);
                 }
             });

@@ -18,25 +18,25 @@ export class BDJSLog extends Error {
 
 		switch (type) {
 			case 'client':
-				message = `🤖 ${clc.blue('BDJS') + ':' + clc.blue('CLIENT')} | ${args.join(' ')}`
+				message = `🤖 ${`${clc.blue('BDJS')}:${clc.blue('CLIENT')}`} | ${args.join(' ')}`
 				break
 			case 'custom':
-				message = `❌ ${clc.blue('BDJS') + ':' + clc.red('ERROR')} | ${args.join(' ')}`
+				message = `❌ ${`${clc.blue('BDJS')}:${clc.red('ERROR')}`} | ${args.join(' ')}`
 				break
 			case 'command':
-				message = `ℹ  ${clc.blue('BDJS') + ':' + clc.magenta('COMMAND')} | ${args[0]} at ${args[1]}`
+				message = `ℹ  ${`${clc.blue('BDJS')}:${clc.magenta('COMMAND')}`} | ${args[0]} at ${args[1]}`
 				break
 			case 'disallowed':
-				message = `❌ ${clc.blue('BDJS') + ':' + clc.red('DISALLOWED')} | "${args[0]}" is only allowed in ${args[1]}`
+				message = `❌ ${`${clc.blue('BDJS')}:${clc.red('DISALLOWED')}`} | "${args[0]}" is only allowed in ${args[1]}`
 				break
 			case 'internal':
-				message = `⚠️ ${clc.blue('BDJS') + ':' + clc.yellowBright('INTERNAL')} | ${args.join(' ')}`
+				message = `⚠️ ${`${clc.blue('BDJS')}:${clc.yellowBright('INTERNAL')}`} | ${args.join(' ')}`
 				break
 			case 'invalid':
-				message = `❌ ${clc.blue('BDJS') + ':' + clc.red('ERROR')} | Invalid "${args[0]}" in ${args[1]}`
+				message = `❌ ${`${clc.blue('BDJS')}:${clc.red('ERROR')}`} | Invalid "${args[0]}" in ${args[1]}`
 				break
 			case 'required':
-				message = `❌ ${clc.blue('BDJS') + ':' + clc.red('ERROR')} | "${args[0]}" is required in ${args[1]}`
+				message = `❌ ${`${clc.blue('BDJS')}:${clc.red('ERROR')}`} | "${args[0]}" is required in ${args[1]}`
 				break
 		}
 
@@ -52,7 +52,7 @@ export class BDJSLog extends Error {
 	static error(message: string) {
 		console.log(
 			'❌',
-			`${clc.blue('BDJS') + ':' + clc.red('ERROR')}`,
+			`${`${clc.blue('BDJS')}:${clc.red('ERROR')}`}`,
 			'|',
 			clc.magentaBright(message)
 		)
@@ -66,7 +66,7 @@ export class BDJSLog extends Error {
 	static info(message: string) {
 		console.log(
 			'ℹ',
-			`${clc.blue('BDJS') + ':' + clc.cyan('INFO')}`,
+			`${`${clc.blue('BDJS')}:${clc.cyan('INFO')}`}`,
 			'|',
 			clc.green(message)
 		)
@@ -80,7 +80,7 @@ export class BDJSLog extends Error {
 	static warn(message: string) {
 		console.log(
 			'⚠️ ',
-			`${clc.blue('BDJS') + ':' + clc.yellowBright('WARN')}`,
+			`${`${clc.blue('BDJS')}:${clc.yellowBright('WARN')}`}`,
 			'|',
 			clc.yellow(message)
 		)
@@ -94,7 +94,7 @@ export class BDJSLog extends Error {
 	static debug(message: string) {
 		console.log(
 			'🐛',
-			`${clc.blue('BDJS') + ':' + clc.cyan('DEBUG')}`,
+			`${`${clc.blue('BDJS')}:${clc.cyan('DEBUG')}`}`,
 			'|',
 			clc.blue(message)
 		)

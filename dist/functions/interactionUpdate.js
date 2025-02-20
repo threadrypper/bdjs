@@ -31,7 +31,7 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [message, fetchReply = 'true', returnId = 'false']) => {
         if (!(d.ctx?.raw instanceof discord_js_1.MessageComponentInteraction))
-            throw new d.error(d, 'disallowed', d.function?.name, 'component interactions');
+            throw new d.error(d, 'disallowed', d.function!.name, 'component interactions');
         if (!d.ctx?.raw.isRepliable())
             throw new d.error(d, 'custom', `${d.commandType} is not repliable.`);
         if (!d.ctx?.raw.replied)

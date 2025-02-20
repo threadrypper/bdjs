@@ -28,17 +28,17 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, property, index]) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Object Name', d.function!.name)
 
 		if (!d.hasEnvironmentVariable(name))
-			throw new d.error(d, 'invalid', 'Object Name', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object Name', d.function!.name)
 
 		const object = d.getEnvironmentVariable(name)
 
 		if (typeof object !== 'object')
-			throw new d.error(d, 'invalid', 'Object', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object', d.function!.name)
 		if (!Object.prototype.hasOwnProperty.call(object, property))
-			throw new d.error(d, 'invalid', 'Object Property', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Object Property', d.function!.name)
 		if (!Array.isArray(object[property]))
 			throw new d.error(d, 'custom', `"${property}" is not a valid array!`)
 

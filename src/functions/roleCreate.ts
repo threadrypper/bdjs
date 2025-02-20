@@ -5,7 +5,7 @@ import {
 	resolveColor
 } from 'discord.js'
 import { BaseFunction } from '../structures/Function'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	builders: true,
@@ -48,12 +48,12 @@ export default new BaseFunction({
 		[name, options, guildID = d.ctx?.guild?.id, returnID = 'false']
 	) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'Texts', d.function?.name!)
+			throw new d.error(d, 'required', 'Texts', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const guild = d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild', d.function!.name)
 
 		const data = {} as RoleCreateOptions
 
@@ -68,7 +68,7 @@ export default new BaseFunction({
 						description: 'Set the color for this role.',
 						code: async (t, [hex]) => {
 							if (hex === undefined)
-								throw new t.error(d, 'required', 'color', t.function?.name!)
+								throw new t.error(d, 'required', 'color', t.function!.name)
 							try {
 								const color = resolveColor(hex as ColorResolvable)
 								data.color = color
@@ -93,7 +93,7 @@ export default new BaseFunction({
 						description: 'Set the icon for this role.',
 						code: async (t, [source]) => {
 							if (source === undefined)
-								throw new t.error(d, 'required', 'icon', t.function?.name!)
+								throw new t.error(d, 'required', 'icon', t.function!.name)
 							data.icon = source
 						}
 					})
@@ -117,14 +117,14 @@ export default new BaseFunction({
 									d,
 									'required',
 									'permission',
-									t.function?.name!
+									t.function!.name
 								)
 							if (
 								!t.util.validatePermissions(
 									...(permissions as PermissionsString[])
 								)
 							)
-								throw new t.error(d, 'invalid', 'permission', t.function?.name!)
+								throw new t.error(d, 'invalid', 'permission', t.function!.name)
 							data.permissions = [
 								...(permissions as unknown as PermissionsString[])
 							]
@@ -137,9 +137,9 @@ export default new BaseFunction({
 						description: 'Set the position for this role.',
 						code: async (t, [position]) => {
 							if (position === undefined)
-								throw new t.error(d, 'required', 'position', t.function?.name!)
-							if (isNaN(Number(position)) || Number(position) < 1)
-								throw new t.error(d, 'invalid', 'position', t.function?.name!)
+								throw new t.error(d, 'required', 'position', t.function!.name)
+							if (Number.isNaN(Number(position)) || Number(position) < 1)
+								throw new t.error(d, 'invalid', 'position', t.function!.name)
 							data.position = Number(position)
 						}
 					})
@@ -150,7 +150,7 @@ export default new BaseFunction({
 						description: 'Set the role creation reason.',
 						code: async (t, [reason]) => {
 							if (reason === undefined)
-								throw new t.error(d, 'required', 'reason', t.function?.name!)
+								throw new t.error(d, 'required', 'reason', t.function!.name)
 							data.reason = reason
 						}
 					})

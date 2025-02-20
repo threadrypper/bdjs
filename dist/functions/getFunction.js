@@ -30,16 +30,16 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, property]) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'name', d.function?.name);
+            throw new d.error(d, 'required', 'name', d.function!.name);
         const func = d.functions?.get(name.toLowerCase());
         if (!func)
-            throw new d.error(d, 'invalid', 'name', d.function?.name);
+            throw new d.error(d, 'invalid', 'name', d.function!.name);
         const properties = [
             'description', 'parameters',
             'supportbuilders', 'supportinjection'
         ];
         if (!properties.includes(property.toLowerCase()))
-            throw new d.error(d, 'invalid', 'property', d.function?.name);
+            throw new d.error(d, 'invalid', 'property', d.function!.name);
         return getFunction(d, func, property);
     }
 });

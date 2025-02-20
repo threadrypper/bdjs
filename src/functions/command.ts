@@ -34,7 +34,7 @@ export default new BaseFunction({
 		if (property === undefined)
 			throw new d.error(d, 'required', 'Command Property', d.function!.name)
 
-		const commands = Array.from(d.bot!.commands.values()).filter(
+		const commands = Array.from(d.bot?.commands.values()).filter(
 			cmd => cmd.type === type
 		)
 		const command = commands.find(cmd => cmd.name === name)

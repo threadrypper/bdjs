@@ -1,6 +1,6 @@
 import { BaseFunction } from '../structures/Function'
-import { readFile } from 'fs/promises'
-import { inspect } from 'util'
+import { readFile } from 'node:fs/promises'
+import { inspect } from 'node:util'
 
 export default new BaseFunction({
 	description: 'Reads a file and load the result into a environment variable.',
@@ -31,9 +31,9 @@ export default new BaseFunction({
 	],
 	code: async (d, [directory, variable, encoding = 'utf-8']) => {
 		if (directory === undefined)
-			throw new d.error(d, 'required', 'Directory', d.function?.name!)
+			throw new d.error(d, 'required', 'Directory', d.function!.name)
 		if (variable === undefined)
-			throw new d.error(d, 'required', 'Variable Name', d.function?.name!)
+			throw new d.error(d, 'required', 'Variable Name', d.function!.name)
 
 		await readFile(directory, {
 			encoding: encoding as BufferEncoding

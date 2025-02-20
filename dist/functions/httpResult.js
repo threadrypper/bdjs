@@ -26,7 +26,7 @@ exports.default = new Function_1.BaseFunction({
         if (variable === undefined)
             throw new d.error(d, 'required', 'Variable Name', d.function.name);
         if (path === undefined)
-            throw new d.error(d, 'required', 'Property Path', d.function?.name);
+            throw new d.error(d, 'required', 'Property Path', d.function!.name);
         if (!d.hasEnvironmentVariable(variable))
             throw new d.error(d, 'invalid', 'Variable Name', d.function.name);
         const data = d.getEnvironmentVariable(variable);

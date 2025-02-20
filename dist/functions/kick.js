@@ -31,10 +31,10 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [userID, guildID = d.ctx?.guild?.id, reason]) => {
         if (userID === undefined)
-            throw new d.error(d, 'required', 'name', d.function?.name);
+            throw new d.error(d, 'required', 'name', d.function!.name);
         const member = await d.util.getMember(userID, d.ctx?.guild);
         if (!member)
-            throw new d.error(d, 'invalid', 'member', d.function?.name);
+            throw new d.error(d, 'invalid', 'member', d.function!.name);
         await member.kick(reason).catch(e => {
             throw new d.error(d, 'custom', (0, util_1.inspect)(e));
         });

@@ -9,14 +9,14 @@ function getFunction(d: Data, func: BaseFunction, property: string) {
 			return func.parameters && func.parameters?.length > 0
 				? func.parameters
 						?.map(f => {
-							return f.required ? f.name.toString() : f.name.toLowerCase() + '?'
+							return f.required ? f.name.toString() : `${f.name.toLowerCase()}?`
 						})
 						.join(';')
 				: 'none'
 		case 'supportbuilders':
-			return func.builders + ''
+			return `${func.builders}`
 		case 'supportinjection':
-			return func.injectable + ''
+			return `${func.injectable}`
 		default:
 			return 'none'
 	}
@@ -35,10 +35,10 @@ export default new BaseFunction({
 	],
 	code: async (d, [name, property]) => {
 		if (name === undefined)
-			throw new d.error(d, 'required', 'name', d.function?.name!)
+			throw new d.error(d, 'required', 'name', d.function!.name)
 
 		const func = d.functions?.get(name.toLowerCase())
-		if (!func) throw new d.error(d, 'invalid', 'name', d.function?.name!)
+		if (!func) throw new d.error(d, 'invalid', 'name', d.function!.name)
 
 		const properties = [
 			'description',
@@ -47,7 +47,7 @@ export default new BaseFunction({
 			'supportinjection'
 		]
 		if (!properties.includes(property.toLowerCase()))
-			throw new d.error(d, 'invalid', 'property', d.function?.name!)
+			throw new d.error(d, 'invalid', 'property', d.function!.name)
 
 		return getFunction(d, func, property)
 	}

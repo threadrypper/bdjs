@@ -32,7 +32,7 @@ function getMessageProperty(d: Data, property: string, embed: Embed) {
 		case 'thumbnail':
 			return embed.thumbnail
 		default:
-			throw new d.error(d, 'invalid', 'Embed Property', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Embed Property', d.function!.name)
 	}
 }
 
@@ -72,29 +72,29 @@ export default new BaseFunction({
 		]
 	) => {
 		if (property === undefined)
-			throw new d.error(d, 'required', 'Property', d.function?.name!)
-		if (isNaN(Number(index)) || Number(index) < 0)
-			throw new d.error(d, 'invalid', 'Index', d.function?.name!)
+			throw new d.error(d, 'required', 'Property', d.function!.name)
+		if (Number.isNaN(Number(index)) || Number(index) < 0)
+			throw new d.error(d, 'invalid', 'Index', d.function!.name)
 		if (guildID === undefined)
-			throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 		if (channelID === undefined)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 		if (messageID === undefined)
-			throw new d.error(d, 'invalid', 'Message ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Message ID', d.function!.name)
 
 		const guild = await d.bot?.guilds.cache.get(guildID)
-		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function?.name!)
+		if (!guild) throw new d.error(d, 'invalid', 'Guild ID', d.function!.name)
 
 		const channel = await d.util.getChannel<GuildTextBasedChannel>(
 			channelID,
 			guild
 		)
 		if (!channel)
-			throw new d.error(d, 'invalid', 'Channel ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Channel ID', d.function!.name)
 
 		const message = await d.util.getMessage(channel, messageID)
 		if (!message)
-			throw new d.error(d, 'invalid', 'Message ID', d.function?.name!)
+			throw new d.error(d, 'invalid', 'Message ID', d.function!.name)
 		if (message.embeds.length === 0)
 			throw new d.error(d, 'custom', 'Unable to get embeds from message.')
 

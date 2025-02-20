@@ -31,9 +31,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [directory, variable, encoding = 'utf-8']) => {
         if (directory === undefined)
-            throw new d.error(d, 'required', 'Directory', d.function?.name);
+            throw new d.error(d, 'required', 'Directory', d.function!.name);
         if (variable === undefined)
-            throw new d.error(d, 'required', 'Variable Name', d.function?.name);
+            throw new d.error(d, 'required', 'Variable Name', d.function!.name);
         await (0, promises_1.readFile)(directory, {
             encoding: encoding
         }).then(str => {

@@ -1,11 +1,11 @@
 import type { BaseFieldOptions, BaseFunction } from '../structures/Function'
-import { mkdir, readdir, writeFile } from 'fs/promises'
+import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { CommandManager } from '../managers/Command'
 import type { BaseEvent } from '../structures/Event'
 import { AsciiTable3 } from 'ascii-table3'
 import { BDJSLog } from './BDJSLog'
 import { Util } from './Util'
-import { join } from 'path'
+import { join } from 'node:path'
 
 interface FunctionExtraOptions {
 	/** If function supports builders. */
@@ -70,11 +70,11 @@ class FunctionInfo {
 				: undefined
 		const special =
 			this.extraOptions.builders && this.extraOptions.injection
-				? `## Extra Data\n> Supports Builders\n> Supports Injection`
+				? '## Extra Data\n> Supports Builders\n> Supports Injection'
 				: this.extraOptions.builders
-					? `## Extra Data\n> Supports Builders`
+					? '## Extra Data\n> Supports Builders'
 					: this.extraOptions.injection
-						? `## Extra Data\n> Supports Injection`
+						? '## Extra Data\n> Supports Injection'
 						: undefined
 		return [
 			`# $${this.name}`,
@@ -112,10 +112,10 @@ class FunctionInfo {
 				? this.extraOptions.params.map(x =>
 						x.required
 							? Util.camelCase(x.name.toLowerCase())
-							: Util.camelCase(x.name.toLowerCase() + '?')
+							: Util.camelCase(`${x.name.toLowerCase()}?`)
 					)
 				: []
-		return `$${this.name + (args.length > 0 ? '[' + args.join(';') + ']' : '')}`
+		return `$${this.name + (args.length > 0 ? `[${args.join(';')}]` : '')}`
 	}
 }
 
@@ -137,9 +137,9 @@ export class Generators {
 		for (const file of files) {
 			const data: BaseFunction = require(
 				join(input_providing_cwd ? '' : process.cwd(), input, file)
-			)['default']
+			).default
 			if (!data) {
-				BDJSLog.error('Unable to read: ' + file)
+				BDJSLog.error(`Unable to read: ${file}`)
 				continue
 			}
 
@@ -202,7 +202,7 @@ export class Generators {
 				join(
 					!output_providing_cwd ? '' : process.cwd(),
 					...paths,
-					func.name + '.md'
+					`${func.name}.md`
 				),
 				content
 			)
@@ -272,7 +272,7 @@ export class Generators {
 		for (const file of files) {
 			const event: BaseEvent<any> = require(
 				join(__dirname.replace('util', 'events'), file)
-			)['default']
+			).default
 			rows.push([event.name, event.description ?? 'NO_DESCRIPTION'])
 		}
 
@@ -293,7 +293,7 @@ export class Generators {
 		for (const file of files) {
 			const event: BaseEvent<any> = require(
 				join(__dirname.replace('util', 'events'), file)
-			)['default']
+			).default
 			data.push(JSON.parse(JSON.stringify(event)))
 		}
 
