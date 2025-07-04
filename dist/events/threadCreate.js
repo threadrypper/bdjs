@@ -13,7 +13,9 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'threadCreate');
         const data = new Data_1.Data({
-            bot, ctx: context, env: { newlyCreated },
+            bot,
+            ctx: context,
+            env: { newlyCreated },
             commandType: 'threadCreate',
             functions: bot.functions,
             reader: bot.reader

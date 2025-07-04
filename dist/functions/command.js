@@ -35,7 +35,7 @@ exports.default = new Function_1.BaseFunction({
             throw new d.error(d, 'required', 'Command Name', d.function.name);
         if (property === undefined)
             throw new d.error(d, 'required', 'Command Property', d.function.name);
-        const commands = Array.from(d.bot.commands.values()).filter(cmd => cmd.type === type);
+        const commands = Array.from(d.bot?.commands.values()).filter(cmd => cmd.type === type);
         const command = commands.find(cmd => cmd.name === name);
         if (!command)
             throw new d.error(d, 'invalid', 'Command Name', d.function.name);

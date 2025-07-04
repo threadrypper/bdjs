@@ -33,8 +33,11 @@ class VariableManager {
             throw new Error('Invalid table name provided!');
         for (const [key, value] of Object.entries(data)) {
             this._data[table][key] =
-                typeof value === 'object' ? JSON.stringify(value)
-                    : typeof value !== 'string' ? value.toString() : value;
+                typeof value === 'object'
+                    ? JSON.stringify(value)
+                    : typeof value !== 'string'
+                        ? value.toString()
+                        : value;
         }
         return this;
     }
@@ -78,7 +81,7 @@ class VariableManager {
      * @param table Table name.
      */
     async has(name, table = 'main') {
-        return (await this.db.has(table, name)); // && this.checkVar(name, table)
+        return await this.db.has(table, name); // && this.checkVar(name, table)
     }
     /**
      * Delete a value from the database.

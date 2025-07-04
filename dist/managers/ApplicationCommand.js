@@ -4,15 +4,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BDJSApplicationCommandManager = void 0;
 const tslib_1 = require("tslib");
 const discord_js_1 = require("discord.js");
-const promises_1 = require("fs/promises");
+const promises_1 = require("node:fs/promises");
 const BDJSLog_1 = require("../util/BDJSLog");
-const path_1 = require("path");
+const node_path_1 = require("node:path");
 class BDJSApplicationCommandManager {
     constructor(bot) {
         _BDJSApplicationCommandManager_bot.set(this, void 0);
         _BDJSApplicationCommandManager_commands.set(this, void 0);
         tslib_1.__classPrivateFieldSet(this, _BDJSApplicationCommandManager_bot, bot, "f");
-        tslib_1.__classPrivateFieldSet(this, _BDJSApplicationCommandManager_commands, new discord_js_1.Collection, "f");
+        tslib_1.__classPrivateFieldSet(this, _BDJSApplicationCommandManager_commands, new discord_js_1.Collection(), "f");
     }
     /**
      * Upload slash command specifications to the Discord API.
@@ -21,29 +21,33 @@ class BDJSApplicationCommandManager {
      */
     async load(dir, providing_cwd = false) {
         const root = providing_cwd ? '' : process.cwd();
-        const files = await (0, promises_1.readdir)((0, path_1.join)(root, dir));
+        const files = await (0, promises_1.readdir)((0, node_path_1.join)(root, dir));
         for (const file of files) {
-            const stat = await (0, promises_1.lstat)((0, path_1.join)(root, dir, file));
+            const stat = await (0, promises_1.lstat)((0, node_path_1.join)(root, dir, file));
             if (stat.isDirectory()) {
-                await this.load((0, path_1.join)(dir, file), providing_cwd);
+                await this.load((0, node_path_1.join)(dir, file), providing_cwd);
                 continue;
             }
-            const spec = require((0, path_1.join)(root, dir, file));
+            const spec = require((0, node_path_1.join)(root, dir, file));
             if (!Array.isArray(spec)) {
                 if (!('data' in spec))
                     continue;
-                tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_commands, "f").set(spec.data.name, spec.data instanceof discord_js_1.SlashCommandBuilder || spec.data instanceof discord_js_1.ContextMenuCommandBuilder
-                    ? spec.data.toJSON() : spec.data);
+                tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_commands, "f").set(spec.data?.name, spec.data instanceof discord_js_1.SlashCommandBuilder ||
+                    spec.data instanceof discord_js_1.ContextMenuCommandBuilder
+                    ? spec.data?.toJSON()
+                    : spec.data);
             }
             else {
                 for (const cmd of spec) {
                     if (!('data' in cmd))
                         continue;
-                    tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_commands, "f").set(cmd.data.name, cmd.data instanceof discord_js_1.SlashCommandBuilder || cmd.data instanceof discord_js_1.ContextMenuCommandBuilder
-                        ? cmd.data.toJSON() : cmd.data);
+                    tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_commands, "f").set(cmd.data?.name, cmd.data instanceof discord_js_1.SlashCommandBuilder ||
+                        cmd.data instanceof discord_js_1.ContextMenuCommandBuilder
+                        ? cmd.data?.toJSON()
+                        : cmd.data);
                 }
             }
-            delete require.cache[(0, path_1.join)(root, dir, file)];
+            delete require.cache[(0, node_path_1.join)(root, dir, file)];
         }
     }
     /**
@@ -53,9 +57,10 @@ class BDJSApplicationCommandManager {
     async sync(guildIDs) {
         if (Array.isArray(guildIDs)) {
             for (const guildID of guildIDs) {
-                const guild = tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_bot, "f").guilds.cache.get(guildID) ?? await tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_bot, "f").guilds.fetch(guildID);
+                const guild = tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_bot, "f").guilds.cache.get(guildID) ??
+                    (await tslib_1.__classPrivateFieldGet(this, _BDJSApplicationCommandManager_bot, "f").guilds.fetch(guildID));
                 if (!guild) {
-                    BDJSLog_1.BDJSLog.error('Cannot sync command specifications to "' + guildID + '"');
+                    BDJSLog_1.BDJSLog.error(`Cannot sync command specifications to "${guildID}"`);
                     continue;
                 }
                 await guild.commands.set(this.commandsArray).catch(e => {

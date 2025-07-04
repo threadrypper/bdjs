@@ -12,7 +12,7 @@ class StatusManager {
         _StatusManager_data.set(this, void 0);
         _StatusManager_bot.set(this, void 0);
         tslib_1.__classPrivateFieldSet(this, _StatusManager_bot, bot, "f");
-        tslib_1.__classPrivateFieldSet(this, _StatusManager_data, new discord_js_1.Collection, "f");
+        tslib_1.__classPrivateFieldSet(this, _StatusManager_data, new discord_js_1.Collection(), "f");
     }
     /**
      * Add a status data to the manager.
@@ -26,18 +26,21 @@ class StatusManager {
                 BDJSLog_1.BDJSLog.error('Missing status text!');
                 break;
             }
-            else if (typeof time !== 'string' && typeof time !== 'number') {
+            if (typeof time !== 'string' && typeof time !== 'number') {
                 BDJSLog_1.BDJSLog.error('Invalid status time provided!');
                 break;
             }
             if (typeof time === 'string')
                 time = (0, ms_1.default)(time);
-            if (time === null || isNaN(Number(time))) {
+            if (time === null || Number.isNaN(Number(time))) {
                 BDJSLog_1.BDJSLog.error('Invalid status time provided!');
                 break;
             }
             tslib_1.__classPrivateFieldGet(this, _StatusManager_data, "f").set(tslib_1.__classPrivateFieldGet(this, _StatusManager_data, "f").size.toString(), {
-                text, type, status, time
+                text,
+                type,
+                status,
+                time
             });
         }
         return this;
@@ -53,7 +56,7 @@ class StatusManager {
             tslib_1.__classPrivateFieldGet(this, _StatusManager_bot, "f").user.presence.set({
                 activities: [
                     {
-                        name: text.code,
+                        name: text?.code,
                         type: data.type
                     }
                 ],

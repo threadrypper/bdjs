@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventManager = void 0;
 const Bot_1 = require("../structures/Bot");
 const Event_1 = require("../structures/Event");
-const promises_1 = require("fs/promises");
+const promises_1 = require("node:fs/promises");
 const BDJSLog_1 = require("../util/BDJSLog");
-const path_1 = require("path");
+const node_path_1 = require("node:path");
 class EventManager extends Map {
     /**
      * Load events from a directory.
@@ -18,14 +18,13 @@ class EventManager extends Map {
             if (file.endsWith('.js')) {
                 if (file === 'error.js' || file === 'ready.js')
                     continue;
-                const event = require((0, path_1.join)(root, file)).default;
-                if (event instanceof Event_1.BaseEvent
-                    &&
-                        bot.extraOptions.events.includes(event.name)) {
+                const event = require((0, node_path_1.join)(root, file)).default;
+                if (event instanceof Event_1.BaseEvent &&
+                    bot.extraOptions.events.includes(event.name)) {
                     bot[event.once === true ? 'once' : 'on']((0, Bot_1.reformulateEvents)([event.name], 'DJS').join(''), async (...args) => {
                         await event.listener(bot, ...args);
                     });
-                    delete require.cache[(0, path_1.join)(root, file)];
+                    delete require.cache[(0, node_path_1.join)(root, file)];
                     if (bot.extraOptions.debug === true)
                         BDJSLog_1.BDJSLog.debug(`"${event.name}" is being listened.`);
                 }

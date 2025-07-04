@@ -27,7 +27,8 @@ exports.default = new Function_1.BaseFunction({
             throw new d.error(d, 'required', 'Cases', d.function.name);
         const cases = new Map();
         const data = d.extend(d);
-        data.functions.add({
+        data.functions
+            .add({
             name: 'case',
             description: 'Switch case.',
             parameters: [
@@ -45,7 +46,7 @@ exports.default = new Function_1.BaseFunction({
                     resolver: 'String',
                     compile: false,
                     value: 'none'
-                },
+                }
             ],
             code: async (t, [name, executable]) => {
                 if (name === undefined)
@@ -66,7 +67,7 @@ exports.default = new Function_1.BaseFunction({
                     resolver: 'String',
                     compile: false,
                     value: 'none'
-                },
+                }
             ],
             code: async (t, [executable]) => {
                 if (executable === undefined)
@@ -79,7 +80,6 @@ exports.default = new Function_1.BaseFunction({
             throw new data.error(data, 'required', 'Default Case', data.function.name);
         if (cases.has(text))
             return await d.reader.compile(cases.get(text), d);
-        else
-            return await d.reader.compile(cases.get('__BDJS__DEFAULT__'), d);
+        return await d.reader.compile(cases.get('__BDJS__DEFAULT__'), d);
     }
 });

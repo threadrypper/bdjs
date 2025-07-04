@@ -47,7 +47,7 @@ export class BDJSApplicationCommandManager {
 			if (!Array.isArray(spec)) {
 				if (!('data' in spec)) continue
 				this.#commands.set(
-					spec.data?.name,
+					spec.data?.name!,
 					spec.data instanceof SlashCommandBuilder ||
 						spec.data instanceof ContextMenuCommandBuilder
 						? spec.data?.toJSON()
@@ -57,7 +57,7 @@ export class BDJSApplicationCommandManager {
 				for (const cmd of spec) {
 					if (!('data' in cmd)) continue
 					this.#commands.set(
-						cmd.data?.name,
+						cmd.data?.name!,
 						cmd.data instanceof SlashCommandBuilder ||
 							cmd.data instanceof ContextMenuCommandBuilder
 							? cmd.data?.toJSON()

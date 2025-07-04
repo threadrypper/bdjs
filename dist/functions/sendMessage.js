@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
 const discord_js_1 = require("discord.js");
-const util_1 = require("util");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Sends a message to the provided channel.',
     parameters: [
@@ -38,22 +38,22 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [payload, channelID = d.ctx?.channel?.isTextBased() ? d.ctx.channel.id : undefined, guildID = d.ctx?.guild?.id, returnID = 'false']) => {
         if (payload === undefined)
-            throw new d.error(d, 'required', 'Message Payload', d.function!.name);
+            throw new d.error(d, 'required', 'Message Payload', d.function.name);
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function.name);
         if (channelID === undefined)
-            throw new d.error(d, 'invalid', 'Channel ID', d.function!.name);
+            throw new d.error(d, 'invalid', 'Channel ID', d.function.name);
         const guild = d.bot?.guilds.cache.get(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild', d.function!.name);
+            throw new d.error(d, 'invalid', 'Guild', d.function.name);
         const channel = await d.util.getChannel(channelID, guild);
-        if (!channel || channel && !channel.isTextBased())
-            throw new d.error(d, 'invalid', 'Channel', d.function!.name);
+        if (!channel || (channel && !channel.isTextBased()))
+            throw new d.error(d, 'invalid', 'Channel', d.function.name);
         const compiled = await d.reader.compile(payload, d);
         if (compiled.code)
             d.container.pushContent(compiled.code);
-        const message = await channel.send(d.container).catch((e) => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e, { depth: 2 }));
+        const message = await channel.send(d.container).catch(e => {
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e, { depth: 2 }));
         });
         d.container.clear();
         if (message instanceof discord_js_1.Message && returnID === 'true')

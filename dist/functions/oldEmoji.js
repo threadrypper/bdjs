@@ -14,9 +14,8 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
+    allowFor: t => t === 'emojiUpdate',
     code: async (d, [property]) => {
-        if (d.commandType !== 'emojiUpdate')
-            throw new d.error(d, 'disallowed', d.function.name, 'onEmojiUpdate event');
         if (property === undefined)
             throw new d.error(d, 'required', 'Property', d.function.name);
         const types = Object.keys(Properties_1.default.Emoji);

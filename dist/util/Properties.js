@@ -11,7 +11,7 @@ exports.default = {
             code: a => a.createdTimestamp
         },
         name: {
-            description: 'The activity\'s name.',
+            description: "The activity's name.",
             code: a => a.name
         },
         details: {
@@ -19,15 +19,15 @@ exports.default = {
             code: a => a.details
         },
         state: {
-            description: 'The activity\'s state.',
+            description: "The activity's state.",
             code: a => a.state
         },
         type: {
-            description: 'The activity\'s type.',
+            description: "The activity's type.",
             code: a => a.type
         },
         url: {
-            description: 'The activity\'s URL.',
+            description: "The activity's URL.",
             code: a => a.url
         }
     }),
@@ -72,22 +72,32 @@ exports.default = {
         },
         channelcount: {
             description: 'Total amount of channels.',
-            code: b => b.guilds.cache.map(t => t.channels.cache.size).reduce((a, b) => a + b).toString()
+            code: b => b.guilds.cache
+                .map(t => t.channels.cache.size)
+                .reduce((a, b) => a + b)
+                .toString()
         },
         commands: {
             description: 'Retrieves all loaded command names.',
-            code: b => Array.from(b.commands.values()).filter(cmd => cmd.name).join(',')
+            code: b => Array.from(b.commands.values())
+                .filter(cmd => cmd.name)
+                .join(',')
         },
         emojicount: {
             description: 'Total amount of emojis.',
-            code: b => b.guilds.cache.map(t => t.emojis.cache.size).reduce((a, b) => a + b).toString()
+            code: b => b.guilds.cache
+                .map(t => t.emojis.cache.size)
+                .reduce((a, b) => a + b)
+                .toString()
         },
         globalcommands: {
             description: 'Retrieves all synced application command names.',
             // @ts-ignore
             code: b => {
-                return b.application.commands.fetch().then((cmds) => {
-                    return Array.from(cmds.values()).map(x => x.id).join(',');
+                return b.application.commands.fetch().then(cmds => {
+                    return Array.from(cmds.values())
+                        .map(x => x.id)
+                        .join(',');
                 });
             }
         },
@@ -107,18 +117,20 @@ exports.default = {
             description: 'The owner IDs of this client.',
             // @ts-ignore
             code: b => {
-                return b.application.fetch().then((app) => {
+                return b.application.fetch().then(app => {
                     if (app.owner instanceof discord_js_1.User) {
                         return app.owner.id;
                     }
-                    else
-                        return app.owner?.members.map(t => t.id).join(',');
+                    return app.owner?.members.map(t => t.id).join(',');
                 });
             }
         },
         usercount: {
             description: 'Total amount of users.',
-            code: b => b.guilds.cache.map(t => t.memberCount).reduce((a, b) => a + b).toString()
+            code: b => b.guilds.cache
+                .map(t => t.memberCount)
+                .reduce((a, b) => a + b)
+                .toString()
         },
         uptime: {
             description: 'The client connection time, in milliseconds.',
@@ -132,7 +144,7 @@ exports.default = {
     Channel: defineProperties({
         bitrate: {
             description: 'The channel bitrate.',
-            code: c => c.isVoiceBased() ? c.bitrate : undefined
+            code: c => (c.isVoiceBased() ? c.bitrate : undefined)
         },
         createdtimestamp: {
             description: 'The time this channel was created, in milliseconds.',
@@ -148,7 +160,7 @@ exports.default = {
         },
         isfull: {
             description: 'Whether this channel is full.',
-            code: c => c.isVoiceBased() ? c.full : undefined
+            code: c => (c.isVoiceBased() ? c.full : undefined)
         },
         ismanageable: {
             description: 'Whether this channel is manageable.',
@@ -164,7 +176,7 @@ exports.default = {
         },
         isjoinable: {
             description: 'Whether this channel is joinable.',
-            code: c => c.isVoiceBased() ? c.joinable : undefined
+            code: c => (c.isVoiceBased() ? c.joinable : undefined)
         },
         lastmessageid: {
             description: 'ID of the last message sent in this channel.',
@@ -196,11 +208,13 @@ exports.default = {
         },
         threads: {
             description: 'A list of threads in this channel.',
-            code: c => c.type === discord_js_1.ChannelType.GuildText ? c.threads.cache.map(x => x.name).join(',') : undefined
+            code: c => c.type === discord_js_1.ChannelType.GuildText
+                ? c.threads.cache.map(x => x.name).join(',')
+                : undefined
         },
         topic: {
             description: 'The topic of this channel.',
-            code: c => c.type === discord_js_1.ChannelType.GuildText ? c.topic : undefined
+            code: c => (c.type === discord_js_1.ChannelType.GuildText ? c.topic : undefined)
         },
         type: {
             description: 'The channel type.',
@@ -208,7 +222,7 @@ exports.default = {
         },
         userlimit: {
             description: 'The user limit for this voice channel.',
-            code: c => c.isVoiceBased() ? c.userLimit.toString() : undefined
+            code: c => (c.isVoiceBased() ? c.userLimit.toString() : undefined)
         },
         url: {
             description: 'The URL of this channel.',
@@ -216,7 +230,7 @@ exports.default = {
         },
         videoqualitymode: {
             description: 'The video quality mode for this voice channel.',
-            code: c => c.isVoiceBased() ? c.videoQualityMode?.toString() : undefined
+            code: c => (c.isVoiceBased() ? c.videoQualityMode?.toString() : undefined)
         }
     }),
     Emoji: defineProperties({
@@ -267,7 +281,7 @@ exports.default = {
             code: g => g.afkChannelId
         },
         afktimeout: {
-            description: 'The guild\'s AFK timeout.',
+            description: "The guild's AFK timeout.",
             code: g => g.afkTimeout
         },
         available: {
@@ -286,13 +300,13 @@ exports.default = {
             description: 'Returns all the application command IDs for this guild.',
             // @ts-ignore
             code: g => {
-                return g.commands.fetch().then((cmds) => {
+                return g.commands.fetch().then(cmds => {
                     return cmds.map(cmd => cmd.id).join(',');
                 });
             }
         },
         defaultmessagenotification: {
-            description: 'Returns this guild\'s default message notifications setting.',
+            description: "Returns this guild's default message notifications setting.",
             code: g => g.defaultMessageNotifications.toString()
         },
         description: {
@@ -312,11 +326,11 @@ exports.default = {
             code: g => g.features.join(',')
         },
         icon: {
-            description: 'Guild\'s icon.',
+            description: "Guild's icon.",
             code: g => g.iconURL()
         },
         id: {
-            description: 'Guild\'s ID.',
+            description: "Guild's ID.",
             code: g => g.id
         },
         ispartnered: {
@@ -340,7 +354,7 @@ exports.default = {
             code: g => g.memberCount
         },
         mfalevel: {
-            description: 'This guild\'s MFA level.',
+            description: "This guild's MFA level.",
             code: g => g.mfaLevel.toString()
         },
         name: {
@@ -348,7 +362,7 @@ exports.default = {
             code: g => g.name
         },
         ownerid: {
-            description: 'The ID of the guild\'s owner.',
+            description: "The ID of the guild's owner.",
             code: g => g.ownerId
         },
         preferredlocale: {
@@ -356,15 +370,15 @@ exports.default = {
             code: g => g.preferredLocale.toString()
         },
         premiumsubscriptioncount: {
-            description: 'This guild\'s boost count.',
+            description: "This guild's boost count.",
             code: g => g.premiumSubscriptionCount
         },
         premiumtier: {
-            description: 'This guild\'s boost count.',
+            description: "This guild's boost count.",
             code: g => g.premiumTier.toString()
         },
         publicupdateschannelid: {
-            description: 'This guild\'s public updates channel ID.',
+            description: "This guild's public updates channel ID.",
             code: g => g.publicUpdatesChannelId
         },
         roles: {
@@ -372,103 +386,103 @@ exports.default = {
             code: g => g.roles.cache.map(x => x.id).join(',')
         },
         ruleschannelid: {
-            description: 'This guild\'s rules channel ID.',
+            description: "This guild's rules channel ID.",
             code: g => g.rulesChannelId
         },
         systemchannelid: {
-            description: 'This guild\'s system channel ID.',
+            description: "This guild's system channel ID.",
             code: g => g.systemChannelId
         },
         verificationlevel: {
-            description: 'This guild\'s verification level.',
+            description: "This guild's verification level.",
             code: g => g.verificationLevel.toString()
         },
         widgetchannelid: {
-            description: 'This guild\'s widget channel ID.',
+            description: "This guild's widget channel ID.",
             code: g => g.widgetChannelId
         }
     }),
     Member: defineProperties({
         avatar: {
             description: 'Retrieves the avatar of this guild member.',
-            code: (m) => m.displayAvatarURL()
+            code: m => m.displayAvatarURL()
         },
         banner: {
             description: 'Retrieves the avatar of this guild member.',
-            code: (m) => m.user.bannerURL()
+            code: m => m.user.bannerURL()
         },
         displayname: {
             description: 'The displayed name of this member.',
-            code: (m) => m.displayName
+            code: m => m.displayName
         },
         dmchannelid: {
-            description: 'The channel ID of this member\'s DM.',
-            code: (m) => m.dmChannel?.id
+            description: "The channel ID of this member's DM.",
+            code: m => m.dmChannel?.id
         },
         guildid: {
             description: 'The guild this member is in.',
-            code: (m) => m.guild.id
+            code: m => m.guild.id
         },
         hexcolor: {
-            description: 'The user\'s highest role hexadecimal color.',
-            code: (m) => m.displayHexColor
+            description: "The user's highest role hexadecimal color.",
+            code: m => m.displayHexColor
         },
         highestroleid: {
             description: 'The ID of the highest role of this member.',
-            code: (m) => m.roles.highest.id
+            code: m => m.roles.highest.id
         },
         id: {
             description: 'Guild member ID.',
-            code: (m) => m.id
+            code: m => m.id
         },
         isbannable: {
             description: 'Whether this guild member is bannable.',
-            code: (m) => m.bannable
+            code: m => m.bannable
         },
         isbot: {
             description: 'Whether this guild member is bot.',
-            code: (m) => m.user.bot
+            code: m => m.user.bot
         },
         iskickable: {
             description: 'Whether this guild member is kickable.',
-            code: (m) => m.kickable
+            code: m => m.kickable
         },
         ismanageable: {
             description: 'Whether this guild member is manageable.',
-            code: (m) => m.manageable
+            code: m => m.manageable
         },
         ismoderable: {
             description: 'Whether this guild member is moderable.',
-            code: (m) => m.moderatable
+            code: m => m.moderatable
         },
         ismuted: {
             description: 'Whether this guild member is muted.',
-            code: (m) => m.isCommunicationDisabled()
+            code: m => m.isCommunicationDisabled()
         },
         ispending: {
             description: 'Whether this guild member is pending.',
-            code: (m) => m.pending
+            code: m => m.pending
         },
         joinedtimestamp: {
             description: 'The time this member joined the server, in milliseconds.',
-            code: (m) => m.joinedTimestamp
+            code: m => m.joinedTimestamp
         },
         nickname: {
             description: 'The nickname of this member.',
-            code: (m) => m.nickname
+            code: m => m.nickname
         },
         permissions: {
             description: 'Join all permission this member has.',
-            code: (m) => m.permissions.toArray().join(',')
+            code: m => m.permissions.toArray().join(',')
         },
         roles: {
             description: 'Join all role IDs this member has.',
-            code: (m) => m.roles.cache.map(role => role.id).join(',')
+            code: m => m.roles.cache.map(role => role.id).join(',')
         },
         voicechannelid: {
             description: 'The voice channel ID of this member, if any.',
-            code: (m) => m.voice.channel?.id
-        },
+            code: m => m.voice.channel?.id
+        }
     }),
     Message: defineProperties({
         authorid: {
@@ -543,63 +557,65 @@ exports.default = {
     Role: defineProperties({
         createdtimestamp: {
             description: 'The time this role was created, in milliseconds.',
-            code: (r) => r.createdTimestamp
+            code: r => r.createdTimestamp
         },
         hexcolor: {
             description: 'Color this role has, as hexadecimal.',
-            code: (r) => r.hexColor
+            code: r => r.hexColor
         },
         icon: {
             description: 'The icon of this role, if any.',
-            code: (r) => r.iconURL()
+            code: r => r.iconURL()
         },
         id: {
             description: 'Role ID.',
-            code: (r) => r.id
+            code: r => r.id
         },
         iseditable: {
             description: 'Whether this role is editable.',
-            code: (r) => r.editable
+            code: r => r.editable
         },
         iseveryonerole: {
             description: 'Whether this role is the @everyone role for this guild.',
-            code: (r) => r.id === r.guild.id
+            code: r => r.id === r.guild.id
         },
         ishoisted: {
             description: 'Whether this role is hoisted.',
-            code: (r) => r.hoist
+            code: r => r.hoist
         },
         ismanaged: {
             description: 'Whether this role is managed.',
-            code: (r) => r.managed
+            code: r => r.managed
         },
         ismentionable: {
             description: 'Whether this role is mentionable.',
-            code: (r) => r.mentionable
+            code: r => r.mentionable
         },
         name: {
             description: 'Name this role has.',
-            code: (r) => r.name
+            code: r => r.name
         },
         members: {
             description: 'Cached member IDs with this role.',
-            code: (r) => Array.from(r.members.values()).map(m => m.id).join(',')
+            code: r => Array.from(r.members.values())
+                .map(m => m.id)
+                .join(',')
         },
         mention: {
             description: 'Returns the role mention.',
-            code: (r) => r.toString()
+            code: r => r.toString()
         },
         permissions: {
             description: 'Permission list this role has.',
-            code: (r) => r.permissions.toArray().join(',')
+            code: r => r.permissions.toArray().join(',')
         },
         position: {
             description: 'This role position.',
-            code: (r) => r.position
+            code: r => r.position
         },
         rawposition: {
             description: 'This role raw position.',
-            code: (r) => r.rawPosition
+            code: r => r.rawPosition
         }
     }),
     Sticker: defineProperties({
@@ -687,7 +703,9 @@ exports.default = {
         },
         members: {
             description: 'Join all guild members IDs participating in this thread.',
-            code: t => Array.from(t.guildMembers.values()).map(m => m.id).join(',')
+            code: t => Array.from(t.guildMembers.values())
+                .map(m => m.id)
+                .join(',')
         },
         membercount: {
             description: 'Retrieves the member count participating in this thread.',
@@ -720,36 +738,36 @@ exports.default = {
     }),
     User: defineProperties({
         accentcolor: {
-            description: 'The user\'s accent hexadecimal color.',
-            code: (u) => u.hexAccentColor
+            description: "The user's accent hexadecimal color.",
+            code: u => u.hexAccentColor
         },
         avatar: {
             description: 'Retrieves the avatar of this user.',
-            code: (u) => u.displayAvatarURL()
+            code: u => u.displayAvatarURL()
         },
         avatardecoration: {
             description: 'Retrieves the avatar decoration of this user, if any.',
-            code: (u) => u.avatarDecorationURL()
+            code: u => u.avatarDecorationURL()
         },
         banner: {
             description: 'Retrieves the banner of this user.',
-            code: (u) => u.bannerURL()
+            code: u => u.bannerURL()
         },
         createdtimestamp: {
             description: 'The time this user created its account, in milliseconds.',
-            code: (u) => u.createdTimestamp
+            code: u => u.createdTimestamp
         },
         displayname: {
             description: 'The displayed name of this user.',
-            code: (u) => u.displayName
+            code: u => u.displayName
         },
         dmchannelid: {
-            description: 'The channel ID of this user\'s DM.',
-            code: (u) => u.dmChannel?.id
+            description: "The channel ID of this user's DM.",
+            code: u => u.dmChannel?.id
         },
         id: {
             description: 'User ID.',
-            code: (u) => u.id
+            code: u => u.id
         },
         isbot: {
             description: 'Whether user is bot.',
@@ -757,11 +775,11 @@ exports.default = {
         },
         globalname: {
             description: 'The global name this user has.',
-            code: (u) => u.globalName
+            code: u => u.globalName
         },
         username: {
             description: 'The username this user has.',
-            code: (u) => u.username
+            code: u => u.username
         }
     })
 };

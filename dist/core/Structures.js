@@ -23,8 +23,7 @@ class FunctionField {
      * @returns {string}
      */
     toString() {
-        return typeof this.value === undefined
-            ? 'undefined' : this.value;
+        return typeof this.value === 'undefined' ? 'undefined' : this.value;
     }
     /**
      * Writes a character into the field value.
@@ -130,7 +129,10 @@ class RawFunction {
      * Get the compiled function as raw source.
      */
     get toString() {
-        return this.name + (this.fields.length === 0 ? '' : ('[' + this.fields.map(f => f.value) + ']'));
+        return (this.name +
+            (this.fields.length === 0
+                ? ''
+                : `[${this.fields.map(f => f.value)}]`));
     }
 }
 exports.RawFunction = RawFunction;

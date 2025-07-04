@@ -24,10 +24,11 @@ const escapers = [
  * @returns {string}
  */
 function EscapeText(text) {
+    let result = text;
     for (const escaper of escapers) {
-        text = text.replace(new RegExp(`${escaper[1]}`, 'ig'), escaper[0]);
+        result = result.replace(new RegExp(`${escaper[1]}`, 'ig'), escaper[0]);
     }
-    return text;
+    return result;
 }
 /**
  * Unescape a text.
@@ -35,10 +36,11 @@ function EscapeText(text) {
  * @returns {string}
  */
 function UnescapeText(text) {
+    let result = text;
     for (const escaper of escapers) {
-        text = text.replace(new RegExp(`${escaper[0]}`, 'ig'), escaper[1]);
+        result = result.replace(new RegExp(`${escaper[0]}`, 'ig'), escaper[1]);
     }
-    return text;
+    return result;
 }
 /**
  * Removes unsafe text from code results.
@@ -60,20 +62,25 @@ class Reader {
      */
     async compile(code, data) {
         data.setEnvironmentVariable('__BDJS__PERFORMANCE__', performance.now());
-        const lines = code.trim().split('\n').map(line => line.trim()).join('\n');
+        const lines = code
+            .trim()
+            .split('\n')
+            .map(line => line.trim())
+            .join('\n');
         const compiled = {
             functions: [],
             strings: [],
-            function: new Structures_1.RawFunction,
-            string: new Structures_1.RawString,
+            function: new Structures_1.RawFunction(),
+            string: new Structures_1.RawString(),
             depth: 0,
             line: 1,
             type: 'any',
-            temp: new Structures_1.RawString
+            temp: new Structures_1.RawString()
         };
         // Reading each line character.
         for (let i = 0; i < lines.length; i++) {
-            const char = lines[i], next = lines[i + 1];
+            const char = lines[i];
+            const next = lines[i + 1];
             if (char === '\n')
                 compiled.line++;
             if ('[' === char)
@@ -86,7 +93,7 @@ class Reader {
                     compiled.type = 'function:name';
                     if (compiled.string.isEmpty === false) {
                         compiled.strings.push(compiled.string);
-                        compiled.string = new Structures_1.RawString;
+                        compiled.string = new Structures_1.RawString();
                     }
                 }
                 else
@@ -96,23 +103,25 @@ class Reader {
                 const [start, mode] = compiled.type.split(':');
                 if (mode === 'name') {
                     if (!/\w/.test(char) && char !== '[') {
-                        compiled.function.setName(compiled.temp.value)
+                        compiled.function
+                            .setName(compiled.temp.value)
                             .setLine(compiled.line)
                             .setIndex(compiled.functions.length)
                             .setClosed(true);
                         compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
                         compiled.functions.push(compiled.function);
-                        compiled.function = new Structures_1.RawFunction;
-                        compiled.temp = new Structures_1.RawString;
+                        compiled.function = new Structures_1.RawFunction();
+                        compiled.temp = new Structures_1.RawString();
                         compiled.type = 'any';
                         compiled.string.write(char);
                     }
                     else if ('[' === char) {
                         compiled.type = 'function:parameters';
-                        compiled.function.setName(compiled.temp.value)
+                        compiled.function
+                            .setName(compiled.temp.value)
                             .setLine(compiled.line)
                             .setIndex(compiled.functions.length);
-                        compiled.temp = new Structures_1.RawString;
+                        compiled.temp = new Structures_1.RawString();
                     }
                     else
                         compiled.temp.write(char);
@@ -120,14 +129,14 @@ class Reader {
                 else if (mode === 'parameters') {
                     if (';' === char && compiled.depth <= 1) {
                         compiled.function.addField(compiled.temp.value);
-                        compiled.temp = new Structures_1.RawString;
+                        compiled.temp = new Structures_1.RawString();
                     }
                     else if (']' === char && compiled.depth <= 0) {
                         compiled.function.addField(compiled.temp.value).setClosed(true);
                         compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
                         compiled.functions.push(compiled.function);
-                        compiled.function = new Structures_1.RawFunction;
-                        compiled.temp = new Structures_1.RawString;
+                        compiled.function = new Structures_1.RawFunction();
+                        compiled.temp = new Structures_1.RawString();
                         compiled.type = 'any';
                     }
                     else
@@ -137,15 +146,14 @@ class Reader {
         }
         if (compiled.string.isEmpty === false) {
             compiled.strings.push(compiled.string);
-            compiled.string = new Structures_1.RawString;
+            compiled.string = new Structures_1.RawString();
         }
         if (compiled.function.name !== '') {
             compiled.functions.push(compiled.function);
-            compiled.function = new Structures_1.RawFunction;
+            compiled.function = new Structures_1.RawFunction();
         }
-        if (compiled.temp.value.startsWith('$')
-            &&
-                compiled.type.startsWith('function')) {
+        if (compiled.temp.value.startsWith('$') &&
+            compiled.type.startsWith('function')) {
             compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
             const rest = new Structures_1.RawFunction()
                 .setName(compiled.temp.value)
@@ -153,10 +161,11 @@ class Reader {
                 .setIndex(compiled.functions.length)
                 .setLine(compiled.line);
             compiled.functions.push(rest);
-            compiled.temp = new Structures_1.RawString;
+            compiled.temp = new Structures_1.RawString();
             compiled.type = 'any';
         }
-        const parsedFunctions = [], texts = compiled.strings.map(str => str.value);
+        const parsedFunctions = [];
+        const texts = compiled.strings.map(str => str.value);
         for (const dfunc of compiled.functions) {
             if (data.bot?.extraOptions.debug === true)
                 BDJSLog_1.BDJSLog.debug(`Parsing ${dfunc.name} => ${dfunc.toString}`);
@@ -167,27 +176,41 @@ class Reader {
             data.function = functionData;
             if (!spec)
                 throw new data.error(data, 'custom', [
-                    '"' + dfunc.name + '" is not a function.',
+                    `"${dfunc.name}" is not a function.`,
                     '|-> Please provide a valid function name at:',
-                    '|-> Line: ' + dfunc.line,
-                    '|-> Source: "' + dfunc.toString + '"',
+                    `|-> Line: ${dfunc.line}`,
+                    `|-> Source: "${dfunc.toString}"`,
                     '|--------------------------------------------'
                 ].join('\n'));
             if (dfunc.closed === false)
                 throw new data.error(data, 'custom', [
-                    '"' + dfunc.name + '" is not a closed.',
+                    `"${dfunc.name}" is not a closed.`,
                     '|-> Please make sure to close function fields at:',
-                    '|-> Line: ' + dfunc.line,
-                    '|-> Source: "' + dfunc.toString + '"',
+                    `|-> Line: ${dfunc.line}`,
+                    `|-> Source: "${dfunc.toString}"`,
                     '|-------------------------------------------------'
                 ].join('\n'));
-            const fields = dfunc.fields.map(field => field.value), newFields = [];
+            if (spec.allowFor && !spec.allowFor(data.commandType)) {
+                throw new data.error(data, `custom`, [
+                    '|-> Invalid function context.',
+                    `|-> Function "${dfunc.name}" expects to be used meeting the following callback: ${spec.allowFor.toString()}`,
+                    `|-> Line: ${dfunc.line}`,
+                    `|-> Source: "${dfunc.toString}"`,
+                    '|-------------------------------------------------'
+                ].join('\n'));
+            }
+            const fields = dfunc.fields.map(field => field.value);
+            const newFields = [];
             for (let idx = 0; idx < fields.length; idx++) {
                 const field = fields[idx];
-                const compile = typeof spec.parameters?.[idx] === 'undefined' ? true
+                const compile = typeof spec.parameters?.[idx] === 'undefined'
+                    ? true
                     : 'compile' in spec.parameters[idx]
-                        ? spec.parameters[idx].compile === true : true;
-                const parsed = compile ? (await data.reader.compile(field, data))?.code ?? '' : field;
+                        ? spec.parameters[idx].compile === true
+                        : true;
+                const parsed = compile
+                    ? ((await data.reader.compile(field, data))?.code ?? '')
+                    : field;
                 newFields.push(Reader.unescapeParam(parsed, spec.parameters?.[idx]));
             }
             const result = await spec.code(data, newFields).catch(e => {
@@ -195,7 +218,8 @@ class Reader {
                     data.bot.emit('error', e);
                 throw e;
             });
-            parsedFunctions[parsedFunctions.length] = result === undefined ? '' : result;
+            parsedFunctions[parsedFunctions.length] =
+                result === undefined ? '' : result;
         }
         parsedFunctions.forEach((text, index) => {
             if (data.bot?.extraOptions.debug === true)
@@ -213,8 +237,11 @@ class Reader {
      * @returns {string}
      */
     static unescapeParam(self, spec) {
-        const allowed = typeof spec === 'undefined' ? true
-            : 'unescape' in spec ? spec.unescape === true : true;
+        const allowed = typeof spec === 'undefined'
+            ? true
+            : 'unescape' in spec
+                ? spec.unescape === true
+                : true;
         return allowed ? UnescapeText(self) : self;
     }
 }

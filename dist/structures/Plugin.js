@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Plugin = void 0;
 const Function_1 = require("../managers/Function");
 const Event_1 = require("../managers/Event");
-const promises_1 = require("fs/promises");
-const path_1 = require("path");
+const promises_1 = require("node:fs/promises");
+const node_path_1 = require("node:path");
 const Function_2 = require("./Function");
 const Event_2 = require("./Event");
 /**
@@ -12,8 +12,8 @@ const Event_2 = require("./Event");
  */
 class Plugin {
     constructor(data) {
-        this.functionManager = new Function_1.FunctionManager;
-        this.eventManager = new Event_1.EventManager;
+        this.functionManager = new Function_1.FunctionManager();
+        this.eventManager = new Event_1.EventManager();
         if (!data)
             throw new Error('Missing plugin metadata!');
         this.name = data.name;
@@ -22,16 +22,16 @@ class Plugin {
     }
     async load(dir, providing_cwd = false) {
         const root = providing_cwd ? '' : process.cwd();
-        const files = await (0, promises_1.readdir)((0, path_1.join)(root, dir));
+        const files = await (0, promises_1.readdir)((0, node_path_1.join)(root, dir));
         for (const file of files) {
-            const stat = await (0, promises_1.lstat)((0, path_1.join)(root, dir, file));
+            const stat = await (0, promises_1.lstat)((0, node_path_1.join)(root, dir, file));
             if (stat.isDirectory()) {
-                await this.load((0, path_1.join)(dir, file), providing_cwd);
+                await this.load((0, node_path_1.join)(dir, file), providing_cwd);
                 continue;
             }
-            else if (!file.endsWith('.js'))
+            if (!file.endsWith('.js'))
                 continue;
-            const mod = require((0, path_1.join)(root, dir, file)).default;
+            const mod = require((0, node_path_1.join)(root, dir, file)).default;
             if (mod instanceof Function_2.BaseFunction) {
                 const name = file.slice(file.startsWith('$') ? 1 : 0, -3).toLowerCase();
                 this.functionManager.set(name, mod);

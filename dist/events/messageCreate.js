@@ -28,11 +28,11 @@ exports.default = new Event_1.BaseEvent({
                 ctx: context,
                 command,
                 env: {
-                    '__BDJS__ARGS__': message.content.split(/ +/g)
+                    __BDJS__ARGS__: message.content.split(/ +/g)
                 },
                 commandType: 'always',
                 functions: bot.functions,
-                reader: bot.reader,
+                reader: bot.reader
             });
             await data.reader.compile(command.code, data);
         }
@@ -48,10 +48,10 @@ exports.default = new Event_1.BaseEvent({
                     command,
                     commandType: 'unprefixed',
                     env: {
-                        '__BDJS__ARGS__': args
+                        __BDJS__ARGS__: args
                     },
                     functions: bot.functions,
-                    reader: bot.reader,
+                    reader: bot.reader
                 });
                 await data.reader.compile(command.code, data);
             }
@@ -63,26 +63,34 @@ exports.default = new Event_1.BaseEvent({
             ctx: context,
             commandType: 'prefixed',
             env: {
-                '__BDJS__ARGS__': args
+                __BDJS__ARGS__: args
             },
             functions: bot.functions,
-            reader: bot.reader,
+            reader: bot.reader
         });
         let prefixes = [];
         for (const prefix of bot.extraOptions.prefixes) {
             const compiled = await data.reader.compile(prefix, data);
             prefixes.push(compiled.code.toLowerCase());
         }
-        prefixes = bot.extraOptions.mentionPrefix === true ? [...prefixes, `<@${bot.user.id}>`, `<@!${bot.user.id}>`] : prefixes;
-        const prefix = prefixes.find(prx => args.at(0)?.toLowerCase().startsWith(prx))?.trim();
+        prefixes =
+            bot.extraOptions.mentionPrefix === true
+                ? [...prefixes, `<@${bot.user.id}>`, `<@!${bot.user.id}>`]
+                : prefixes;
+        const prefix = prefixes
+            .find(prx => args.at(0)?.toLowerCase().startsWith(prx))
+            ?.trim();
         if (!prefix)
             return;
-        const commandName = args.at(0)?.toLowerCase() === prefix ? args[1]?.toLowerCase() : args.shift()?.toLowerCase().slice(prefix.length);
+        const commandName = args.at(0)?.toLowerCase() === prefix
+            ? args[1]?.toLowerCase()
+            : args.shift()?.toLowerCase().slice(prefix.length);
         if (args.at(0)?.toLowerCase() === prefix)
             args = args.slice(2);
         if (!commandName)
             return;
-        const command = prefixed.find(cmd => cmd.name?.toLowerCase() === commandName || cmd.aliases?.includes(commandName));
+        const command = prefixed.find(cmd => cmd.name?.toLowerCase() === commandName ||
+            cmd.aliases?.includes(commandName));
         if (command) {
             data.command = command;
             await data.reader.compile(command.code, data);

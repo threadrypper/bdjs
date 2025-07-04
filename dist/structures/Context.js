@@ -40,10 +40,10 @@ class Context {
         if (this.raw instanceof discord_js_1.CommandInteraction) {
             return await this.raw.deferReply({ ephemeral, fetchReply });
         }
-        else if (this.raw instanceof discord_js_1.MessageComponentInteraction) {
+        if (this.raw instanceof discord_js_1.MessageComponentInteraction) {
             return await this.raw.deferUpdate({ fetchReply });
         }
-        else if (this.channel && 'sendTyping' in this.channel) {
+        if (this.channel && 'sendTyping' in this.channel) {
             return await this.channel.sendTyping().catch((e) => null);
         }
     }
@@ -55,14 +55,13 @@ class Context {
         if (this.interaction instanceof discord_js_1.CommandInteraction) {
             return await this.interaction.editReply(options);
         }
-        else if (this.interaction instanceof discord_js_1.MessageComponentInteraction) {
+        if (this.interaction instanceof discord_js_1.MessageComponentInteraction) {
             return await this.interaction.update(options);
         }
-        else if (tslib_1.__classPrivateFieldGet(this, _Context_hold, "f") instanceof discord_js_1.Message) {
+        if (tslib_1.__classPrivateFieldGet(this, _Context_hold, "f") instanceof discord_js_1.Message) {
             return await tslib_1.__classPrivateFieldGet(this, _Context_hold, "f").edit(options);
         }
-        else
-            return null;
+        return null;
     }
     /**
      * Follow up a message response.
@@ -72,14 +71,13 @@ class Context {
         if (this.interaction instanceof discord_js_1.CommandInteraction) {
             return await this.interaction.followUp(options);
         }
-        else if (this.interaction instanceof discord_js_1.MessageComponentInteraction) {
+        if (this.interaction instanceof discord_js_1.MessageComponentInteraction) {
             return await this.interaction.reply(options);
         }
-        else if (tslib_1.__classPrivateFieldGet(this, _Context_hold, "f") instanceof discord_js_1.Message) {
+        if (tslib_1.__classPrivateFieldGet(this, _Context_hold, "f") instanceof discord_js_1.Message) {
             return await tslib_1.__classPrivateFieldGet(this, _Context_hold, "f").reply(options);
         }
-        else
-            return null;
+        return null;
     }
     /**
      * Sends a message using the possible channel.
@@ -88,39 +86,38 @@ class Context {
     async send(payload) {
         if (this.raw instanceof discord_js_1.ChatInputCommandInteraction) {
             const reply = await this.raw.reply(payload);
-            if (typeof payload !== 'string'
-                &&
-                    payload.fetchReply)
+            if (typeof payload !== 'string' &&
+                payload
+                    .fetchReply)
                 tslib_1.__classPrivateFieldGet(this, _Context_instances, "m", _Context_setMessage).call(this, reply);
             return reply;
         }
-        else if (this.raw instanceof discord_js_1.MessageComponentInteraction) {
+        if (this.raw instanceof discord_js_1.MessageComponentInteraction) {
             const reply = await this.raw.reply(payload);
             tslib_1.__classPrivateFieldGet(this, _Context_instances, "m", _Context_setMessage).call(this, reply);
             return reply;
         }
-        else if (this.raw instanceof discord_js_1.ModalSubmitInteraction) {
+        if (this.raw instanceof discord_js_1.ModalSubmitInteraction) {
             const reply = await this.raw.reply(payload);
             tslib_1.__classPrivateFieldGet(this, _Context_instances, "m", _Context_setMessage).call(this, reply);
             return reply;
         }
-        else if (this.raw instanceof discord_js_1.Message) {
+        if (this.raw instanceof discord_js_1.Message) {
             const reply = await this.raw.channel.send(payload);
             tslib_1.__classPrivateFieldGet(this, _Context_instances, "m", _Context_setMessage).call(this, reply);
             return reply;
         }
-        else if (isValidInstance(this.raw)) {
-            const reply = await this.raw.send(payload);
+        if (isValidInstance(this.raw)) {
+            const reply = (await this.raw.send(payload));
             tslib_1.__classPrivateFieldGet(this, _Context_instances, "m", _Context_setMessage).call(this, reply);
             return reply;
         }
-        else if (this.raw instanceof discord_js_1.GuildMember) {
+        if (this.raw instanceof discord_js_1.GuildMember) {
             const reply = await this.raw.user.send(payload);
             tslib_1.__classPrivateFieldGet(this, _Context_instances, "m", _Context_setMessage).call(this, reply);
             return reply;
         }
-        else
-            return null;
+        return null;
     }
 }
 exports.Context = Context;

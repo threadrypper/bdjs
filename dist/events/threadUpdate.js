@@ -13,10 +13,11 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'threadUpdate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             env: {
-                '__BDJS__OLD__THREAD__': old,
-                '__BDJS__NEW__THREAD__': thread,
+                __BDJS__OLD__THREAD__: old,
+                __BDJS__NEW__THREAD__: thread
             },
             commandType: 'threadUpdate',
             functions: bot.functions,

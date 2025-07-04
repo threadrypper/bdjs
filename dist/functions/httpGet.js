@@ -22,7 +22,7 @@ exports.default = new Function_1.BaseFunction({
         },
         {
             name: 'Response Type',
-            description: 'The type of response API can return. (json\|text\|blob\|arrayBuffer)',
+            description: 'The type of response API can return. (json|text|blob|arrayBuffer)',
             required: false,
             resolver: 'String',
             value: 'json'
@@ -51,9 +51,12 @@ exports.default = new Function_1.BaseFunction({
             headers: raw_headers.length ? headers : undefined,
             method: 'GET'
         });
-        const data = responseType === 'json' ? await result.body.json()
-            : responseType === 'arrayBuffer' ? await result.body.arrayBuffer()
-                : responseType === 'blob' ? await result.body.blob()
+        const data = responseType === 'json'
+            ? await result.body.json()
+            : responseType === 'arrayBuffer'
+                ? await result.body.arrayBuffer()
+                : responseType === 'blob'
+                    ? await result.body.blob()
                     : await result.body.text();
         d.setEnvironmentVariable(variable, {
             body: data,

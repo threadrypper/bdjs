@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
-const util_1 = require("util");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Shows the client as "typing" in the provided channel.',
     parameters: [
@@ -15,12 +15,12 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [channelID = d.ctx?.channel?.id]) => {
         if (channelID === undefined)
-            throw new d.error(d, 'required', 'Channel ID', d.function!.name);
+            throw new d.error(d, 'required', 'Channel ID', d.function.name);
         const channel = await d.util.getChannel(channelID, d.ctx?.guild);
-        if (!channel || channel && !channel.isTextBased())
-            throw new d.error(d, 'invalid', 'Channel ID', d.function!.name);
+        if (!channel || (channel && !channel.isTextBased()))
+            throw new d.error(d, 'invalid', 'Channel ID', d.function.name);
         await channel.sendTyping().catch(e => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e));
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e));
         });
     }
 });

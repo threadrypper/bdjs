@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VariableManager = exports.SlashCommandBuilder = exports.Plugin = exports.Data = exports.ContextMenuCommandBuilder = exports.Bot = exports.BDJSLog = exports.BDJSDefaultOptions = exports.BaseFunction = exports.ApplicationCommandOptionType = exports.ApplicationCommandType = exports.ActivityType = void 0;
+exports.VariableManager = exports.SlashCommandBuilder = exports.Plugin = exports.Data = exports.ContextMenuCommandBuilder = exports.Bot = exports.BDJSLog = exports.BaseFunction = exports.ApplicationCommandOptionType = exports.ApplicationCommandType = exports.ActivityType = void 0;
+exports.BDJSDefaultOptions = BDJSDefaultOptions;
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 const discord_js_1 = require("discord.js");
 Object.defineProperty(exports, "ActivityType", { enumerable: true, get: function () { return discord_js_1.ActivityType; } });
@@ -27,16 +28,8 @@ function BDJSDefaultOptions(auth, prefixes) {
         return BDJSLog_1.BDJSLog.error('You must provide 1 prefix at least!');
     return {
         auth,
-        events: [
-            'onReady',
-            'onMessageCreate'
-        ],
-        intents: [
-            'Guilds',
-            'GuildMessages',
-            'MessageContent'
-        ],
+        events: ['onReady', 'onMessageCreate'],
+        intents: ['Guilds', 'GuildMessages', 'MessageContent'],
         prefixes
     };
 }
-exports.BDJSDefaultOptions = BDJSDefaultOptions;

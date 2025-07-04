@@ -16,20 +16,24 @@ exports.default = new Event_1.BaseEvent({
             raw: interaction
         }, bot);
         // Any interaction commands.
-        Array.from(bot.commands.values()).filter(cmd => cmd.type === 'anyInteraction').forEach(async (cmd) => {
+        const anyInteractionCommands = Array.from(bot.commands.values())
+            .filter(cmd => cmd.type === 'anyInteraction');
+        for (const anyInteractionCommand of anyInteractionCommands) {
             const data = new Data_1.Data({
                 bot,
                 commandType: 'anyInteraction',
                 ctx: context,
-                command: cmd,
+                command: anyInteractionCommand,
                 functions: bot.functions,
                 reader: bot.reader
             });
-            await data.reader.compile(cmd.code, data);
-        });
+            await data.reader.compile(anyInteractionCommand.code, data);
+        }
         // Button interactions.
         if (interaction.isButton()) {
-            const command = Array.from(Array.from(bot.commands.values()).values()).filter(cmd => cmd.type === 'buttonInteraction').find(cmd => cmd.name === interaction.customId);
+            const command = Array.from(Array.from(bot.commands.values()).values())
+                .filter(cmd => cmd.type === 'buttonInteraction')
+                .find(cmd => cmd.name === interaction.customId);
             const data = new Data_1.Data({
                 bot,
                 commandType: 'buttonInteraction',
@@ -38,11 +42,13 @@ exports.default = new Event_1.BaseEvent({
                 reader: bot.reader
             });
             if (command)
-                data.command = command, await data.reader.compile(command.code, data);
+                (data.command = command), await data.reader.compile(command.code, data);
         }
         // Select menu interactions.
         if (interaction.isAnySelectMenu()) {
-            const command = Array.from(Array.from(bot.commands.values()).values()).filter(cmd => cmd.type === 'selectMenuInteraction').find(cmd => cmd.name === interaction.customId);
+            const command = Array.from(Array.from(bot.commands.values()).values())
+                .filter(cmd => cmd.type === 'selectMenuInteraction')
+                .find(cmd => cmd.name === interaction.customId);
             const data = new Data_1.Data({
                 bot,
                 commandType: 'selectMenuInteraction',
@@ -51,11 +57,13 @@ exports.default = new Event_1.BaseEvent({
                 reader: bot.reader
             });
             if (command)
-                data.command = command, await data.reader.compile(command.code, data);
+                (data.command = command), await data.reader.compile(command.code, data);
         }
         // Modal interactions.
         if (interaction.isModalSubmit()) {
-            const command = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'modalInteraction').find(cmd => cmd.name === interaction.customId);
+            const command = Array.from(bot.commands.values())
+                .filter(cmd => cmd.type === 'modalInteraction')
+                .find(cmd => cmd.name === interaction.customId);
             const data = new Data_1.Data({
                 bot,
                 commandType: 'modalInteraction',
@@ -64,14 +72,17 @@ exports.default = new Event_1.BaseEvent({
                 reader: bot.reader
             });
             if (command)
-                data.command = command, await data.reader.compile(command.code, data);
+                (data.command = command), await data.reader.compile(command.code, data);
         }
         // Slash commands
         if (interaction.isChatInputCommand()) {
             const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'commandInteraction');
             const command = interaction.options.getSubcommandGroup(false)
-                ? commands.find(cmd => cmd.name?.toLowerCase() === `${interaction.commandName} ${interaction.options.getSubcommand(false)} ${interaction.options.getSubcommandGroup(false)}`)
-                : interaction.options.getSubcommand(false) ? commands.find(cmd => cmd.name?.toLowerCase() === `${interaction.commandName} ${interaction.options.getSubcommand(false)}`)
+                ? commands.find(cmd => cmd.name?.toLowerCase() ===
+                    `${interaction.commandName} ${interaction.options.getSubcommand(false)} ${interaction.options.getSubcommandGroup(false)}`)
+                : interaction.options.getSubcommand(false)
+                    ? commands.find(cmd => cmd.name?.toLowerCase() ===
+                        `${interaction.commandName} ${interaction.options.getSubcommand(false)}`)
                     : commands.find(cmd => cmd.name?.toLowerCase() === interaction.commandName);
             const data = new Data_1.Data({
                 bot,
@@ -81,7 +92,7 @@ exports.default = new Event_1.BaseEvent({
                 reader: bot.reader
             });
             if (command)
-                data.command = command, await data.reader.compile(command.code, data);
+                (data.command = command), await data.reader.compile(command.code, data);
         }
         // User context menus
         if (interaction.isUserContextMenuCommand()) {
@@ -100,7 +111,7 @@ exports.default = new Event_1.BaseEvent({
                 reader: bot.reader
             });
             if (command)
-                data.command = command, await data.reader.compile(command.code, data);
+                (data.command = command), await data.reader.compile(command.code, data);
         }
         // Message context menus
         if (interaction.isMessageContextMenuCommand()) {
@@ -119,7 +130,7 @@ exports.default = new Event_1.BaseEvent({
                 reader: bot.reader
             });
             if (command)
-                data.command = command, await data.reader.compile(command.code, data);
+                (data.command = command), await data.reader.compile(command.code, data);
         }
     }
 });

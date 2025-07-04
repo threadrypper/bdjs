@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
-const util_1 = require("util");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Allows you to handle and manage errors and exceptions in a code.',
     parameters: [
@@ -39,22 +39,25 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [code, catchCode, finallyCode, sep = ',']) => {
         if (code === undefined)
-            throw new d.error(d, 'required', 'code', d.function!.name);
+            throw new d.error(d, 'required', 'code', d.function.name);
         if (catchCode === undefined)
-            throw new d.error(d, 'required', 'catch code', d.function!.name);
+            throw new d.error(d, 'required', 'catch code', d.function.name);
         const results = [];
-        d.reader.compile(code, d).then((compiled) => {
+        d.reader
+            .compile(code, d)
+            .then(compiled => {
             if (compiled.code !== '')
                 results.push(compiled.code);
-        }).catch(async (e) => {
+        })
+            .catch(async (e) => {
             const data = d.extend(d);
             data.functions.set('error', new Function_1.BaseFunction({
                 description: 'Retrieves a property from the error.',
                 code: async (subdata, [property = 'message']) => {
                     const properties = ['message', 'stack', 'raw'];
                     if (!properties.includes(property.toLowerCase()))
-                        throw new subdata.error(d, 'invalid', 'property', subdata.function!.name);
-                    const error = (0, util_1.inspect)(property.toLowerCase() === 'raw' ? e : e[property], { depth: 4 });
+                        throw new subdata.error(d, 'invalid', 'property', subdata.function.name);
+                    const error = (0, node_util_1.inspect)(property.toLowerCase() === 'raw' ? e : e[property], { depth: 4 });
                     return error;
                 }
             }));

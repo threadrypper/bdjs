@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
-const util_1 = require("util");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Removes a role from a guild member.',
     parameters: [
@@ -29,22 +29,22 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [roleID, memberID, guildID = d.ctx?.guild?.id]) => {
         if (roleID === undefined)
-            throw new d.error(d, 'required', 'Role ID', d.function!.name);
+            throw new d.error(d, 'required', 'Role ID', d.function.name);
         if (memberID === undefined)
-            throw new d.error(d, 'required', 'Member ID', d.function!.name);
+            throw new d.error(d, 'required', 'Member ID', d.function.name);
         if (guildID === undefined)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function.name);
         const guild = d.bot?.guilds.cache.get(guildID);
         if (!guild)
-            throw new d.error(d, 'invalid', 'Guild ID', d.function!.name);
+            throw new d.error(d, 'invalid', 'Guild ID', d.function.name);
         const member = await d.util.getMember(memberID, guild);
         if (!member)
-            throw new d.error(d, 'invalid', 'Member ID', d.function!.name);
+            throw new d.error(d, 'invalid', 'Member ID', d.function.name);
         const role = await d.util.getRole(roleID, guild);
         if (!role)
-            throw new d.error(d, 'invalid', 'Role ID', d.function!.name);
+            throw new d.error(d, 'invalid', 'Role ID', d.function.name);
         await member.roles.remove(role).catch(e => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e));
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e));
         });
     }
 });

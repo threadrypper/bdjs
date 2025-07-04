@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
-const promises_1 = require("fs/promises");
-const util_1 = require("util");
+const promises_1 = require("node:fs/promises");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Appends content to the end of a file.',
     parameters: [
@@ -30,13 +30,13 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [directory, content, encoding = 'utf-8']) => {
         if (directory === undefined)
-            throw new d.error(d, 'required', 'Directory', d.function!.name);
+            throw new d.error(d, 'required', 'Directory', d.function.name);
         if (content === undefined)
-            throw new d.error(d, 'required', 'Content', d.function!.name);
+            throw new d.error(d, 'required', 'Content', d.function.name);
         await (0, promises_1.appendFile)(directory, content, {
             encoding: encoding
         }).catch(e => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e, { depth: 1 }));
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e, { depth: 1 }));
         });
     }
 });

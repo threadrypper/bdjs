@@ -14,10 +14,11 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'emojiUpdate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             env: {
-                '__BDJS__OLD__EMOJI__': old,
-                '__BDJS__NEW__EMOJI__': emoji,
+                __BDJS__OLD__EMOJI__: old,
+                __BDJS__NEW__EMOJI__: emoji
             },
             commandType: 'emojiUpdate',
             functions: bot.functions,

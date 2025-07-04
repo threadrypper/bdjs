@@ -14,9 +14,8 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
+    allowFor: t => t === 'presenceUpdate',
     code: async (d, [property]) => {
-        if (d.commandType !== 'presenceUpdate')
-            throw new d.error(d, 'disallowed', d.function.name, 'onPresenceUpdate event');
         if (property === undefined)
             throw new d.error(d, 'required', 'Property', d.function.name);
         const types = Object.keys(Properties_1.default.Activity);

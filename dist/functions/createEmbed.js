@@ -17,71 +17,83 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [payload]) => {
         if (payload === undefined)
-            throw new d.error(d, 'required', 'payload', d.function!.name);
-        const data = d.extend(d), embed = new discord_js_1.EmbedBuilder;
-        data.functions.set('settitle', new Function_1.BaseFunction({
+            throw new d.error(d, 'required', 'payload', d.function.name);
+        const data = d.extend(d);
+        const embed = new discord_js_1.EmbedBuilder();
+        data.functions
+            .set('settitle', new Function_1.BaseFunction({
             description: 'Set the title for the embed.',
             async code(extended, [title]) {
                 if (title === undefined)
-                    throw new extended.error(d, 'required', 'title', extended.function!.name);
+                    throw new extended.error(d, 'required', 'title', extended.function.name);
                 embed.setTitle(title);
             }
-        })).set('setdescription', new Function_1.BaseFunction({
+        }))
+            .set('setdescription', new Function_1.BaseFunction({
             description: 'Set the description for the embed.',
             async code(extended, [text]) {
                 if (text === undefined)
-                    throw new extended.error(d, 'required', 'description', extended.function!.name);
+                    throw new extended.error(d, 'required', 'description', extended.function.name);
                 embed.setDescription(text);
             }
-        })).set('setthumbnail', new Function_1.BaseFunction({
+        }))
+            .set('setthumbnail', new Function_1.BaseFunction({
             description: 'Set a thumbnail for the embed.',
             async code(extended, [url]) {
                 if (url === undefined)
-                    throw new extended.error(d, 'required', 'image URL', extended.function!.name);
+                    throw new extended.error(d, 'required', 'image URL', extended.function.name);
                 embed.setThumbnail(url);
             }
-        })).set('setimage', new Function_1.BaseFunction({
+        }))
+            .set('setimage', new Function_1.BaseFunction({
             description: 'Set an image for the embed.',
             async code(extended, [url]) {
                 if (url === undefined)
-                    throw new extended.error(d, 'required', 'image URL', extended.function!.name);
+                    throw new extended.error(d, 'required', 'image URL', extended.function.name);
                 embed.setImage(url);
             }
-        })).set('setfooter', new Function_1.BaseFunction({
+        }))
+            .set('setfooter', new Function_1.BaseFunction({
             description: 'Set the footer for the embed.',
             async code(extended, [text, icon]) {
                 if (text === undefined)
-                    throw new extended.error(d, 'required', 'footer text', extended.function!.name);
+                    throw new extended.error(d, 'required', 'footer text', extended.function.name);
                 embed.setFooter({
-                    text, iconURL: icon ? icon : undefined
+                    text,
+                    iconURL: icon ? icon : undefined
                 });
             }
-        })).set('setauthor', new Function_1.BaseFunction({
+        }))
+            .set('setauthor', new Function_1.BaseFunction({
             description: 'Set the author for the embed.',
             async code(extended, [text, icon]) {
                 if (text === undefined)
-                    throw new extended.error(d, 'required', 'author name', extended.function!.name);
+                    throw new extended.error(d, 'required', 'author name', extended.function.name);
                 embed.setAuthor({
                     name: text,
                     iconURL: icon ? icon : undefined
                 });
             }
-        })).set('setcolor', new Function_1.BaseFunction({
+        }))
+            .set('setcolor', new Function_1.BaseFunction({
             description: 'Set the footer for the embed.',
             async code(extended, [hex]) {
                 if (hex === undefined)
-                    throw new extended.error(d, 'required', 'hex code', extended.function!.name);
+                    throw new extended.error(d, 'required', 'hex code', extended.function.name);
                 embed.setColor((0, discord_js_1.resolveColor)(hex));
             }
-        })).set('pushfield', new Function_1.BaseFunction({
+        }))
+            .set('pushfield', new Function_1.BaseFunction({
             description: 'Push a field into the embed.',
             async code(extended, [name, value, inline = 'false']) {
                 if (name === undefined)
-                    throw new extended.error(d, 'required', 'field name', extended.function!.name);
+                    throw new extended.error(d, 'required', 'field name', extended.function.name);
                 if (value === undefined)
-                    throw new extended.error(d, 'required', 'field value', extended.function!.name);
+                    throw new extended.error(d, 'required', 'field value', extended.function.name);
                 embed.addFields({
-                    name, value, inline: inline === 'true'
+                    name,
+                    value,
+                    inline: inline === 'true'
                 });
             }
         }));

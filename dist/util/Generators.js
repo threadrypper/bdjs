@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Generators = void 0;
-const promises_1 = require("fs/promises");
+const promises_1 = require("node:fs/promises");
 const Command_1 = require("../managers/Command");
 const ascii_table3_1 = require("ascii-table3");
 const BDJSLog_1 = require("./BDJSLog");
 const Util_1 = require("./Util");
-const path_1 = require("path");
+const node_path_1 = require("node:path");
 /**
  * Represents a function documentation.
  */
@@ -43,8 +43,16 @@ class FunctionInfo {
      * Generates a markdown file from function data.
      */
     async toMD() {
-        const args = (this.extraOptions.params?.length ?? 0) > 0 ? `## Parameters\n${this.getParamTable()}` : undefined;
-        const special = (this.extraOptions.builders && this.extraOptions.injection) ? `## Extra Data\n> Supports Builders\n> Supports Injection` : this.extraOptions.builders ? `## Extra Data\n> Supports Builders` : this.extraOptions.injection ? `## Extra Data\n> Supports Injection` : undefined;
+        const args = (this.extraOptions.params?.length ?? 0) > 0
+            ? `## Parameters\n${this.getParamTable()}`
+            : undefined;
+        const special = this.extraOptions.builders && this.extraOptions.injection
+            ? '## Extra Data\n> Supports Builders\n> Supports Injection'
+            : this.extraOptions.builders
+                ? '## Extra Data\n> Supports Builders'
+                : this.extraOptions.injection
+                    ? '## Extra Data\n> Supports Injection'
+                    : undefined;
         return [
             `# $${this.name}`,
             this.description,
@@ -54,13 +62,15 @@ class FunctionInfo {
             '',
             args,
             '',
-            special,
+            special
             /*'## Source Code',
             '```ts',
             await this.getSource(),
             '```',
             `Available on GitHub: [Click Here](${this.url})`*/
-        ].filter(line => !!line).join('\n');
+        ]
+            .filter(line => !!line)
+            .join('\n');
     }
     /**
      * Returns the function URL.
@@ -72,8 +82,12 @@ class FunctionInfo {
      * Get the function usage as string.
      */
     get usage() {
-        const args = (this.extraOptions.params.length ?? 0) > 0 ? this.extraOptions.params.map(x => x.required ? Util_1.Util.camelCase(x.name.toLowerCase()) : Util_1.Util.camelCase(x.name.toLowerCase() + '?')) : [];
-        return `$${this.name + (args.length > 0 ? '[' + args.join(';') + ']' : '')}`;
+        const args = (this.extraOptions.params.length ?? 0) > 0
+            ? this.extraOptions.params.map(x => x.required
+                ? Util_1.Util.camelCase(x.name.toLowerCase())
+                : Util_1.Util.camelCase(`${x.name.toLowerCase()}?`))
+            : [];
+        return `$${this.name + (args.length > 0 ? `[${args.join(';')}]` : '')}`;
     }
 }
 /**
@@ -86,12 +100,12 @@ class Generators {
      * @param input_providing_cwd - Whether input includes a custom cwd.
      */
     static async loadFunctions(input, input_providing_cwd = false) {
-        const files = (await (0, promises_1.readdir)((0, path_1.join)(input_providing_cwd ? '' : process.cwd(), input))).filter(file => file.endsWith('.js'));
+        const files = (await (0, promises_1.readdir)((0, node_path_1.join)(input_providing_cwd ? '' : process.cwd(), input))).filter(file => file.endsWith('.js'));
         const loaded = [];
         for (const file of files) {
-            const data = require((0, path_1.join)(input_providing_cwd ? '' : process.cwd(), input, file))['default'];
+            const data = require((0, node_path_1.join)(input_providing_cwd ? '' : process.cwd(), input, file)).default;
             if (!data) {
-                BDJSLog_1.BDJSLog.error('Unable to read: ' + file);
+                BDJSLog_1.BDJSLog.error(`Unable to read: ${file}`);
                 continue;
             }
             const doc = new FunctionInfo(file.slice(0, -3), data.description, {
@@ -115,15 +129,21 @@ class Generators {
         const output_providing_cwd = output.endsWith(':providing_cwd');
         if (output_providing_cwd)
             output = output.replaceAll(':providing_cwd', '');
-        const paths = output.split(/(\/|\\|\\\\)/g).filter(path => path.match(/\w+/));
-        await (0, promises_1.mkdir)((0, path_1.join)(input_providing_cwd ? '' : process.cwd(), ...paths), { recursive: true });
+        const paths = output
+            .split(/(\/|\\|\\\\)/g)
+            .filter(path => path.match(/\w+/));
+        await (0, promises_1.mkdir)((0, node_path_1.join)(input_providing_cwd ? '' : process.cwd(), ...paths), {
+            recursive: true
+        });
         const accumulated = await Generators.loadFunctions(input, input_providing_cwd);
-        accumulated && Generators.getSideBar(accumulated, (0, path_1.join)(input_providing_cwd ? '' : process.cwd(), ...paths.slice(0, paths.length - 1)));
-        accumulated && Generators.getFunctionSchema(accumulated, (0, path_1.join)(input_providing_cwd ? '' : process.cwd(), ...paths.slice(0, paths.length - 1)));
+        accumulated &&
+            Generators.getSideBar(accumulated, (0, node_path_1.join)(input_providing_cwd ? '' : process.cwd(), ...paths.slice(0, paths.length - 1)));
+        accumulated &&
+            Generators.getFunctionSchema(accumulated, (0, node_path_1.join)(input_providing_cwd ? '' : process.cwd(), ...paths.slice(0, paths.length - 1)));
         for (const func of accumulated) {
             const content = await func.toMD();
             BDJSLog_1.BDJSLog.info(`Writing ${func.name}.md...`);
-            (0, promises_1.writeFile)((0, path_1.join)(!output_providing_cwd ? '' : process.cwd(), ...paths, func.name + '.md'), content);
+            (0, promises_1.writeFile)((0, node_path_1.join)(!output_providing_cwd ? '' : process.cwd(), ...paths, `${func.name}.md`), content);
         }
     }
     /**
@@ -134,7 +154,7 @@ class Generators {
         const data = [];
         for (const func of accumulated)
             data.push(JSON.parse(JSON.stringify(func)));
-        (0, promises_1.writeFile)((0, path_1.join)(output, 'FUNCTION.SCHEMA.json'), JSON.stringify(data, null, 2));
+        (0, promises_1.writeFile)((0, node_path_1.join)(output, 'FUNCTION.SCHEMA.json'), JSON.stringify(data, null, 2));
     }
     /**
      * Generates the documentation sidebar.
@@ -147,7 +167,7 @@ class Generators {
         for (const func of accumulated) {
             contents.push(`* [$${func.name}](functions/${func.name}.md)`);
         }
-        await (0, promises_1.writeFile)((0, path_1.join)(output, 'sidebar.md'), contents.join('\n'));
+        await (0, promises_1.writeFile)((0, node_path_1.join)(output, 'sidebar.md'), contents.join('\n'));
     }
     /**
      * Generates a markdown file including all supported command types as table.
@@ -159,37 +179,37 @@ class Generators {
             .setStyle('github-markdown')
             .setHeading('Name')
             .addRowMatrix(types.map(type => [type]));
-        (0, promises_1.writeFile)((0, path_1.join)(output, 'SUPPORTED.COMMANDS.md'), table.toString());
+        (0, promises_1.writeFile)((0, node_path_1.join)(output, 'SUPPORTED.COMMANDS.md'), table.toString());
     }
     /**
      * Generates a markdown file including all supported events as table.
      * @param output - Markdown file output directory.
      */
     static async getEventTable(output) {
-        const files = (await (0, promises_1.readdir)((0, path_1.join)(__dirname.replace('util', 'events')))).filter(f => f.endsWith('.js'));
+        const files = (await (0, promises_1.readdir)((0, node_path_1.join)(__dirname.replace('util', 'events')))).filter(f => f.endsWith('.js'));
         const rows = [];
         const table = new ascii_table3_1.AsciiTable3()
             .setStyle('github-markdown')
             .setHeading('Name', 'Description');
         for (const file of files) {
-            const event = require((0, path_1.join)(__dirname.replace('util', 'events'), file))['default'];
+            const event = require((0, node_path_1.join)(__dirname.replace('util', 'events'), file)).default;
             rows.push([event.name, event.description ?? 'NO_DESCRIPTION']);
         }
         table.addRowMatrix(rows);
-        (0, promises_1.writeFile)((0, path_1.join)(output, 'SUPPORTED.EVENTS.md'), table.toString());
+        (0, promises_1.writeFile)((0, node_path_1.join)(output, 'SUPPORTED.EVENTS.md'), table.toString());
     }
     /**
      * Generates a JSON file including all functions.
      * @param output - JSON file output directory.
      */
     static async getEventSchema(output) {
-        const files = (await (0, promises_1.readdir)((0, path_1.join)(__dirname.replace('util', 'events')))).filter(f => f.endsWith('.js'));
+        const files = (await (0, promises_1.readdir)((0, node_path_1.join)(__dirname.replace('util', 'events')))).filter(f => f.endsWith('.js'));
         const data = [];
         for (const file of files) {
-            const event = require((0, path_1.join)(__dirname.replace('util', 'events'), file))['default'];
+            const event = require((0, node_path_1.join)(__dirname.replace('util', 'events'), file)).default;
             data.push(JSON.parse(JSON.stringify(event)));
         }
-        (0, promises_1.writeFile)((0, path_1.join)(output, 'EVENT.SCHEMA.json'), JSON.stringify(data, null, 2));
+        (0, promises_1.writeFile)((0, node_path_1.join)(output, 'EVENT.SCHEMA.json'), JSON.stringify(data, null, 2));
     }
     static async getPropertiesTable(output) {
         const properties = require('../util/Properties').default;
@@ -203,13 +223,9 @@ class Generators {
                 rows.push([key, properties[property][key].description]);
             }
             table.addRowMatrix(rows);
-            tables.push([
-                `## ${property}`,
-                table.toString(),
-                ''
-            ].join('\n'));
+            tables.push([`## ${property}`, table.toString(), ''].join('\n'));
         }
-        await (0, promises_1.writeFile)((0, path_1.join)(output, 'PROPERTIES.md'), tables.join('\n'));
+        await (0, promises_1.writeFile)((0, node_path_1.join)(output, 'PROPERTIES.md'), tables.join('\n'));
     }
 }
 exports.Generators = Generators;

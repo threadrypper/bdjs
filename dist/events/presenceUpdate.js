@@ -15,10 +15,11 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'presenceUpdate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             env: {
-                '__BDJS__OLD__PRESENCE__': old?.activities[0],
-                '__BDJS__NEW__PRESENCE__': presence.activities[0],
+                __BDJS__OLD__PRESENCE__: old?.activities[0],
+                __BDJS__NEW__PRESENCE__: presence.activities[0]
             },
             commandType: 'emojiUpdate',
             functions: bot.functions,

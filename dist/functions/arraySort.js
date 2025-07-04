@@ -13,7 +13,7 @@ exports.default = new Function_1.BaseFunction({
         },
         {
             name: 'Method',
-            description: 'Method to sort the array. (alpha\|asc\|desc)',
+            description: 'Method to sort the array. (alpha|asc|desc)',
             required: false,
             resolver: 'String',
             value: 'alpha'
@@ -28,19 +28,19 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, method = 'alpha', separator = ',']) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'Array Name', d.function!.name);
+            throw new d.error(d, 'required', 'Array Name', d.function.name);
         if (method === undefined)
-            throw new d.error(d, 'required', 'Method', d.function!.name);
+            throw new d.error(d, 'required', 'Method', d.function.name);
         if (!['alpha', 'asc', 'desc'].includes(method.toLowerCase()))
-            throw new d.error(d, 'invalid', 'Method', d.function!.name);
+            throw new d.error(d, 'invalid', 'Method', d.function.name);
         const args = d.getEnvironmentVariable(name);
         if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-            throw new d.error(d, 'invalid', 'Array Name', d.function!.name);
+            throw new d.error(d, 'invalid', 'Array Name', d.function.name);
         method = method.toLowerCase();
         return (method === 'alpha'
-            ? args.sort() : method === 'asc'
-            ? args.sort((a, b) => b.length - a.length)
-            : args.sort((a, b) => a.length - b.length))
-            .join(separator);
+            ? args.sort()
+            : method === 'asc'
+                ? args.sort((a, b) => b.length - a.length)
+                : args.sort((a, b) => a.length - b.length)).join(separator);
     }
 });

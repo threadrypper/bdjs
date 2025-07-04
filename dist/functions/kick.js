@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
-const util_1 = require("util");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     builders: true,
     description: 'Kicks an user from the provided guild.',
@@ -31,12 +31,12 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [userID, guildID = d.ctx?.guild?.id, reason]) => {
         if (userID === undefined)
-            throw new d.error(d, 'required', 'name', d.function!.name);
+            throw new d.error(d, 'required', 'name', d.function.name);
         const member = await d.util.getMember(userID, d.ctx?.guild);
         if (!member)
-            throw new d.error(d, 'invalid', 'member', d.function!.name);
+            throw new d.error(d, 'invalid', 'member', d.function.name);
         await member.kick(reason).catch(e => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e));
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e));
         });
     }
 });

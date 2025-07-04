@@ -13,7 +13,8 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'automodRuleDelete');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             commandType: 'automodRuleDelete',
             functions: bot.functions,
             reader: bot.reader

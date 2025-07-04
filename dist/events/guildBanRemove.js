@@ -14,9 +14,10 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'banRemove');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             env: {
-                'reason': ban.reason
+                reason: ban.reason
             },
             commandType: 'banRemove',
             functions: bot.functions,

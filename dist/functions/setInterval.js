@@ -32,16 +32,17 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [duration, code, variable]) => {
         if (duration === undefined)
-            throw new d.error(d, 'required', 'Duration', d.function!.name);
+            throw new d.error(d, 'required', 'Duration', d.function.name);
         if (code === undefined)
-            throw new d.error(d, 'required', 'Code', d.function!.name);
+            throw new d.error(d, 'required', 'Code', d.function.name);
         const parsedDuration = (0, ms_1.default)(duration);
-        if (isNaN(parsedDuration))
-            throw new d.error(d, 'invalid', 'Duration', d.function!.name);
+        if (Number.isNaN(parsedDuration))
+            throw new d.error(d, 'invalid', 'Duration', d.function.name);
         setInterval(() => {
-            d.reader.compile(code, d).then((compiled) => {
+            d.reader.compile(code, d).then(compiled => {
                 if (compiled.code !== '')
-                    d.setEnvironmentVariable(variable, compiled.code), d.bot?.emit('interval', d.env);
+                    d.setEnvironmentVariable(variable, compiled.code),
+                        d.bot?.emit('interval', d.env);
             });
         }, (0, ms_1.default)(duration));
     }

@@ -21,12 +21,12 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, ...elements]) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'Array Name', d.function!.name);
+            throw new d.error(d, 'required', 'Array Name', d.function.name);
         if (elements[0] === undefined)
-            throw new d.error(d, 'required', 'Elements', d.function!.name);
+            throw new d.error(d, 'required', 'Elements', d.function.name);
         const args = d.getEnvironmentVariable(name);
         if (!d.hasEnvironmentVariable(name) || !Array.isArray(args))
-            throw new d.error(d, 'invalid', 'Array Name', d.function!.name);
+            throw new d.error(d, 'invalid', 'Array Name', d.function.name);
         for (const element of elements) {
             args.push(element);
         }

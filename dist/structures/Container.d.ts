@@ -1,6 +1,5 @@
-/// <reference types="node" />
 import type { Attachment, AttachmentBuilder, AttachmentPayload, APIAttachment, APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ActionRowData, BufferResolvable, JSONEncodable, MessageMentionOptions, MessageActionRowComponentData, MessageActionRowComponentBuilder, Snowflake, MessageMentionTypes } from 'discord.js';
-import type { Stream } from 'stream';
+import type { Stream } from 'node:stream';
 /**
  * Represents a message container.
  */

@@ -14,9 +14,8 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
+    allowFor: t => t === 'messageUpdate',
     code: async (d, [property]) => {
-        if (d.commandType !== 'messageUpdate')
-            throw new d.error(d, 'disallowed', d.function.name, 'onMessageUpdate event');
         if (property === undefined)
             throw new d.error(d, 'required', 'Property', d.function.name);
         const types = Object.keys(Properties_1.default.Channel);

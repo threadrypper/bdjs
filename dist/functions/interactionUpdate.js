@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const Function_1 = require("../structures/Function");
-const util_1 = require("util");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Updates an interaction.',
     parameters: [
@@ -31,7 +31,7 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [message, fetchReply = 'true', returnId = 'false']) => {
         if (!(d.ctx?.raw instanceof discord_js_1.MessageComponentInteraction))
-            throw new d.error(d, 'disallowed', d.function!.name, 'component interactions');
+            throw new d.error(d, 'disallowed', d.function.name, 'component interactions');
         if (!d.ctx?.raw.isRepliable())
             throw new d.error(d, 'custom', `${d.commandType} is not repliable.`);
         if (!d.ctx?.raw.replied)
@@ -41,7 +41,7 @@ exports.default = new Function_1.BaseFunction({
             d.container.pushContent(result.code);
         d.container.setFetchReply(fetchReply === 'true');
         const data = await d.ctx?.raw.update(d.container).catch(e => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e, { depth: 4 }));
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e, { depth: 4 }));
         });
         d.container.clear();
         if (data instanceof discord_js_1.Message && returnId === 'true')

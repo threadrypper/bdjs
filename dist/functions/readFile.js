@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Function_1 = require("../structures/Function");
-const promises_1 = require("fs/promises");
-const util_1 = require("util");
+const promises_1 = require("node:fs/promises");
+const node_util_1 = require("node:util");
 exports.default = new Function_1.BaseFunction({
     description: 'Reads a file and load the result into a environment variable.',
     parameters: [
@@ -31,16 +31,18 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [directory, variable, encoding = 'utf-8']) => {
         if (directory === undefined)
-            throw new d.error(d, 'required', 'Directory', d.function!.name);
+            throw new d.error(d, 'required', 'Directory', d.function.name);
         if (variable === undefined)
-            throw new d.error(d, 'required', 'Variable Name', d.function!.name);
+            throw new d.error(d, 'required', 'Variable Name', d.function.name);
         await (0, promises_1.readFile)(directory, {
             encoding: encoding
-        }).then(str => {
+        })
+            .then(str => {
             if (str.length > 0)
                 d.setEnvironmentVariable(variable, str);
-        }).catch(e => {
-            throw new d.error(d, 'custom', (0, util_1.inspect)(e, { depth: 1 }));
+        })
+            .catch(e => {
+            throw new d.error(d, 'custom', (0, node_util_1.inspect)(e, { depth: 1 }));
         });
     }
 });

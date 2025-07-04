@@ -14,7 +14,8 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'emojiCreate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             commandType: 'emojiCreate',
             functions: bot.functions,
             reader: bot.reader

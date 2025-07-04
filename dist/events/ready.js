@@ -15,21 +15,31 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 const Event_1 = require("../structures/Event");
 const Plugin_1 = require("../structures/Plugin");
 const Data_1 = require("../structures/Data");
 const BDJSLog_1 = require("../util/BDJSLog");
 const undici_1 = require("undici");
-const child_process_1 = require("child_process");
-const util_1 = require("util");
+const node_child_process_1 = require("node:child_process");
+const node_util_1 = require("node:util");
 exports.default = new Event_1.BaseEvent({
     name: 'onReady',
     description: 'Executed when client user is ready.',
@@ -38,7 +48,7 @@ exports.default = new Event_1.BaseEvent({
         await bot.functions.loadNatives().then(() => {
             if (bot.extraOptions.debug === true)
                 BDJSLog_1.BDJSLog.debug([
-                    `${bot.functions.size} native functions were loaded`,
+                    `${bot.functions.size} native functions were loaded`
                     // '$' + bot.functions.keyArray().join(' - $')
                 ].join('\n'));
         });
@@ -49,9 +59,9 @@ exports.default = new Event_1.BaseEvent({
                     plugin.__attach__(bot);
                     BDJSLog_1.BDJSLog.info(`Plugin loaded: "${plugin.name}" - ${plugin.version}`);
                 }
+                // @ts-ignore
                 else
-                    // @ts-ignore
-                    BDJSLog_1.BDJSLog.error('Cannot load plugin: ' + plugin.constructor.name);
+                    BDJSLog_1.BDJSLog.error(`Cannot load plugin: ${plugin.constructor.name}`);
             }
         }
         const autoUpdate = bot.extraOptions.autoUpdate ?? true;
@@ -66,33 +76,25 @@ exports.default = new Event_1.BaseEvent({
                 'User-Agent': 'bdjs'
             }
         });
-        const npmdata = await result.body.json();
+        const npmdata = (await result.body.json());
         const fetchedVersion = npmdata['dist-tags'].latest;
         if (fetchedVersion !== currentVersion && disableLogs === false) {
             BDJSLog_1.BDJSLog.warn([
                 'You are using an outdated version of BDJS!',
-                'Last version: ' + fetchedVersion,
-                'Current version: ' + currentVersion
+                `Last version: ${fetchedVersion}`,
+                `Current version: ${currentVersion}`
             ].join('\n'));
         }
         else if (fetchedVersion === currentVersion && disableLogs === false) {
-            BDJSLog_1.BDJSLog.info([
-                'Using the latest version of BDJS: ' + currentVersion
-            ].join('\n'));
+            BDJSLog_1.BDJSLog.info([`Using the latest version of BDJS: ${currentVersion}`].join('\n'));
         }
         if (autoUpdate && fetchedVersion !== currentVersion) {
-            const res = (0, child_process_1.exec)('npm i bdjs@latest', error => {
+            const res = (0, node_child_process_1.exec)('npm i bdjs@latest', error => {
                 if (error) {
-                    BDJSLog_1.BDJSLog.error([
-                        'AutoUpdate Error',
-                        JSON.stringify(error, null, 4)
-                    ].join('\n'));
+                    BDJSLog_1.BDJSLog.error(['AutoUpdate Error', JSON.stringify(error, null, 4)].join('\n'));
                 }
                 else {
-                    BDJSLog_1.BDJSLog.info([
-                        'Updated successfully',
-                        'Please reboot the process.'
-                    ].join('\n'));
+                    BDJSLog_1.BDJSLog.info(['Updated successfully', 'Please reboot the process.'].join('\n'));
                     process.exit();
                 }
             });
@@ -109,7 +111,7 @@ exports.default = new Event_1.BaseEvent({
         for (const command of commands) {
             data.command = command;
             await data.reader.compile(command.code, data).catch(e => {
-                BDJSLog_1.BDJSLog.error((0, util_1.inspect)(e, { depth: 4 }));
+                BDJSLog_1.BDJSLog.error((0, node_util_1.inspect)(e, { depth: 4 }));
             });
         }
         if (bot.status.size > 0)

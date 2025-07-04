@@ -9,12 +9,13 @@ exports.default = new Event_1.BaseEvent({
     async listener(bot, channel) {
         const context = new Context_1.Context({
             channel,
-            guild: channel.guild ?? await bot.guilds.fetch(channel.guildId),
+            guild: channel.guild ?? (await bot.guilds.fetch(channel.guildId)),
             raw: channel
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'channelCreate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             commandType: 'channelCreate',
             functions: bot.functions,
             reader: bot.reader

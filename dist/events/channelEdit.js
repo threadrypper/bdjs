@@ -17,10 +17,11 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'channelUpdate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             env: {
-                '__BDJS__OLD__CHANNEL__': old_channel,
-                '__BDJS__NEW__CHANNEL__': new_channel
+                __BDJS__OLD__CHANNEL__: old_channel,
+                __BDJS__NEW__CHANNEL__: new_channel
             },
             commandType: 'channelUpdate',
             functions: bot.functions,

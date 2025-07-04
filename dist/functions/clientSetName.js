@@ -14,7 +14,7 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name]) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'URL', d.function!.name);
+            throw new d.error(d, 'required', 'URL', d.function.name);
         await d.bot?.user.setUsername(name);
     }
 });

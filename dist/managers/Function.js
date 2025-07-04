@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FunctionManager = void 0;
 const tslib_1 = require("tslib");
 const Function_1 = require("../structures/Function");
-const promises_1 = require("fs/promises");
-const path_1 = require("path");
+const promises_1 = require("node:fs/promises");
+const node_path_1 = require("node:path");
 class FunctionManager extends Map {
     constructor() {
         super(...arguments);
@@ -23,14 +23,13 @@ class FunctionManager extends Map {
      * @returns {Promise<void>}
      */
     async loadNatives() {
-        const root = __dirname.replace('managers', 'functions'), files = await (0, promises_1.readdir)(root);
+        const root = __dirname.replace('managers', 'functions');
+        const files = await (0, promises_1.readdir)(root);
         for (const file of files) {
             if (file.endsWith('.js')) {
-                const func = require((0, path_1.join)(root, file)).default;
+                const func = require((0, node_path_1.join)(root, file)).default;
                 if (func instanceof Function_1.BaseFunction) {
-                    const name = (file.startsWith('$')
-                        ? file.slice(1, -3)
-                        : file.slice(0, -3)).toLowerCase();
+                    const name = (file.startsWith('$') ? file.slice(1, -3) : file.slice(0, -3)).toLowerCase();
                     this.set(name, func);
                 }
             }
@@ -43,7 +42,8 @@ class FunctionManager extends Map {
      */
     add(...data) {
         for (const func of data) {
-            const name = func.name.toLowerCase(), body = func;
+            const name = func.name.toLowerCase();
+            const body = func;
             this.set(name.startsWith('$') ? name.slice(1) : name, body);
         }
         return this;
@@ -56,9 +56,7 @@ class FunctionManager extends Map {
      * @returns {FunctionManager}
      */
     inject(target, name, data) {
-        tslib_1.__classPrivateFieldGet(this, _FunctionManager_injections, "f")[name.startsWith('$')
-            ? name.slice(1).toLowerCase()
-            : name.toLowerCase()] = {
+        tslib_1.__classPrivateFieldGet(this, _FunctionManager_injections, "f")[name.startsWith('$') ? name.slice(1).toLowerCase() : name.toLowerCase()] = {
             data,
             name: name.startsWith('$')
                 ? name.slice(1).toLowerCase()

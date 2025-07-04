@@ -15,10 +15,11 @@ exports.default = new Event_1.BaseEvent({
         }, bot);
         const commands = Array.from(bot.commands.values()).filter(cmd => cmd.type === 'memberUpdate');
         const data = new Data_1.Data({
-            bot, ctx: context,
+            bot,
+            ctx: context,
             env: {
-                '__BDJS__OLD__MEMBER__': old_member,
-                '__BDJS__NEW__MEMBER__': new_member
+                __BDJS__OLD__MEMBER__: old_member,
+                __BDJS__NEW__MEMBER__: new_member
             },
             commandType: 'memberUpdate',
             functions: bot.functions,

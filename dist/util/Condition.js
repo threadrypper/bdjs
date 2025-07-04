@@ -1,14 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Condition = void 0;
-const fullSymbols = [
-    '>=',
-    '<=',
-    '==',
-    '!=',
-    '>',
-    '<'
-];
+const fullSymbols = ['>=', '<=', '==', '!=', '>', '<'];
 /**
  * Represents a condition parser.
  */
@@ -20,15 +13,17 @@ class Condition {
             const orResults = [];
             const ors = and.split('||').map(x => x.trim());
             for (const or of ors) {
-                let [left, operator, right] = or.split(new RegExp(`(${fullSymbols.join('|')})`, 'ig')).map(t => t.trim());
+                let [left, operator, right] = or
+                    .split(new RegExp(`(${fullSymbols.join('|')})`, 'ig'))
+                    .map(t => t.trim());
                 if (!operator)
-                    operator = '==', right = left;
+                    (operator = '=='), (right = left);
                 switch (operator) {
                     case '==':
-                        orResults.push(left == right);
+                        orResults.push(left === right);
                         break;
                     case '!=':
-                        orResults.push(left != right);
+                        orResults.push(left !== right);
                         break;
                     case '>=':
                         orResults.push(Number(left) >= Number(right));

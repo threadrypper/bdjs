@@ -13,11 +13,14 @@ exports.default = new Function_1.BaseFunction({
         }
     ],
     code: async (d, [options]) => {
-        if ((d.commandType === 'anyInteraction' && !d.ctx?.interaction?.isAutocomplete()) || d.commandType !== 'autocompleteInteraction')
+        if ((d.commandType === 'anyInteraction' &&
+            !d.ctx?.interaction?.isAutocomplete()) ||
+            d.commandType !== 'autocompleteInteraction')
             throw new d.error(d, 'disallowed', d.function.name, 'autocompleteInteraction');
         if (options === undefined)
             throw new d.error(d, 'required', 'Options', d.function.name);
-        const data = d.extend(d), choices = [];
+        const data = d.extend(d);
+        const choices = [];
         data.functions.add({
             name: 'appendOption',
             description: 'Appends an option to the response.',

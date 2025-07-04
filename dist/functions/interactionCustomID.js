@@ -6,7 +6,7 @@ exports.default = new Function_1.BaseFunction({
     description: 'Returns the customID of the interaction.',
     code: async (d) => {
         if (!(d.ctx?.raw instanceof discord_js_1.BaseInteraction) && !d.ctx?.raw.customID)
-            throw new d.error(d, 'disallowed', d.function!.name, 'component interactions');
+            throw new d.error(d, 'disallowed', d.function.name, 'component interactions');
         return d.ctx?.raw.customID;
     }
 });

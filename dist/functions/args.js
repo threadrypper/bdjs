@@ -26,14 +26,13 @@ exports.default = new Function_1.BaseFunction({
             value: 'none'
         }
     ],
+    allowFor: e => ALLOWED_EVENTS.includes(e),
     code: async (d, [index = '-1', endIndex]) => {
-        if (!ALLOWED_EVENTS.includes(d.commandType))
-            throw new d.error(d, 'disallowed', d.function.name, 'Message Context');
         if (index === undefined)
             throw new d.error(d, 'required', 'Index', d.function.name);
-        if (isNaN(Number(index)))
+        if (Number.isNaN(Number(index)))
             throw new d.error(d, 'invalid', 'Index', d.function.name);
-        if (endIndex && isNaN(Number(endIndex)))
+        if (endIndex && Number.isNaN(Number(endIndex)))
             throw new d.error(d, 'invalid', 'End Index', d.function.name);
         const args = d.getEnvironmentVariable('__BDJS__ARGS__');
         return endIndex

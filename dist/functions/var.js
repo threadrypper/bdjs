@@ -21,9 +21,9 @@ exports.default = new Function_1.BaseFunction({
     ],
     code: async (d, [name, value]) => {
         if (name === undefined)
-            throw new d.error(d, 'required', 'name', d.function!.name);
+            throw new d.error(d, 'required', 'name', d.function.name);
         if (value === undefined)
-            throw new d.error(d, 'required', 'value', d.function!.name);
+            throw new d.error(d, 'required', 'value', d.function.name);
         d.setEnvironmentVariable(name, value);
     }
 });
