@@ -1,0 +1,36 @@
+{
+  "name": "bdjs",
+  "version": "2.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "build": "tsc && tsc-alias"
+  },
+  "keywords": [
+    "bdfd",
+    "bot designer for discord",
+    "discord",
+    "bot",
+    "aoi.js",
+    "aoijs",
+    "dbd.js",
+    "dbd.ts"
+  ],
+  "author": "Cyberghxst",
+  "license": "MIT",
+  "contributors": [
+    "Cyberghxst <cyberghxst@petalmail.com>"
+  ],
+  "packageManager": "pnpm@10.19.0",
+  "dependencies": {
+    "ascii-table3": "^1.0.1",
+    "oceanic.js": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/uglify-js": "^3.17.5",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3",
+    "uglify-js": "^3.19.3"
+  }
+}
