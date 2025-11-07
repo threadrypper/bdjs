@@ -4,7 +4,9 @@ import { Client, type ClientEvents, type ClientOptions } from 'oceanic.js'
 /**
  * The discord client events prefixed with 'on'.
  */
-export type DiscordClientEvents = `on${Capitalize<keyof ClientEvents>}`
+export type DiscordClientEvents = {
+    [K in keyof ClientEvents as `on${Capitalize<string & K>}`]: ClientEvents[K]
+}
 
 /**
  * Options for setting up the Discord client.
@@ -13,7 +15,7 @@ export interface DiscordClientSetupOptions extends ClientOptions {
     /**
      * Events to listen to for the Discord client.
      */
-    events: DiscordClientEvents[]
+    events: (keyof DiscordClientEvents)[]
 
     /**
      * Command prefixes for the Discord client.
@@ -28,7 +30,8 @@ export class DiscordClient extends Client {
     /**
      * The events to listen to for the client.
      */
-    private loadedEvents: DiscordClientEvents[] = []
+    private loadedEvents: (keyof DiscordClientEvents)[] = []
+    
     /**
      * The command prefixes for the client.
      */
