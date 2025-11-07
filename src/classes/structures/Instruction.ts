@@ -1,3 +1,6 @@
+import type { Task } from '@core/Task'
+import type { Scope } from '@core/Scope'
+
 /**
  * Enumeration of possible data types for instruction outputs.
  */
@@ -92,5 +95,5 @@ export interface Instruction {
      * @param args The arguments to pass to the function.
      * @returns The result of the function execution.
      */
-    run:            (fn: unknown, scope: unknown, args: unknown[]) => Promise<string | undefined> | string | undefined
+    run:            (fn: Task, scope: Scope, args: unknown[]) => Promise<string | undefined> | string | undefined
 }
