@@ -1,9 +1,0 @@
-# $stringIndexOf
-Finds the index of the first character matched.
-## Usage
-> `$stringIndexOf[text;character]`
-## Parameters
-|   Name    |      Description       |  Type  | Default value |
-|-----------|------------------------|--------|---------------|
-| Text      | The text to work with. | String | none          |
-| Character | Character to be found. | String | none          |

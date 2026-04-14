@@ -1,4 +1,4 @@
-import type { Data } from '../structures/Data'
+import { Runtime } from '../classes/internal/Runtime'
 import { RawFunction, RawString } from './Structures'
 import type { BaseFieldOptions, BaseFunction } from '../structures/Function'
 import { BDJSLog } from '../util/BDJSLog'
@@ -79,8 +79,8 @@ export class Reader {
 	 * @param {Data} data Environment data.
 	 * @returns {Promise<Data>}
 	 */
-	async compile(code: string, data: Data) {
-		data.setEnvironmentVariable('__BDJS__PERFORMANCE__', performance.now())
+	async compile(code: string, runtime: Runtime) {
+		runtime.setEnvironmentVariable('performance', performance.now())
 
 		const lines = code
 			.trim()
