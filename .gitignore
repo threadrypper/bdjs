@@ -1,0 +1,15 @@
+# Folders
+/database
+/node_modules
+/test
+
+# Files
+.env
+builders.descriptions.txt
+command.types.descriptions.txt
+injection.descriptions.txt
+event.names.descriptions.txt
+package-lock.json
+pnpm-lock.yaml
+tsconfig.tsbuildinfo
+sidebar.md
