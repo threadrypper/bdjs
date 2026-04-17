@@ -1,7 +1,7 @@
 import { Runtime } from '../classes/internal/Runtime'
 import { RawFunction, RawString } from './Structures'
-import type { BaseFieldOptions, BaseFunction } from '../structures/Function'
-import { BDJSLog } from '../util/BDJSLog'
+import { InterpretingError } from '../classes/internal/Errors'
+import { InstructionArgOptions } from '../classes/internal/Instruction'
 
 /**
  * Represents the compiled data by BDJS reader.
@@ -76,12 +76,9 @@ export class Reader {
 	/**
 	 * Reads BDJS code.
 	 * @param {string} code BDJS code to read.
-	 * @param {Data} data Environment data.
-	 * @returns {Promise<Data>}
+	 * @returns {CompiledData}
 	 */
-	async compile(code: string, runtime: Runtime) {
-		runtime.setEnvironmentVariable('performance', performance.now())
-
+	static compile(code: string): CompiledData {
 		const lines = code
 			.trim()
 			.split('\n')
@@ -190,24 +187,19 @@ export class Reader {
 			compiled.type = 'any'
 		}
 
+		return compiled
+	}
+
+	static async interpret(compiledData: CompiledData, runtime: Runtime) {
 		const parsedFunctions: string[] = []
-		const texts = compiled.strings.map(str => str.value)
+		const texts = compiledData.strings.map(str => str.value)
 
-		for (const dfunc of compiled.functions) {
-			if (data.bot?.extraOptions.debug === true)
-				BDJSLog.debug(`Parsing ${dfunc.name} => ${dfunc.toString}`)
-			if (data.stop) break
+		for (const dfunc of compiledData.functions) {
+			if (runtime.mustStop) break
 
-			const spec = data.functions.get(dfunc.name.slice(1).toLowerCase())
-			const functionData = { name: dfunc.name, ...spec } as BaseFunction & {
-				name: string
-			}
-			data.function = functionData
-
+			const spec = runtime.instructions.get(dfunc.name.slice(1).toLowerCase())
 			if (!spec)
-				throw new data.error(
-					data,
-					'custom',
+				throw new InterpretingError(
 					[
 						`"${dfunc.name}" is not a function.`,
 						'|-> Please provide a valid function name at:',
@@ -218,9 +210,7 @@ export class Reader {
 				)
 
 			if (dfunc.closed === false)
-				throw new data.error(
-					data,
-					'custom',
+				throw new InterpretingError(
 					[
 						`"${dfunc.name}" is not a closed.`,
 						'|-> Please make sure to close function fields at:',
@@ -230,13 +220,28 @@ export class Reader {
 					].join('\n')
 				)
 
-			if (spec.allowFor && !spec.allowFor(data.commandType)) {
-				throw new data.error(
-					data,
-					`custom`,
+			runtime.self.data = spec
+			runtime.self.raw = dfunc
+			const fields = dfunc.fields.map(field => field.value)
+			const newFields: string[] = []
+
+			for (let idx = 0; idx < fields.length; idx++) {
+				const field = fields[idx]
+				const compile = spec.interpret
+
+				const parsed = compile
+					? ((await Reader.compileAndInterpret(field, runtime))?.getResultString() ?? '')
+					: field
+				newFields.push(Reader.unescapeParam(parsed, spec.args?.at(idx)))
+			}
+
+			const result = await spec.run(runtime, newFields)
+
+			if (result.isError()) {
+				throw new InterpretingError(
 					[
-						'|-> Invalid function context.',
-						`|-> Function "${dfunc.name}" expects to be used meeting the following callback: ${spec.allowFor.toString()}`,
+						`"${dfunc.name}" returned an error.`,
+						'|-> Please check the function arguments at:',
 						`|-> Line: ${dfunc.line}`,
 						`|-> Source: "${dfunc.toString}"`,
 						'|-------------------------------------------------'
@@ -244,62 +249,40 @@ export class Reader {
 				)
 			}
 
-			const fields = dfunc.fields.map(field => field.value)
-			const newFields: string[] = []
-
-			for (let idx = 0; idx < fields.length; idx++) {
-				const field = fields[idx]
-				const compile =
-					typeof spec.parameters?.[idx] === 'undefined'
-						? true
-						: 'compile' in spec.parameters[idx]
-							? spec.parameters[idx].compile === true
-							: true
-
-				const parsed = compile
-					? ((await data.reader.compile(field, data))?.code ?? '')
-					: field
-				newFields.push(Reader.unescapeParam(parsed, spec.parameters?.[idx]))
-			}
-
-			const result = await spec.code(data, newFields).catch(e => {
-				if (data.bot?.extraOptions.events.includes('onError'))
-					data.bot.emit('error', e)
-				throw e
-			})
-
 			parsedFunctions[parsedFunctions.length] =
-				result === undefined ? '' : result
+				result.value === '' ? '' : result.value
 		}
 
 		parsedFunctions.forEach((text, index) => {
-			if (data.bot?.extraOptions.debug === true)
-				BDJSLog.debug(
-					`Replacing overload "(call_${index})" to "${text === '' ? 'none' : text}"`
-				)
-
 			texts[texts.indexOf(`(call_${index})`)] = text
 		})
 
-		data.setCode(removeUnsafeText(texts.join('').trim()))
-		data.compiled = compiled
-		return data as Data
+		runtime.setResultString(removeUnsafeText(texts.join('').trim()))
+		runtime.setCompiledData(compiledData)
+		return runtime
+	}
+
+	/**
+	 * Compiles and interprets BDJS code.
+	 * Shorthand for `Reader.compile(code)` and `Reader.interpret(compiledData, runtime)`.
+	 * @param {string} code BDJS code to compile and interpret.
+	 * @param {Runtime} runtime Runtime to use.
+	 * @returns {Promise<Runtime>}
+	 */
+	static async compileAndInterpret(code: string, runtime: Runtime) {
+		const compiledData = Reader.compile(code)
+		return await Reader.interpret(compiledData, runtime)
 	}
 
 	/**
 	 * Unescapes a function parameter.
-	 * @param self - The parameter value.
+	 * @param value - The parameter value.
 	 * @param spec - Parameter specificaction.
 	 * @returns {string}
 	 */
-	static unescapeParam(self: string, spec?: BaseFieldOptions) {
-		const allowed =
-			typeof spec === 'undefined'
-				? true
-				: 'unescape' in spec
-					? spec.unescape === true
-					: true
-
-		return allowed ? UnescapeText(self) : self
+	static unescapeParam(value: string, spec?: InstructionArgOptions) {
+		if (!spec) return value
+		const allowed = !!spec.unescape
+		return allowed ? UnescapeText(value) : value
 	}
 }

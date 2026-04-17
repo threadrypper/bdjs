@@ -1,7 +1,7 @@
 /**
  * Represents a BDJS function field value.
  */
-class FunctionField {
+export class FunctionField {
 	public index: number
 	public value: string
 	constructor(index: number, value: string) {

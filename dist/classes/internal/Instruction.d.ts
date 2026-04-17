@@ -1,25 +1,22 @@
-import { Output } from './Output'
-import { Runtime } from './Runtime'
-
-export enum DataType {
-    ANY = 'any',
-    NUMBER = 'number',
-    BOOLEAN = 'boolean',
-    ARRAY = 'array',
-    OBJECT = 'object',
-    NULL = 'null',
-    UNDEFINED = 'undefined'
+import { Output } from './Output';
+import { Runtime } from './Runtime';
+export declare enum DataType {
+    ANY = "any",
+    NUMBER = "number",
+    BOOLEAN = "boolean",
+    ARRAY = "array",
+    OBJECT = "object",
+    NULL = "null",
+    UNDEFINED = "undefined"
 }
-
 export interface InstructionArgOptions {
-    name: string
-    description: string
-    required: boolean
-    type: DataType
-    spread: boolean
-    unescape?: boolean
+    name: string;
+    description: string;
+    required: boolean;
+    type: DataType;
+    spread: boolean;
+    unescape?: boolean;
 }
-
 interface BaseInstruction {
     /**
      * The name of the instruction.
@@ -28,7 +25,7 @@ interface BaseInstruction {
      * '$meow'
      * ```
      */
-    name: `$${string}`
+    name: `$${string}`;
     /**
      * The description of the instruction.
      * @example
@@ -36,34 +33,34 @@ interface BaseInstruction {
      * 'Meows like a cat.'
      * ```
      */
-    description: string
+    description: string;
     /**
      * If true, it means this instruction will interpret the arguments.
      */
-    interpret: boolean
+    interpret: boolean;
     /**
      * The arguments for this instruction.
      */
-    args?: InstructionArgOptions[]
+    args?: InstructionArgOptions[];
     /**
      * If true, it means this instruction requires brackets.
      * This property is set automatically.
      */
-    brackets?: boolean
+    brackets?: boolean;
     /**
      * If true, it means this is an experimental function.
      */
-    experimental?: true
+    experimental?: true;
     /**
      * If true, it means this is a deprecated function.
      */
-    deprecated?: true
+    deprecated?: true;
     /**
      * @ignore
      * The version when this function was introduced.
      * **DO NOT PROVIDE THIS.**
      */
-    version?: string
+    version?: string;
     /**
      * The output type of the instruction.
      * @example
@@ -71,26 +68,24 @@ interface BaseInstruction {
      * DataType.NUMBER
      * ```
      */
-    output?: DataType
-    run: (runtime: Runtime, args?: string[]) => Promise<Output> | Output
+    output?: DataType;
+    run: (runtime: Runtime, args?: string[]) => Promise<Output> | Output;
 }
-
 interface NormalInstruction extends BaseInstruction {
     /**
      * If undefined, it means this is not a builder function.
      */
-    builder?: false | undefined
+    builder?: false | undefined;
     /**
      * This value does not exist.
      */
-    builderOptions?: never
+    builderOptions?: never;
 }
-
 interface BuilderInstruction extends BaseInstruction {
     /**
      * If true, wont be loaded at startup.
      */
-    builder: true
+    builder: true;
     /**
      * @ignore
      * The options for the builder function.
@@ -103,11 +98,11 @@ interface BuilderInstruction extends BaseInstruction {
          * '$meow'
          * ```
          */
-        allowFor: string
-    }
+        allowFor: string;
+    };
 }
-
 /**
  * Union type for instructions.
  */
-export type IBDJSInstruction = NormalInstruction | BuilderInstruction
+export type IBDJSInstruction = NormalInstruction | BuilderInstruction;
+export {};

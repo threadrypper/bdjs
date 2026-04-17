@@ -1,4 +1,5 @@
 import { createInstruction } from '../utils/createInstruction'
+import { Output } from '../classes/internal/Output'
 
 export const data = createInstruction({
     name: '$cat',
@@ -6,5 +7,6 @@ export const data = createInstruction({
     interpret: false,
     run: (runtime) => {
         console.log('Meow!')
+        return Output.ok()
     }
 })
