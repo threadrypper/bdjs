@@ -57,7 +57,7 @@ export class Runtime {
      * @param callback The callback to apply to each argument.
      * @returns {Array<string | FunctionField>} The compiled arguments.
      */
-    getCompiledArgs(callback: (arg: FunctionField) => string | FunctionField = (arg) => arg) {
+    getCompiledArgs(callback: (arg: FunctionField) => string | FunctionField = (arg) => arg.value) {
         return this.self.raw.fields.map(callback)
     }
 
