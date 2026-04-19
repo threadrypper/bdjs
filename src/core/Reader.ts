@@ -259,56 +259,56 @@ export class Reader {
 		const parsedFunctions: string[] = []
 		const texts = compiledData.strings.map(str => str.value)
 
-		for (const dfunc of compiledData.functions) {
+		for (const currentCompiledFunction of compiledData.functions) {
 			if (runtime.mustStop) break
 
-			const spec = runtime.instructions.get(dfunc.name.slice(1).toLowerCase())
-			if (!spec)
+			const instruction = runtime.instructions.get(currentCompiledFunction.name.slice(1).toLowerCase())
+			if (!instruction)
 				throw new InterpretingError(
 					[
-						`"${dfunc.name}" is not a function.`,
+						`"${currentCompiledFunction.name}" is not a function.`,
 						'|-> Please provide a valid function name at:',
-						`|-> Line: ${dfunc.line}`,
-						`|-> Source: "${dfunc.toString}"`,
+						`|-> Line: ${currentCompiledFunction.line}`,
+						`|-> Source: "${currentCompiledFunction.toString}"`,
 						'|--------------------------------------------'
 					].join('\n')
 				)
 
-			if (dfunc.closed === false)
+			if (currentCompiledFunction.closed === false)
 				throw new InterpretingError(
 					[
-						`"${dfunc.name}" is not a closed.`,
+						`"${currentCompiledFunction.name}" is not a closed.`,
 						'|-> Please make sure to close function fields at:',
-						`|-> Line: ${dfunc.line}`,
-						`|-> Source: "${dfunc.toString}"`,
+						`|-> Line: ${currentCompiledFunction.line}`,
+						`|-> Source: "${currentCompiledFunction.toString}"`,
 						'|-------------------------------------------------'
 					].join('\n')
 				)
 
-			runtime.self.data = spec
-			runtime.self.raw = dfunc
-			const fields = dfunc.fields.map(field => field.value)
+			runtime.self.data = instruction
+			runtime.self.raw = currentCompiledFunction
+			const fields = currentCompiledFunction.fields.map(field => field.value)
 			const newFields: string[] = []
 
 			for (let idx = 0; idx < fields.length; idx++) {
 				const field = fields[idx]
-				const compile = spec.interpret
+				const compile = instruction.interpret
 
 				const parsed = compile
 					? ((await Reader.compileAndInterpret(field, runtime))?.getResultString() ?? '')
 					: field
-				newFields.push(Reader.unescapeParam(parsed, spec.args?.at(idx)))
+				newFields.push(Reader.unescapeParam(parsed, instruction.args?.at(idx)))
 			}
 
-			const result = await spec.run(runtime, newFields)
+			const result = await instruction.run(runtime, newFields)
 
 			if (result.isError()) {
 				throw new InterpretingError(
 					[
-						`"${dfunc.name}" returned an error.`,
+						`"${currentCompiledFunction.name}" returned an error.`,
 						'|-> Please check the function arguments at:',
-						`|-> Line: ${dfunc.line}`,
-						`|-> Source: "${dfunc.toString}"`,
+						`|-> Line: ${currentCompiledFunction.line}`,
+						`|-> Source: "${currentCompiledFunction.toString}"`,
 						'|-------------------------------------------------'
 					].join('\n')
 				)
