@@ -82,7 +82,7 @@ function unescapeText(text: string) {
  * @returns {string}
  */
 function removeUnsafeText(text: string) {
-	return text.replace(/(\(call_\d+\))/g, '')
+	return text.replace(/\(call_\d+\)/g, '')
 }
 
 /**
