@@ -4,7 +4,7 @@ import { InterpretingError, ReadingError } from '../classes/internal/Errors'
 import { InstructionArgOptions } from '../classes/internal/Instruction'
 
 /**
- * Represents the compiled data by BDJS reader.
+ * Internal parser context.
  */
 export interface ParserContext {
 	function: RawFunction
@@ -15,6 +15,9 @@ export interface ParserContext {
 	state: ReaderState
 }
 
+/**
+ * Represents the compiled data by BDJS reader.
+ */
 export interface CompiledData {
 	functions: RawFunction[]
 	strings: RawString[]
