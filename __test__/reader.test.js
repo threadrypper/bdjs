@@ -6,7 +6,7 @@ const runtime = new Runtime()
 runtime.instructions.load(INTERNAL_INSTRUCTIONS_DIRECTORY)
 
 console.time('parsing')
-const compiled = Parser.parse('$log[$version]')
+const compiled = Parser.parse('$jsEval[console.log("Hello World".toUpperCase())]')
 console.timeEnd('parsing')
 
 console.time('running')

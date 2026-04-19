@@ -23,7 +23,7 @@ class InstructionManager extends Map {
         for (const file of files) {
             const instruction = require(file).data;
             if (filter(instruction)) {
-                this.set(instruction.name.slice(1), instruction);
+                this.set(instruction.name.slice(1).toLowerCase(), instruction);
             }
         }
     }
