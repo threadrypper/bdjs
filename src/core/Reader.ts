@@ -312,12 +312,11 @@ export class Reader {
 			runtime.self.raw = currentCompiledFunction
 			const fields = currentCompiledFunction.fields.map(field => field.value)
 			const newFields: string[] = []
+			const shouldCompile = instruction.interpret
 
 			for (let idx = 0; idx < fields.length; idx++) {
 				const field = fields[idx]
-				const compile = instruction.interpret
-
-				const parsed = await resolveField(field, compile, runtime)
+				const parsed = await resolveField(field, shouldCompile, runtime)
 				newFields.push(Reader.unescapeParam(parsed, instruction.args?.at(idx)))
 			}
 
