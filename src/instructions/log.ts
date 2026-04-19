@@ -18,7 +18,7 @@ export const data = createInstruction({
     run: (runtime) => {
         const message = runtime.getCompiledArgs()
 
-        console.log(message)
+        console.log(...message)
 
         return Output.empty()
     }

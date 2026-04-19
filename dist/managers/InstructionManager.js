@@ -8,7 +8,7 @@ const recursiveReaddir_1 = require("../utils/recursiveReaddir");
  * @returns {boolean} True if the instruction should be loaded, false otherwise.
  */
 function shouldLoad(instruction) {
-    return instruction.builder === undefined || instruction.builder === false;
+    return !instruction.builder;
 }
 /**
  * Manages instructions.
@@ -19,11 +19,11 @@ class InstructionManager extends Map {
      * @param {string} directory The directory to load instructions from.
      */
     load(directory, filter = shouldLoad) {
-        const files = (0, recursiveReaddir_1.recursiveReaddir)(directory);
+        const files = (0, recursiveReaddir_1.recursiveReaddir)(directory, f => f.endsWith('.js'));
         for (const file of files) {
-            const instruction = require(file);
+            const instruction = require(file).data;
             if (filter(instruction)) {
-                this.set(instruction.name, instruction);
+                this.set(instruction.name.slice(1), instruction);
             }
         }
     }

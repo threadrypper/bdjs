@@ -8,16 +8,17 @@ const path_1 = require("path");
  * @param directory The directory to read.
  * @returns {string[]} An array of file paths.
  */
-function recursiveReaddir(directory) {
+function recursiveReaddir(directory, filter = () => true) {
     const files = [];
     const items = (0, fs_1.readdirSync)(directory, { withFileTypes: true });
     for (const item of items) {
         const path = (0, path_1.join)(directory, item.name);
         if (item.isDirectory()) {
-            files.push(...recursiveReaddir(path));
+            files.push(...recursiveReaddir(path, filter));
         }
         else {
-            files.push(path);
+            if (filter(path))
+                files.push(path);
         }
     }
     return files;

@@ -7,7 +7,7 @@ import { recursiveReaddir } from '@utils/recursiveReaddir'
  * @returns {boolean} True if the instruction should be loaded, false otherwise.
  */
 function shouldLoad(instruction: IBDJSInstruction): boolean {
-    return instruction.builder === undefined || instruction.builder === false
+    return !instruction.builder
 }
 
 /**
@@ -19,12 +19,11 @@ export class InstructionManager extends Map<string, IBDJSInstruction> {
      * @param {string} directory The directory to load instructions from.
      */
     load(directory: string, filter: (instruction: IBDJSInstruction) => boolean = shouldLoad) {
-        const files = recursiveReaddir(directory)
-
+        const files = recursiveReaddir(directory, f => f.endsWith('.js'))
         for (const file of files) {
-            const instruction = require(file)
+            const instruction = require(file).data
             if (filter(instruction)) {
-                this.set(instruction.name, instruction)
+                this.set(instruction.name.slice(1), instruction)
             }
         }
     }
