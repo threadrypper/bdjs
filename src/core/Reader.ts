@@ -6,15 +6,18 @@ import { InstructionArgOptions } from '../classes/internal/Instruction'
 /**
  * Represents the compiled data by BDJS reader.
  */
-export interface CompiledData {
-	functions: RawFunction[]
+export interface ParserContext {
 	function: RawFunction
-	strings: RawString[]
 	string: RawString
 	temp: RawString
 	depth: number
 	line: number
 	state: ReaderState
+}
+
+export interface CompiledData {
+	functions: RawFunction[]
+	strings: RawString[]
 }
 
 /**
@@ -91,12 +94,12 @@ enum ReaderState {
 /**
  * Resolves a field value.
  * @param {string} field - The field value.
- * @param {boolean} compile - Whether to compile the field value.
+ * @param {boolean} shouldCompile - Whether to compile the field value.
  * @param {Runtime} runtime - The runtime to use.
  * @returns {Promise<string>}
  */
-async function resolveField(field: string, compile: boolean, runtime: Runtime) {
-	if (!compile) return field
+async function resolveField(field: string, shouldCompile: boolean, runtime: Runtime) {
+	if (!shouldCompile) return field
 
 	const result = await Reader.compileAndInterpret(field, runtime)
 	return result?.getResultString() ?? ''
@@ -118,9 +121,7 @@ export class Reader {
 			.map(line => line.trim())
 			.join('\n')
 
-		const compiled: CompiledData = {
-			functions: [],
-			strings: [],
+		const ctx: ParserContext = {
 			function: new RawFunction(),
 			string: new RawString(),
 			depth: 0,
@@ -129,14 +130,19 @@ export class Reader {
 			temp: new RawString()
 		}
 
+		const compiled: CompiledData = {
+			functions: [],
+			strings: []
+		}
+
 		/**
 		 * Flushes the current string to the compiled data.
 		 * @returns {void}
 		 */
 		const flushString = () => {
-			if (compiled.string.isEmpty) return;
-			compiled.strings.push(compiled.string)
-			compiled.string = new RawString()
+			if (ctx.string.isEmpty) return;
+			compiled.strings.push(ctx.string)
+			ctx.string = new RawString()
 		}
 
 		/**
@@ -155,18 +161,18 @@ export class Reader {
 		 * @returns {void}
 		 */
 		const pushFunction = (closed = true) => {
-			compiled.function
-				.setName(compiled.temp.value)
-				.setLine(compiled.line)
+			ctx.function
+				.setName(ctx.temp.value)
+				.setLine(ctx.line)
 				.setIndex(compiled.functions.length)
 				.setClosed(closed);
 
 			injectCallRef()
 
-			compiled.functions.push(compiled.function)
+			compiled.functions.push(ctx.function)
 
-			compiled.function = new RawFunction()
-			compiled.temp = new RawString()
+			ctx.function = new RawFunction()
+			ctx.temp = new RawString()
 		}
 
 		// Reading each line character.
@@ -174,19 +180,19 @@ export class Reader {
 			const char = lines[i]
 			const next = lines[i + 1]
 
-			if (char === '\n') compiled.line++
+			if (char === '\n') ctx.line++
 
-			if ('[' === char) compiled.depth++
-			else if (']' === char) compiled.depth--
+			if ('[' === char) ctx.depth++
+			else if (']' === char) ctx.depth--
 
-			switch (compiled.state) {
+			switch (ctx.state) {
 				// Collecting everything else.
 				case ReaderState.Any: {
 					if ('$' === char && isWord(next)) {
 						flushString()
-						compiled.temp.write(char)
-						compiled.state = ReaderState.FunctionName
-					} else compiled.string.write(char)
+						ctx.temp.write(char)
+						ctx.state = ReaderState.FunctionName
+					} else ctx.string.write(char)
 					break
 				}
 
@@ -194,49 +200,49 @@ export class Reader {
 				case ReaderState.FunctionName: {
 					if (!/\w/.test(char) && char !== '[') {
 						pushFunction(true)
-						compiled.state = ReaderState.Any
-						compiled.string.write(char)
+						ctx.state = ReaderState.Any
+						ctx.string.write(char)
 					} else if ('[' === char) {
-						compiled.state = ReaderState.FunctionParameters
-						compiled.function
-							.setName(compiled.temp.value)
-							.setLine(compiled.line)
+						ctx.state = ReaderState.FunctionParameters
+						ctx.function
+							.setName(ctx.temp.value)
+							.setLine(ctx.line)
 							.setIndex(compiled.functions.length)
-						compiled.temp = new RawString()
-					} else compiled.temp.write(char)
+						ctx.temp = new RawString()
+					} else ctx.temp.write(char)
 					break
 				}
 
 				// Compiling [...ARGS]
 				case ReaderState.FunctionParameters: {
 					// If the depth is less than 0, it means there is an unexpected closing bracket.
-					if (compiled.depth < 0) {
+					if (ctx.depth < 0) {
 						throw new ReadingError(
 							[
 								`Unexpected closing bracket.`,
 								'|-> Please make sure to close function fields correctly at:',
-								`|-> Line: ${compiled.line}`,
-								`|-> Source: "${compiled.function.toString}"`,
+								`|-> Line: ${ctx.line}`,
+								`|-> Source: "${ctx.function.toString}"`,
 								'|-------------------------------------------------'
 							].join('\n')
 						)
 					}
 
-					if (';' === char && compiled.depth <= 1) {
-						compiled.function.addField(compiled.temp.value)
-						compiled.temp = new RawString()
-					} else if (']' === char && compiled.depth === 0) {
-						compiled.function.addField(compiled.temp.value)
+					if (';' === char && ctx.depth <= 1) {
+						ctx.function.addField(ctx.temp.value)
+						ctx.temp = new RawString()
+					} else if (']' === char && ctx.depth === 0) {
+						ctx.function.addField(ctx.temp.value)
 							.setClosed(true);
 
 						injectCallRef()
 
-						compiled.functions.push(compiled.function)
-						compiled.function = new RawFunction()
-						compiled.temp = new RawString()
+						compiled.functions.push(ctx.function)
+						ctx.function = new RawFunction()
+						ctx.temp = new RawString()
 
-						compiled.state = ReaderState.Any
-					} else compiled.temp.write(char)
+						ctx.state = ReaderState.Any
+					} else ctx.temp.write(char)
 					break
 				}
 			}
@@ -244,26 +250,26 @@ export class Reader {
 
 		flushString() // Just in case.
 
-		if (compiled.function.name !== '') {
-			compiled.functions.push(compiled.function)
-			compiled.function = new RawFunction()
+		if (ctx.function.name !== '') {
+			compiled.functions.push(ctx.function)
+			ctx.function = new RawFunction()
 		}
 
 		if (
-			compiled.temp.value.startsWith('$') &&
-			(compiled.state === ReaderState.FunctionName || compiled.state === ReaderState.FunctionParameters)
+			ctx.temp.value.startsWith('$') &&
+			(ctx.state === ReaderState.FunctionName || ctx.state === ReaderState.FunctionParameters)
 		) {
 			injectCallRef()
 
 			const rest = new RawFunction()
-				.setName(compiled.temp.value)
+				.setName(ctx.temp.value)
 				.setClosed(true)
 				.setIndex(compiled.functions.length)
-				.setLine(compiled.line)
+				.setLine(ctx.line)
 
 			compiled.functions.push(rest)
-			compiled.temp = new RawString()
-			compiled.state = ReaderState.Any
+			ctx.temp = new RawString()
+			ctx.state = ReaderState.Any
 		}
 
 		return compiled
