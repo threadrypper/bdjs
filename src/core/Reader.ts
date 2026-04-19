@@ -104,20 +104,32 @@ enum ReaderState {
 async function resolveField(field: string, shouldCompile: boolean, runtime: Runtime) {
 	if (!shouldCompile) return field
 
-	const result = await Reader.compileAndInterpret(field, runtime)
+	const result = await Interpreter.parseAndRun(field, runtime)
 	return result?.getResultString() ?? ''
 }
 
 /**
- * BDJS code reader.
+ * Unescapes a function parameter.
+ * @param {string} value - The parameter value.
+ * @param {InstructionArgOptions} spec - Parameter specificaction.
+ * @returns {string}
  */
-export class Reader {
+function unescapeParam(value: string, spec?: InstructionArgOptions) {
+	if (!spec) return value
+	const allowed = !!spec.unescape
+	return allowed ? unescapeText(value) : value
+}
+
+/**
+ * BDJS code parser.
+ */
+export class Parser {
 	/**
-	 * Reads BDJS code.
+	 * Parses BDJS code.
 	 * @param {string} code BDJS code to read.
 	 * @returns {CompiledData}
 	 */
-	static compile(code: string): CompiledData {
+	static parse(code: string): CompiledData {
 		const lines = code
 			.trim()
 			.split('\n')
@@ -277,8 +289,19 @@ export class Reader {
 
 		return compiled
 	}
+}
 
-	static async interpret(compiledData: CompiledData, runtime: Runtime) {
+/**
+ * BDJS code interpreter.
+ */
+export class Interpreter {
+	/**
+	 * Runs the compiled BDJS code.
+	 * @param {CompiledData} compiledData Compiled BDJS code.
+	 * @param {Runtime} runtime Runtime to use.
+	 * @returns {Promise<Runtime>}
+	 */
+	static async run(compiledData: CompiledData, runtime: Runtime) {
 		const parsedFunctions: string[] = []
 		const texts = compiledData.strings.map(str => str.value)
 
@@ -317,7 +340,7 @@ export class Reader {
 			for (let idx = 0; idx < fields.length; idx++) {
 				const field = fields[idx]
 				const parsed = await resolveField(field, shouldCompile, runtime)
-				newFields.push(Reader.unescapeParam(parsed, instruction.args?.at(idx)))
+				newFields.push(unescapeParam(parsed, instruction.args?.at(idx)))
 			}
 
 			const result = await instruction.run(runtime, newFields)
@@ -348,26 +371,14 @@ export class Reader {
 	}
 
 	/**
-	 * Compiles and interprets BDJS code.
-	 * Shorthand for `Reader.compile(code)` and `Reader.interpret(compiledData, runtime)`.
-	 * @param {string} code BDJS code to compile and interpret.
+	 * Parses and interprets BDJS code.
+	 * Shorthand for `Parser.parse(code)` and `Interpreter.run(compiledData, runtime)`.
+	 * @param {string} code BDJS code to parse and interpret.
 	 * @param {Runtime} runtime Runtime to use.
 	 * @returns {Promise<Runtime>}
 	 */
-	static async compileAndInterpret(code: string, runtime: Runtime) {
-		const compiledData = Reader.compile(code)
-		return await Reader.interpret(compiledData, runtime)
-	}
-
-	/**
-	 * Unescapes a function parameter.
-	 * @param value - The parameter value.
-	 * @param spec - Parameter specificaction.
-	 * @returns {string}
-	 */
-	static unescapeParam(value: string, spec?: InstructionArgOptions) {
-		if (!spec) return value
-		const allowed = !!spec.unescape
-		return allowed ? unescapeText(value) : value
+	static async parseAndRun(code: string, runtime: Runtime) {
+		const compiledData = Parser.parse(code)
+		return await Interpreter.run(compiledData, runtime)
 	}
 }

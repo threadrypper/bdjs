@@ -1,18 +1,22 @@
 import { Runtime } from '../classes/internal/Runtime';
 import { RawFunction, RawString } from './Structures';
-import { InstructionArgOptions } from '../classes/internal/Instruction';
 /**
- * Represents the compiled data by BDJS reader.
+ * Internal parser context.
  */
-export interface CompiledData {
-    functions: RawFunction[];
+export interface ParserContext {
     function: RawFunction;
-    strings: RawString[];
     string: RawString;
     temp: RawString;
     depth: number;
     line: number;
     state: ReaderState;
+}
+/**
+ * Represents the compiled data by BDJS reader.
+ */
+export interface CompiledData {
+    functions: RawFunction[];
+    strings: RawString[];
 }
 /**
  * Represents the state of the reader.
@@ -22,31 +26,26 @@ declare enum ReaderState {
     FunctionName = 1,
     FunctionParameters = 2
 }
-/**
- * BDJS code reader.
- */
-export declare class Reader {
+export declare class Parser {
     /**
-     * Reads BDJS code.
+     * Parses BDJS code.
      * @param {string} code BDJS code to read.
      * @returns {CompiledData}
      */
-    static compile(code: string): CompiledData;
-    static interpret(compiledData: CompiledData, runtime: Runtime): Promise<Runtime>;
+    static parse(code: string): CompiledData;
+}
+/**
+ * BDJS code interpreter.
+ */
+export declare class Interpreter {
+    static run(compiledData: CompiledData, runtime: Runtime): Promise<Runtime>;
     /**
-     * Compiles and interprets BDJS code.
-     * Shorthand for `Reader.compile(code)` and `Reader.interpret(compiledData, runtime)`.
-     * @param {string} code BDJS code to compile and interpret.
+     * Parses and interprets BDJS code.
+     * Shorthand for `Parser.parse(code)` and `Interpreter.run(compiledData, runtime)`.
+     * @param {string} code BDJS code to parse and interpret.
      * @param {Runtime} runtime Runtime to use.
      * @returns {Promise<Runtime>}
      */
-    static compileAndInterpret(code: string, runtime: Runtime): Promise<Runtime>;
-    /**
-     * Unescapes a function parameter.
-     * @param value - The parameter value.
-     * @param spec - Parameter specificaction.
-     * @returns {string}
-     */
-    static unescapeParam(value: string, spec?: InstructionArgOptions): string;
+    static parseAndRun(code: string, runtime: Runtime): Promise<Runtime>;
 }
 export {};
