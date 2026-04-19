@@ -12,7 +12,15 @@ export interface CompiledData {
     temp: RawString;
     depth: number;
     line: number;
-    type: string;
+    state: ReaderState;
+}
+/**
+ * Represents the state of the reader.
+ */
+declare enum ReaderState {
+    Any = 0,
+    FunctionName = 1,
+    FunctionParameters = 2
 }
 /**
  * BDJS code reader.
@@ -41,3 +49,4 @@ export declare class Reader {
      */
     static unescapeParam(value: string, spec?: InstructionArgOptions): string;
 }
+export {};

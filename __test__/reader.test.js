@@ -37,6 +37,7 @@ const log = createInstruction({
         return Output.ok()
     }
 })
+
 const math = createInstruction({
     name: '$sum',
     description: 'Sum two numbers.',
@@ -55,5 +56,10 @@ runtime.instructions.set(instruction.name.slice(1), instruction)
 runtime.instructions.set(log.name.slice(1), log)
 runtime.instructions.set(math.name.slice(1), math)
 
+console.log(runtime.instructions)
+
 const compiled = Reader.compile('$test\n$log[$sum[12;1]]')
-Reader.interpret(compiled, runtime).then(() => console.debug('CODE EXECUTED')).catch((err) => console.error(err))
+
+Reader.interpret(compiled, runtime)
+    .then(() => console.debug('CODE EXECUTED'))
+    .catch((err) => console.error(err));

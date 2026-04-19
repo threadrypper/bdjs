@@ -1,6 +1,6 @@
 import { Runtime } from '../classes/internal/Runtime'
 import { RawFunction, RawString } from './Structures'
-import { InterpretingError } from '../classes/internal/Errors'
+import { InterpretingError, ReadingError } from '../classes/internal/Errors'
 import { InstructionArgOptions } from '../classes/internal/Instruction'
 
 /**
@@ -14,7 +14,7 @@ export interface CompiledData {
 	temp: RawString
 	depth: number
 	line: number
-	type: string
+	state: ReaderState
 }
 
 /**
@@ -22,29 +22,43 @@ export interface CompiledData {
  * @param {string} t The string to test.
  * @returns {boolean}
  */
-function isWord(t: string) {
-	return /\w/.test(t)
-}
+const isWord = (char?: string): char is string => !!char && /\w/.test(char)
 
-const escapers = [
-	['%SEMI%', ';'],
-	['%COLON%', ':'],
-	['%LEFT%', '['],
-	['%RIGHT%', ']'],
-	['%DOL%', '$']
-]
+/**
+ * Represents the escapers.
+ */
+const ESCAPERS = new Map<string, string>([
+	[':', '%COLON%'],
+	[';', '%SEMI%'],
+	['[', '%LEFT%'],
+	[']', '%RIGHT%'],
+	['$', '%DOL%']
+])
+
+/**
+ * Represents the unescapers.
+ */
+const UNESCAPERS = new Map(
+	[...ESCAPERS.entries()].map(([k, v]) => [v, k])
+)
+
+/**
+ * Regex to match any escaper.
+ */
+const ESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.keys()].join('')})`, 'g')
+
+/**
+ * Regex to match any unescaper.
+ */
+const UNESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.values()].join('|')})`, 'g')
 
 /**
  * Escape a text.
  * @param text - The text to escape.
  * @returns {string}
  */
-function EscapeText(text: string) {
-	let result = text
-	for (const escaper of escapers) {
-		result = result.replace(new RegExp(`${escaper[1]}`, 'ig'), escaper[0])
-	}
-	return result
+function escapeText(text: string) {
+	return text.replace(ESCAPE_REGEX, (match) => ESCAPERS.get(match) || match)
 }
 
 /**
@@ -52,12 +66,8 @@ function EscapeText(text: string) {
  * @param text - The text to escape.
  * @returns {string}
  */
-function UnescapeText(text: string) {
-	let result = text
-	for (const escaper of escapers) {
-		result = result.replace(new RegExp(`${escaper[0]}`, 'ig'), escaper[1])
-	}
-	return result
+function unescapeText(text: string) {
+	return text.replace(UNESCAPE_REGEX, m => UNESCAPERS.get(m) ?? m)
 }
 
 /**
@@ -67,6 +77,15 @@ function UnescapeText(text: string) {
  */
 function removeUnsafeText(text: string) {
 	return text.replace(/(\(call_\d+\))/g, '')
+}
+
+/**
+ * Represents the state of the reader.
+ */
+enum ReaderState {
+	Any,
+	FunctionName,
+	FunctionParameters
 }
 
 /**
@@ -92,8 +111,48 @@ export class Reader {
 			string: new RawString(),
 			depth: 0,
 			line: 1,
-			type: 'any',
+			state: ReaderState.Any,
 			temp: new RawString()
+		}
+
+		/**
+		 * Flushes the current string to the compiled data.
+		 * @returns {void}
+		 */
+		const flushString = () => {
+			if (compiled.string.isEmpty) return;
+			compiled.strings.push(compiled.string)
+			compiled.string = new RawString()
+		}
+
+		/**
+		 * Injects a call reference to the compiled strings data to save its position.
+		 * @returns {void}
+		 */
+		const injectCallRef = () => {
+			compiled.strings.push(
+				new RawString().overwrite(`(call_${compiled.functions.length})`)
+			);
+		}
+
+		/**
+		 * Pushes the current function to the compiled data.
+		 * @param {boolean} closed Whether the function is closed.
+		 * @returns {void}
+		 */
+		const pushFunction = (closed = true) => {
+			compiled.function
+				.setName(compiled.temp.value)
+				.setLine(compiled.line)
+				.setIndex(compiled.functions.length)
+				.setClosed(closed);
+
+			injectCallRef()
+
+			compiled.functions.push(compiled.function)
+
+			compiled.function = new RawFunction()
+			compiled.temp = new RawString()
 		}
 
 		// Reading each line character.
@@ -106,62 +165,63 @@ export class Reader {
 			if ('[' === char) compiled.depth++
 			else if (']' === char) compiled.depth--
 
-			if (compiled.type === 'any') {
-				if ('$' === char && isWord(next)) {
-					compiled.temp.write(char)
-					compiled.type = 'function:name'
-					if (compiled.string.isEmpty === false) {
-						compiled.strings.push(compiled.string)
-						compiled.string = new RawString()
-					}
-				} else compiled.string.write(char)
-			} else {
-				const [start, mode] = compiled.type.split(':')
-				if (mode === 'name') {
+			switch (compiled.state) {
+				// Collecting everything else.
+				case ReaderState.Any: {
+					if ('$' === char && isWord(next)) {
+						flushString()
+						compiled.temp.write(char)
+						compiled.state = ReaderState.FunctionName
+					} else compiled.string.write(char)
+					break
+				}
+
+				// Compiling $function
+				case ReaderState.FunctionName: {
 					if (!/\w/.test(char) && char !== '[') {
-						compiled.function
-							.setName(compiled.temp.value)
-							.setLine(compiled.line)
-							.setIndex(compiled.functions.length)
-							.setClosed(true)
-						compiled.strings.push(
-							new RawString().overwrite(`(call_${compiled.functions.length})`)
-						)
-						compiled.functions.push(compiled.function)
-						compiled.function = new RawFunction()
-						compiled.temp = new RawString()
-						compiled.type = 'any'
+						pushFunction(true)
+						compiled.state = ReaderState.Any
 						compiled.string.write(char)
 					} else if ('[' === char) {
-						compiled.type = 'function:parameters'
+						compiled.state = ReaderState.FunctionParameters
 						compiled.function
 							.setName(compiled.temp.value)
 							.setLine(compiled.line)
 							.setIndex(compiled.functions.length)
 						compiled.temp = new RawString()
 					} else compiled.temp.write(char)
-				} else if (mode === 'parameters') {
+					break
+				}
+
+				// Compiling [...ARGS]
+				case ReaderState.FunctionParameters: {
+					// If the depth is less than 0, it means there is an unexpected closing bracket.
+					if (compiled.depth < 0) {
+						throw new ReadingError(
+							[
+								`Unexpected closing bracket.`,
+								'|-> Please make sure to close function fields correctly at:',
+								`|-> Line: ${compiled.line}`,
+								`|-> Source: "${compiled.function.toString}"`,
+								'|-------------------------------------------------'
+							].join('\n')
+						)
+					}
+
 					if (';' === char && compiled.depth <= 1) {
 						compiled.function.addField(compiled.temp.value)
 						compiled.temp = new RawString()
-					} else if (']' === char && compiled.depth <= 0) {
-						compiled.function.addField(compiled.temp.value).setClosed(true)
-						compiled.strings.push(
-							new RawString().overwrite(`(call_${compiled.functions.length})`)
-						)
-						compiled.functions.push(compiled.function)
-						compiled.function = new RawFunction()
-						compiled.temp = new RawString()
-						compiled.type = 'any'
+					} else if (']' === char && compiled.depth === 0) {
+						compiled.function.addField(compiled.temp.value)
+						pushFunction(true)
+						compiled.state = ReaderState.Any
 					} else compiled.temp.write(char)
+					break
 				}
 			}
 		}
 
-		if (compiled.string.isEmpty === false) {
-			compiled.strings.push(compiled.string)
-			compiled.string = new RawString()
-		}
+		flushString() // Just in case.
 
 		if (compiled.function.name !== '') {
 			compiled.functions.push(compiled.function)
@@ -170,11 +230,9 @@ export class Reader {
 
 		if (
 			compiled.temp.value.startsWith('$') &&
-			compiled.type.startsWith('function')
+			(compiled.state === ReaderState.FunctionName || compiled.state === ReaderState.FunctionParameters)
 		) {
-			compiled.strings.push(
-				new RawString().overwrite(`(call_${compiled.functions.length})`)
-			)
+			injectCallRef()
 
 			const rest = new RawFunction()
 				.setName(compiled.temp.value)
@@ -184,7 +242,7 @@ export class Reader {
 
 			compiled.functions.push(rest)
 			compiled.temp = new RawString()
-			compiled.type = 'any'
+			compiled.state = ReaderState.Any
 		}
 
 		return compiled
@@ -249,12 +307,12 @@ export class Reader {
 				)
 			}
 
-			parsedFunctions[parsedFunctions.length] =
-				result.value === '' ? '' : result.value
+			parsedFunctions.push(result.value ?? '')
 		}
 
 		parsedFunctions.forEach((text, index) => {
-			texts[texts.indexOf(`(call_${index})`)] = text
+			const callIndex = texts.indexOf(`(call_${index})`)
+			if (callIndex !== -1) texts[callIndex] = text
 		})
 
 		runtime.setResultString(removeUnsafeText(texts.join('').trim()))
@@ -283,6 +341,6 @@ export class Reader {
 	static unescapeParam(value: string, spec?: InstructionArgOptions) {
 		if (!spec) return value
 		const allowed = !!spec.unescape
-		return allowed ? UnescapeText(value) : value
+		return allowed ? unescapeText(value) : value
 	}
 }

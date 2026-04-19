@@ -8,39 +8,44 @@ const Errors_1 = require("../classes/internal/Errors");
  * @param {string} t The string to test.
  * @returns {boolean}
  */
-function isWord(t) {
-    return /\w/.test(t);
-}
-const escapers = [
-    ['%SEMI%', ';'],
-    ['%COLON%', ':'],
-    ['%LEFT%', '['],
-    ['%RIGHT%', ']'],
-    ['%DOL%', '$']
-];
+const isWord = (char) => !!char && /\w/.test(char);
+/**
+ * Represents the escapers.
+ */
+const ESCAPERS = new Map([
+    [':', '%COLON%'],
+    [';', '%SEMI%'],
+    ['[', '%LEFT%'],
+    [']', '%RIGHT%'],
+    ['$', '%DOL%']
+]);
+/**
+ * Represents the unescapers.
+ */
+const UNESCAPERS = new Map([...ESCAPERS.entries()].map(([k, v]) => [v, k]));
+/**
+ * Regex to match any escaper.
+ */
+const ESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.keys()].join('')})`, 'g');
+/**
+ * Regex to match any unescaper.
+ */
+const UNESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.values()].join('|')})`, 'g');
 /**
  * Escape a text.
  * @param text - The text to escape.
  * @returns {string}
  */
-function EscapeText(text) {
-    let result = text;
-    for (const escaper of escapers) {
-        result = result.replace(new RegExp(`${escaper[1]}`, 'ig'), escaper[0]);
-    }
-    return result;
+function escapeText(text) {
+    return text.replace(ESCAPE_REGEX, (match) => ESCAPERS.get(match) || match);
 }
 /**
  * Unescape a text.
  * @param text - The text to escape.
  * @returns {string}
  */
-function UnescapeText(text) {
-    let result = text;
-    for (const escaper of escapers) {
-        result = result.replace(new RegExp(`${escaper[0]}`, 'ig'), escaper[1]);
-    }
-    return result;
+function unescapeText(text) {
+    return text.replace(UNESCAPE_REGEX, m => UNESCAPERS.get(m) ?? m);
 }
 /**
  * Removes unsafe text from code results.
@@ -50,6 +55,15 @@ function UnescapeText(text) {
 function removeUnsafeText(text) {
     return text.replace(/(\(call_\d+\))/g, '');
 }
+/**
+ * Represents the state of the reader.
+ */
+var ReaderState;
+(function (ReaderState) {
+    ReaderState[ReaderState["Any"] = 0] = "Any";
+    ReaderState[ReaderState["FunctionName"] = 1] = "FunctionName";
+    ReaderState[ReaderState["FunctionParameters"] = 2] = "FunctionParameters";
+})(ReaderState || (ReaderState = {}));
 /**
  * BDJS code reader.
  */
@@ -72,8 +86,41 @@ class Reader {
             string: new Structures_1.RawString(),
             depth: 0,
             line: 1,
-            type: 'any',
+            state: ReaderState.Any,
             temp: new Structures_1.RawString()
+        };
+        /**
+         * Flushes the current string to the compiled data.
+         * @returns {void}
+         */
+        const flushString = () => {
+            if (compiled.string.isEmpty)
+                return;
+            compiled.strings.push(compiled.string);
+            compiled.string = new Structures_1.RawString();
+        };
+        /**
+         * Injects a call reference to the compiled strings data to save its position.
+         * @returns {void}
+         */
+        const injectCallRef = () => {
+            compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
+        };
+        /**
+         * Pushes the current function to the compiled data.
+         * @param {boolean} closed Whether the function is closed.
+         * @returns {void}
+         */
+        const pushFunction = (closed = true) => {
+            compiled.function
+                .setName(compiled.temp.value)
+                .setLine(compiled.line)
+                .setIndex(compiled.functions.length)
+                .setClosed(closed);
+            injectCallRef();
+            compiled.functions.push(compiled.function);
+            compiled.function = new Structures_1.RawFunction();
+            compiled.temp = new Structures_1.RawString();
         };
         // Reading each line character.
         for (let i = 0; i < lines.length; i++) {
@@ -85,36 +132,27 @@ class Reader {
                 compiled.depth++;
             else if (']' === char)
                 compiled.depth--;
-            if (compiled.type === 'any') {
-                if ('$' === char && isWord(next)) {
-                    compiled.temp.write(char);
-                    compiled.type = 'function:name';
-                    if (compiled.string.isEmpty === false) {
-                        compiled.strings.push(compiled.string);
-                        compiled.string = new Structures_1.RawString();
+            switch (compiled.state) {
+                // Collecting everything else.
+                case ReaderState.Any: {
+                    if ('$' === char && isWord(next)) {
+                        flushString();
+                        compiled.temp.write(char);
+                        compiled.state = ReaderState.FunctionName;
                     }
+                    else
+                        compiled.string.write(char);
+                    break;
                 }
-                else
-                    compiled.string.write(char);
-            }
-            else {
-                const [start, mode] = compiled.type.split(':');
-                if (mode === 'name') {
+                // Compiling $function
+                case ReaderState.FunctionName: {
                     if (!/\w/.test(char) && char !== '[') {
-                        compiled.function
-                            .setName(compiled.temp.value)
-                            .setLine(compiled.line)
-                            .setIndex(compiled.functions.length)
-                            .setClosed(true);
-                        compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
-                        compiled.functions.push(compiled.function);
-                        compiled.function = new Structures_1.RawFunction();
-                        compiled.temp = new Structures_1.RawString();
-                        compiled.type = 'any';
+                        pushFunction(true);
+                        compiled.state = ReaderState.Any;
                         compiled.string.write(char);
                     }
                     else if ('[' === char) {
-                        compiled.type = 'function:parameters';
+                        compiled.state = ReaderState.FunctionParameters;
                         compiled.function
                             .setName(compiled.temp.value)
                             .setLine(compiled.line)
@@ -123,36 +161,43 @@ class Reader {
                     }
                     else
                         compiled.temp.write(char);
+                    break;
                 }
-                else if (mode === 'parameters') {
+                // Compiling [...ARGS]
+                case ReaderState.FunctionParameters: {
+                    // If the depth is less than 0, it means there is an unexpected closing bracket.
+                    if (compiled.depth < 0) {
+                        throw new Errors_1.ReadingError([
+                            `Unexpected closing bracket.`,
+                            '|-> Please make sure to close function fields correctly at:',
+                            `|-> Line: ${compiled.line}`,
+                            `|-> Source: "${compiled.function.toString}"`,
+                            '|-------------------------------------------------'
+                        ].join('\n'));
+                    }
                     if (';' === char && compiled.depth <= 1) {
                         compiled.function.addField(compiled.temp.value);
                         compiled.temp = new Structures_1.RawString();
                     }
-                    else if (']' === char && compiled.depth <= 0) {
-                        compiled.function.addField(compiled.temp.value).setClosed(true);
-                        compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
-                        compiled.functions.push(compiled.function);
-                        compiled.function = new Structures_1.RawFunction();
-                        compiled.temp = new Structures_1.RawString();
-                        compiled.type = 'any';
+                    else if (']' === char && compiled.depth === 0) {
+                        compiled.function.addField(compiled.temp.value);
+                        pushFunction(true);
+                        compiled.state = ReaderState.Any;
                     }
                     else
                         compiled.temp.write(char);
+                    break;
                 }
             }
         }
-        if (compiled.string.isEmpty === false) {
-            compiled.strings.push(compiled.string);
-            compiled.string = new Structures_1.RawString();
-        }
+        flushString(); // Just in case.
         if (compiled.function.name !== '') {
             compiled.functions.push(compiled.function);
             compiled.function = new Structures_1.RawFunction();
         }
         if (compiled.temp.value.startsWith('$') &&
-            compiled.type.startsWith('function')) {
-            compiled.strings.push(new Structures_1.RawString().overwrite(`(call_${compiled.functions.length})`));
+            (compiled.state === ReaderState.FunctionName || compiled.state === ReaderState.FunctionParameters)) {
+            injectCallRef();
             const rest = new Structures_1.RawFunction()
                 .setName(compiled.temp.value)
                 .setClosed(true)
@@ -160,7 +205,7 @@ class Reader {
                 .setLine(compiled.line);
             compiled.functions.push(rest);
             compiled.temp = new Structures_1.RawString();
-            compiled.type = 'any';
+            compiled.state = ReaderState.Any;
         }
         return compiled;
     }
@@ -209,11 +254,12 @@ class Reader {
                     '|-------------------------------------------------'
                 ].join('\n'));
             }
-            parsedFunctions[parsedFunctions.length] =
-                result.value === '' ? '' : result.value;
+            parsedFunctions.push(result.value ?? '');
         }
         parsedFunctions.forEach((text, index) => {
-            texts[texts.indexOf(`(call_${index})`)] = text;
+            const callIndex = texts.indexOf(`(call_${index})`);
+            if (callIndex !== -1)
+                texts[callIndex] = text;
         });
         runtime.setResultString(removeUnsafeText(texts.join('').trim()));
         runtime.setCompiledData(compiledData);
@@ -240,7 +286,7 @@ class Reader {
         if (!spec)
             return value;
         const allowed = !!spec.unescape;
-        return allowed ? UnescapeText(value) : value;
+        return allowed ? unescapeText(value) : value;
     }
 }
 exports.Reader = Reader;

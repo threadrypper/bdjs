@@ -1,5 +1,13 @@
 import { Client, type ClientOptions, ClientEvents } from 'discord.js';
 /**
+ * The channel where the errors will be sent.
+ */
+declare enum ErrorDeliveryChannel {
+    LogOnly = 0,
+    LogAndSend = 1,
+    SendOnly = 2
+}
+/**
  * Options to initialize the Discord client.
  */
 interface BaseDiscordClientSetupOptions extends ClientOptions {
@@ -16,6 +24,10 @@ interface BaseDiscordClientSetupOptions extends ClientOptions {
      * The events to listen to.
      */
     events: Array<keyof ClientEvents>;
+    /**
+     * The channel where the errors will be sent.
+     */
+    errorDeliveryChannel?: ErrorDeliveryChannel;
 }
 interface PrefixedDiscordClientSetupOptions extends BaseDiscordClientSetupOptions {
     /**

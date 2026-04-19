@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InterpretingError = void 0;
+exports.ReadingError = exports.InterpretingError = void 0;
 /**
  * Represents an error that occurs during the interpretation of BDJS code.
  */
@@ -15,3 +15,17 @@ class InterpretingError extends Error {
     }
 }
 exports.InterpretingError = InterpretingError;
+/**
+ * Represents an error that occurs during the compilation of BDJS code.
+ */
+class ReadingError extends Error {
+    /**
+     * Creates a new instance of `ReadingError`.
+     * @param {string} message The error message.
+     */
+    constructor(message) {
+        super(message);
+        this.name = 'ReadingError';
+    }
+}
+exports.ReadingError = ReadingError;
