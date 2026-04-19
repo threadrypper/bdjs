@@ -13,6 +13,10 @@ interface InstructionSelfArg {
      * The raw function compiled by the reader.
      */
     raw: RawFunction
+    /**
+     * The unwrapped arguments of the instruction.
+     */
+    unwrapped: string[]
 }
 
 export class Runtime {
@@ -24,7 +28,11 @@ export class Runtime {
     /**
      * The self argument for the instruction.
      */
-    self: InstructionSelfArg = {} as InstructionSelfArg
+    self: InstructionSelfArg = {
+        unwrapped: [],
+        raw: {} as RawFunction,
+        data: {} as IBDJSInstruction
+    }
 
     /**
      * The instruction manager.
@@ -54,11 +62,10 @@ export class Runtime {
 
     /**
      * Gets the compiled arguments of the instruction.
-     * @param callback The callback to apply to each argument.
-     * @returns {Array<string | FunctionField>} The compiled arguments.
+     * @returns {Array<string>} The compiled arguments.
      */
-    getCompiledArgs(callback: (arg: FunctionField) => string | FunctionField = (arg) => arg.value) {
-        return this.self.raw.fields.map(callback)
+    getCompiledArgs() {
+        return this.self.unwrapped.length === 0 ? this.self.raw.fields.map((field) => field.value) : this.self.unwrapped
     }
 
     /**

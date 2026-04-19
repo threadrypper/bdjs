@@ -2,7 +2,8 @@ export enum OutputType {
     OK = 'ok',
     ERROR = 'error',
     WARNING = 'warning',
-    EMPTY = 'empty'
+    EMPTY = 'empty',
+    STOP = 'stop'
 }
 
 export class Output<T = string> {
@@ -30,6 +31,10 @@ export class Output<T = string> {
 
     static empty(): Output<never> {
         return new Output(OutputType.EMPTY)
+    }
+
+    static stop(): Output<never> {
+        return new Output(OutputType.STOP)
     }
 
     get value(): T {

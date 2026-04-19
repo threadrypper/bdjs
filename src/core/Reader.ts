@@ -2,6 +2,7 @@ import { Runtime } from '@internal/Runtime'
 import { RawFunction, RawString } from './Structures'
 import { InterpretingError, ReadingError } from '@internal/Errors'
 import { InstructionArgOptions } from '@internal/Instruction'
+import { OutputType } from '@internal/Output'
 
 /**
  * Internal parser context.
@@ -243,7 +244,7 @@ export class Parser {
 						)
 					}
 
-					if (';' === char && ctx.depth <= 1) {
+					if (';' === char && ctx.depth === 1) {
 						ctx.function.addField(ctx.temp.value)
 						ctx.temp = new RawString()
 					} else if (']' === char && ctx.depth === 0) {
@@ -333,7 +334,8 @@ export class Interpreter {
 
 			runtime.self.data = instruction
 			runtime.self.raw = currentCompiledFunction
-			const fields = currentCompiledFunction.fields.map(field => field.value)
+
+			const fields = runtime.getCompiledArgs() as string[]
 			const newFields: string[] = []
 			const shouldCompile = instruction.interpret
 
@@ -343,21 +345,38 @@ export class Interpreter {
 				newFields.push(unescapeParam(parsed, instruction.args?.at(idx)))
 			}
 
-			const result = await instruction.run(runtime, newFields)
+			runtime.self.unwrapped = newFields
+			const output = await instruction.run(runtime)
 
-			if (result.isError()) {
-				throw new InterpretingError(
-					[
-						`"${currentCompiledFunction.name}" returned an error.`,
-						'|-> Please check the function arguments at:',
-						`|-> Line: ${currentCompiledFunction.line}`,
-						`|-> Source: "${currentCompiledFunction.toString}"`,
-						'|-------------------------------------------------'
-					].join('\n')
-				)
+			switch (output.type) {
+				case OutputType.ERROR: {
+					throw new InterpretingError(
+						[
+							`"${currentCompiledFunction.name}" returned an error.`,
+							'|-> Please check the function arguments at:',
+							`|-> Line: ${currentCompiledFunction.line}`,
+							`|-> Source: "${currentCompiledFunction.toString}"`,
+							'|-------------------------------------------------'
+						].join('\n')
+					)
+				}
+
+				case OutputType.STOP: {
+					runtime.makeStop()
+					break
+				}
+
+				case OutputType.EMPTY: {
+					parsedFunctions.push('')
+					break
+				}
+
+				case OutputType.OK:
+				default: {
+					parsedFunctions.push(output.value)
+					break
+				}
 			}
-
-			parsedFunctions.push(result.value ?? '')
 		}
 
 		parsedFunctions.forEach((text, index) => {
@@ -367,6 +386,7 @@ export class Interpreter {
 
 		runtime.setResultString(removeUnsafeText(texts.join('').trim()))
 		runtime.setCompiledData(compiledData)
+
 		return runtime
 	}
 
