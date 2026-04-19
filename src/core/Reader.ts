@@ -213,7 +213,14 @@ export class Reader {
 						compiled.temp = new RawString()
 					} else if (']' === char && compiled.depth === 0) {
 						compiled.function.addField(compiled.temp.value)
-						pushFunction(true)
+							.setClosed(true);
+
+						injectCallRef()
+
+						compiled.functions.push(compiled.function)
+						compiled.function = new RawFunction()
+						compiled.temp = new RawString()
+
 						compiled.state = ReaderState.Any
 					} else compiled.temp.write(char)
 					break

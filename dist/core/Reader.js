@@ -180,8 +180,12 @@ class Reader {
                         compiled.temp = new Structures_1.RawString();
                     }
                     else if (']' === char && compiled.depth === 0) {
-                        compiled.function.addField(compiled.temp.value);
-                        pushFunction(true);
+                        compiled.function.addField(compiled.temp.value)
+                            .setClosed(true);
+                        injectCallRef();
+                        compiled.functions.push(compiled.function);
+                        compiled.function = new Structures_1.RawFunction();
+                        compiled.temp = new Structures_1.RawString();
                         compiled.state = ReaderState.Any;
                     }
                     else
