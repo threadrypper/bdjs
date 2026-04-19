@@ -16,6 +16,9 @@ import { DataType, IBDJSInstruction } from '../classes/internal/Instruction'
  * ```
  */
 export function createInstruction(instruction: IBDJSInstruction) {
+    if (!Object.prototype.hasOwnProperty.call(instruction, 'builder')) {
+        instruction.builder = false
+    }
     if (!Object.prototype.hasOwnProperty.call(instruction, 'brackets')) {
         instruction.brackets = false
     }

@@ -1,8 +1,9 @@
 import { Runtime } from '@internal/Runtime'
 import { RawFunction, RawString } from './Structures'
-import { InterpretingError, ReadingError } from '@internal/Errors'
+import { InterpretingError, OutOfScopeError, ReadingError } from '@internal/Errors'
 import { InstructionArgOptions } from '@internal/Instruction'
 import { OutputType } from '@internal/Output'
+import { normalizeInstructionName } from '@utils/normalizeInstructionName'
 
 /**
  * Internal parser context.
@@ -57,7 +58,7 @@ const ESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.keys()].join('')})`, 'g')
 /**
  * Regex to match any unescaper.
  */
-const UNESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.values()].join('|')})`, 'g')
+const UNESCAPE_REGEX = new RegExp(`(${[...UNESCAPERS.keys()].join('|')})`, 'g')
 
 /**
  * Escape a text.
@@ -78,12 +79,17 @@ function unescapeText(text: string) {
 }
 
 /**
+ * Regex to match any call reference.
+ */
+const CALL_REGEX = /\(call_\d+\)/g
+
+/**
  * Removes unsafe text from code results.
  * @param text - Text to be enhanced.
  * @returns {string}
  */
 function removeUnsafeText(text: string) {
-	return text.replace(/\(call_\d+\)/g, '')
+	return text.replace(CALL_REGEX, '')
 }
 
 /**
@@ -309,14 +315,28 @@ export class Interpreter {
 		for (const currentCompiledFunction of compiledData.functions) {
 			if (runtime.mustStop) break
 
-			const instruction = runtime.instructions.get(currentCompiledFunction.name.slice(1).toLowerCase())
-			if (!instruction)
+			const instructionName = normalizeInstructionName(currentCompiledFunction.name)
+			const instruction = runtime.instructions.get(instructionName)
+			if (!instruction && !runtime.instructions.builders.has(instructionName))
 				throw new InterpretingError(
 					[
 						`"${currentCompiledFunction.name}" is not a function.`,
 						'|-> Please provide a valid function name at:',
 						`|-> Line: ${currentCompiledFunction.line}`,
 						`|-> Source: "${currentCompiledFunction.toString}"`,
+						`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.name.length)}`,
+						'|--------------------------------------------'
+					].join('\n')
+				)
+
+			if (!instruction && runtime.instructions.builders.has(instructionName))
+				throw new OutOfScopeError(
+					[
+						`"${currentCompiledFunction.name}" is out of scope.`,
+						`|-> This function can be used only inside "${runtime.instructions.builders.get(instructionName)?.builderOptions?.allowFor}".`,
+						`|-> Line: ${currentCompiledFunction.line}`,
+						`|-> Source: "${currentCompiledFunction.toString}"`,
+						`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
 						'|--------------------------------------------'
 					].join('\n')
 				)
@@ -324,38 +344,47 @@ export class Interpreter {
 			if (currentCompiledFunction.closed === false)
 				throw new InterpretingError(
 					[
-						`"${currentCompiledFunction.name}" is not a closed.`,
+						`"${currentCompiledFunction.name}" is not closed.`,
 						'|-> Please make sure to close function fields at:',
 						`|-> Line: ${currentCompiledFunction.line}`,
 						`|-> Source: "${currentCompiledFunction.toString}"`,
+						`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
 						'|-------------------------------------------------'
 					].join('\n')
 				)
 
-			runtime.self.data = instruction
+			runtime.self.data = instruction!
 			runtime.self.raw = currentCompiledFunction
 
-			const fields = runtime.getCompiledArgs() as string[]
-			const newFields: string[] = []
-			const shouldCompile = instruction.interpret
+			const fields = runtime.getRawArgs()
+			const shouldCompile = instruction!.interpret
+
+			/*const newFields: string[] = []
 
 			for (let idx = 0; idx < fields.length; idx++) {
 				const field = fields[idx]
 				const parsed = await resolveField(field, shouldCompile, runtime)
 				newFields.push(unescapeParam(parsed, instruction.args?.at(idx)))
-			}
+			}*/
+
+			const newFields = await Promise.all(
+				fields.map(async (field, idx) => {
+					const parsed = await resolveField(field, shouldCompile, runtime)
+					return unescapeParam(parsed, instruction!.args?.at(idx))
+				})
+			)
 
 			runtime.self.unwrapped = newFields
-			const output = await instruction.run(runtime)
+			const output = await instruction!.run(runtime)
 
 			switch (output.type) {
 				case OutputType.ERROR: {
 					throw new InterpretingError(
 						[
 							`"${currentCompiledFunction.name}" returned an error.`,
-							'|-> Please check the function arguments at:',
 							`|-> Line: ${currentCompiledFunction.line}`,
 							`|-> Source: "${currentCompiledFunction.toString}"`,
+							`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
 							'|-------------------------------------------------'
 						].join('\n')
 					)
@@ -379,10 +408,17 @@ export class Interpreter {
 			}
 		}
 
-		parsedFunctions.forEach((text, index) => {
+		/*parsedFunctions.forEach((text, index) => {
 			const callIndex = texts.indexOf(`(call_${index})`)
 			if (callIndex !== -1) texts[callIndex] = text
-		})
+		})*/
+		for (let i = 0; i < texts.length; i++) {
+			const match = texts[i].match(CALL_REGEX)
+			if (match) {
+				const fnIndex = Number(match[1])
+				texts[i] = parsedFunctions[fnIndex] ?? ''
+			}
+		}
 
 		runtime.setResultString(removeUnsafeText(texts.join('').trim()))
 		runtime.setCompiledData(compiledData)

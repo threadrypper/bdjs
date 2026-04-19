@@ -142,7 +142,7 @@ export class RawFunction {
 			this.name +
 			(this.fields.length === 0
 				? ''
-				: `[${this.fields.map(f => f.value)}]`)
+				: `[${this.fields.map(f => f.value).join(';')}${this.closed ? ']' : ''}`)
 		)
 	}
 }

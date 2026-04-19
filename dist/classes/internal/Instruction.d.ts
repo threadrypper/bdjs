@@ -71,7 +71,7 @@ interface BaseInstruction {
     output?: DataType;
     run: (runtime: Runtime, args?: string[]) => Promise<Output> | Output;
 }
-interface NormalInstruction extends BaseInstruction {
+export interface NormalInstruction extends BaseInstruction {
     /**
      * If undefined, it means this is not a builder function.
      */
@@ -81,7 +81,7 @@ interface NormalInstruction extends BaseInstruction {
      */
     builderOptions?: never;
 }
-interface BuilderInstruction extends BaseInstruction {
+export interface BuilderInstruction extends BaseInstruction {
     /**
      * If true, wont be loaded at startup.
      */

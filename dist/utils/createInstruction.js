@@ -18,6 +18,9 @@ const Instruction_1 = require("../classes/internal/Instruction");
  * ```
  */
 function createInstruction(instruction) {
+    if (!Object.prototype.hasOwnProperty.call(instruction, 'builder')) {
+        instruction.builder = false;
+    }
     if (!Object.prototype.hasOwnProperty.call(instruction, 'brackets')) {
         instruction.brackets = false;
     }

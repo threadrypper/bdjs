@@ -1,11 +1,17 @@
 "use strict";
-var _Runtime_code, _Runtime_compiled, _Runtime_mustStop, _Runtime___internal__;
+var _Runtime_code, _Runtime_compiled, _Runtime_mustStop, _Runtime___internal__, _Runtime___name__;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Runtime = void 0;
 const tslib_1 = require("tslib");
 const InstructionManager_1 = require("../../managers/InstructionManager");
+const Errors_1 = require("./Errors");
 class Runtime {
-    constructor() {
+    /**
+     * Creates a new runtime.
+     * @param runtimeName The name of the runtime.
+     * @param options Options for the runtime.
+     */
+    constructor(runtimeName, options) {
         /**
          * The self argument for the instruction.
          */
@@ -41,17 +47,45 @@ class Runtime {
          */
         _Runtime___internal__.set(this, new Map()
         /**
-         * Gets the compiled arguments of the instruction.
-         * @returns {Array<string>} The compiled arguments.
+         * The name of the runtime.
          */
         );
+        /**
+         * The name of the runtime.
+         */
+        _Runtime___name__.set(this, 'global'
+        /**
+         * Creates a new runtime.
+         * @param runtimeName The name of the runtime.
+         * @param options Options for the runtime.
+         */
+        );
+        if (runtimeName)
+            tslib_1.__classPrivateFieldSet(this, _Runtime___name__, runtimeName, "f");
+        if (options) {
+            Object.assign(this, options);
+            this.instructions = new InstructionManager_1.InstructionManager(options.instructions?.entries());
+        }
+        // Set the name of the instruction manager.
+        this.instructions.name = tslib_1.__classPrivateFieldGet(this, _Runtime___name__, "f");
     }
     /**
      * Gets the compiled arguments of the instruction.
      * @returns {Array<string>} The compiled arguments.
      */
     getCompiledArgs() {
-        return this.self.unwrapped.length === 0 ? this.self.raw.fields.map((field) => field.value) : this.self.unwrapped;
+        // Cannot get "compiled args" through this method.
+        if (!this.self.data.interpret) {
+            throw new Errors_1.IllegalGetterError('Cannot get compiled arguments of an not-interpreted instruction.');
+        }
+        return this.self.unwrapped;
+    }
+    /**
+     * Gets the raw arguments of the instruction.
+     * @returns {Array<string>} The raw arguments.
+     */
+    getRawArgs() {
+        return this.self.raw.fields.map((field) => field.value);
     }
     /**
      * Set the result string of the interpretation phase.
@@ -81,14 +115,15 @@ class Runtime {
     getCompiledData() {
         return tslib_1.__classPrivateFieldGet(this, _Runtime_compiled, "f");
     }
-    /**
-     * Sets an environment variable.
-     * NOT ACCESIBLE USING `$let`.
-     * @param {string} name The name of the environment variable.
-     * @param {unknown} value The value of the environment variable.
-     */
     setEnvironmentVariable(name, value) {
-        tslib_1.__classPrivateFieldGet(this, _Runtime___internal__, "f").set(name, value);
+        if (typeof name === 'string') {
+            tslib_1.__classPrivateFieldGet(this, _Runtime___internal__, "f").set(name, value);
+        }
+        else {
+            for (const [key, value] of name) {
+                tslib_1.__classPrivateFieldGet(this, _Runtime___internal__, "f").set(key, value);
+            }
+        }
     }
     /**
      * Gets an environment variable.
@@ -113,6 +148,13 @@ class Runtime {
     get mustStop() {
         return tslib_1.__classPrivateFieldGet(this, _Runtime_mustStop, "f");
     }
+    /**
+     * Gets the name of the runtime.
+     * @returns {string}
+     */
+    get name() {
+        return tslib_1.__classPrivateFieldGet(this, _Runtime___name__, "f");
+    }
 }
 exports.Runtime = Runtime;
-_Runtime_code = new WeakMap(), _Runtime_compiled = new WeakMap(), _Runtime_mustStop = new WeakMap(), _Runtime___internal__ = new WeakMap();
+_Runtime_code = new WeakMap(), _Runtime_compiled = new WeakMap(), _Runtime_mustStop = new WeakMap(), _Runtime___internal__ = new WeakMap(), _Runtime___name__ = new WeakMap();

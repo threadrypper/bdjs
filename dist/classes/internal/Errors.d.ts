@@ -18,3 +18,23 @@ export declare class ReadingError extends Error {
      */
     constructor(message: string);
 }
+/**
+ * Represents an error that occurs when a getter is used illegally.
+ */
+export declare class IllegalGetterError extends Error {
+    /**
+     * Creates a new instance of `IllegalGetterError`.
+     * @param {string} message The error message.
+     */
+    constructor(message: string);
+}
+/**
+ * Represents an error that occurs when a variable is used out of scope.
+ */
+export declare class OutOfScopeError extends Error {
+    /**
+     * Creates a new instance of `OutOfScopeError`.
+     * @param {string} message The error message.
+     */
+    constructor(message: string);
+}

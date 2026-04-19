@@ -3,6 +3,7 @@ import { FunctionField, RawFunction } from '@core/Structures'
 import { IBDJSInstruction } from './Instruction'
 import type { DiscordClient } from '@structures/DiscordClient'
 import { InstructionManager } from '@managers/InstructionManager'
+import { IllegalGetterError } from './Errors'
 
 interface InstructionSelfArg {
     /**
@@ -61,11 +62,45 @@ export class Runtime {
     #__internal__ = new Map<string, unknown>()
 
     /**
+     * The name of the runtime.
+     */
+    #__name__ = 'global'
+
+    /**
+     * Creates a new runtime.
+     * @param runtimeName The name of the runtime.
+     * @param options Options for the runtime.
+     */
+    constructor(runtimeName?: string, options?: Partial<Runtime>) {
+        if (runtimeName) this.#__name__ = runtimeName
+        if (options) {
+            Object.assign(this, options)
+            this.instructions = new InstructionManager(options.instructions?.entries())
+        }
+
+        // Set the name of the instruction manager.
+        this.instructions.name = this.#__name__
+    }
+
+    /**
      * Gets the compiled arguments of the instruction.
      * @returns {Array<string>} The compiled arguments.
      */
     getCompiledArgs() {
-        return this.self.unwrapped.length === 0 ? this.self.raw.fields.map((field) => field.value) : this.self.unwrapped
+        // Cannot get "compiled args" through this method.
+        if (!this.self.data.interpret) {
+            throw new IllegalGetterError('Cannot get compiled arguments of an not-interpreted instruction.')
+        }
+
+        return this.self.unwrapped
+    }
+
+    /**
+     * Gets the raw arguments of the instruction.
+     * @returns {Array<string>} The raw arguments.
+     */
+    getRawArgs() {
+        return this.self.raw.fields.map((field) => field.value)
     }
 
     /**
@@ -106,8 +141,20 @@ export class Runtime {
      * @param {string} name The name of the environment variable.
      * @param {unknown} value The value of the environment variable.
      */
-    setEnvironmentVariable(name: string, value: unknown) {
-        this.#__internal__.set(name, value)
+    setEnvironmentVariable(name: string, value: unknown): void
+    /**
+     * Inherit internal variables from a parent runtime.
+     * @param entries 
+     */
+    setEnvironmentVariable(entries: MapIterator<[string, unknown]>): void
+    setEnvironmentVariable(name: string | MapIterator<[string, unknown]>, value?: unknown) {
+        if (typeof name === 'string') {
+            this.#__internal__.set(name, value!)
+        } else {
+            for (const [key, value] of name) {
+                this.#__internal__.set(key, value)
+            }
+        }
     }
 
     /**
@@ -134,5 +181,13 @@ export class Runtime {
      */
     get mustStop() {
         return this.#mustStop
+    }
+
+    /**
+     * Gets the name of the runtime.
+     * @returns {string}
+     */
+    get name() {
+        return this.#__name__
     }
 }

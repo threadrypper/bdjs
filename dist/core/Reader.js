@@ -4,6 +4,7 @@ exports.Interpreter = exports.Parser = void 0;
 const Structures_1 = require("./Structures");
 const Errors_1 = require("../classes/internal/Errors");
 const Output_1 = require("../classes/internal/Output");
+const normalizeInstructionName_1 = require("../utils/normalizeInstructionName");
 /**
  * Check if the provided string is word.
  * @param {string} t The string to test.
@@ -31,7 +32,7 @@ const ESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.keys()].join('')})`, 'g');
 /**
  * Regex to match any unescaper.
  */
-const UNESCAPE_REGEX = new RegExp(`(${[...ESCAPERS.values()].join('|')})`, 'g');
+const UNESCAPE_REGEX = new RegExp(`(${[...UNESCAPERS.keys()].join('|')})`, 'g');
 /**
  * Escape a text.
  * @param text - The text to escape.
@@ -49,12 +50,16 @@ function unescapeText(text) {
     return text.replace(UNESCAPE_REGEX, m => UNESCAPERS.get(m) ?? m);
 }
 /**
+ * Regex to match any call reference.
+ */
+const CALL_REGEX = /\(call_\d+\)/g;
+/**
  * Removes unsafe text from code results.
  * @param text - Text to be enhanced.
  * @returns {string}
  */
 function removeUnsafeText(text) {
-    return text.replace(/\(call_\d+\)/g, '');
+    return text.replace(CALL_REGEX, '');
 }
 /**
  * Represents the state of the reader.
@@ -259,42 +264,59 @@ class Interpreter {
         for (const currentCompiledFunction of compiledData.functions) {
             if (runtime.mustStop)
                 break;
-            const instruction = runtime.instructions.get(currentCompiledFunction.name.slice(1).toLowerCase());
-            if (!instruction)
+            const instructionName = (0, normalizeInstructionName_1.normalizeInstructionName)(currentCompiledFunction.name);
+            const instruction = runtime.instructions.get(instructionName);
+            if (!instruction && !runtime.instructions.builders.has(instructionName))
                 throw new Errors_1.InterpretingError([
                     `"${currentCompiledFunction.name}" is not a function.`,
                     '|-> Please provide a valid function name at:',
                     `|-> Line: ${currentCompiledFunction.line}`,
                     `|-> Source: "${currentCompiledFunction.toString}"`,
+                    `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.name.length)}`,
+                    '|--------------------------------------------'
+                ].join('\n'));
+            if (!instruction && runtime.instructions.builders.has(instructionName))
+                throw new Errors_1.OutOfScopeError([
+                    `"${currentCompiledFunction.name}" is out of scope.`,
+                    `|-> This function can be used only inside "${runtime.instructions.builders.get(instructionName)?.builderOptions?.allowFor}".`,
+                    `|-> Line: ${currentCompiledFunction.line}`,
+                    `|-> Source: "${currentCompiledFunction.toString}"`,
+                    `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
                     '|--------------------------------------------'
                 ].join('\n'));
             if (currentCompiledFunction.closed === false)
                 throw new Errors_1.InterpretingError([
-                    `"${currentCompiledFunction.name}" is not a closed.`,
+                    `"${currentCompiledFunction.name}" is not closed.`,
                     '|-> Please make sure to close function fields at:',
                     `|-> Line: ${currentCompiledFunction.line}`,
                     `|-> Source: "${currentCompiledFunction.toString}"`,
+                    `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
                     '|-------------------------------------------------'
                 ].join('\n'));
             runtime.self.data = instruction;
             runtime.self.raw = currentCompiledFunction;
-            const fields = runtime.getCompiledArgs();
-            const newFields = [];
+            const fields = runtime.getRawArgs();
             const shouldCompile = instruction.interpret;
+            /*const newFields: string[] = []
+
             for (let idx = 0; idx < fields.length; idx++) {
-                const field = fields[idx];
+                const field = fields[idx]
+                const parsed = await resolveField(field, shouldCompile, runtime)
+                newFields.push(unescapeParam(parsed, instruction.args?.at(idx)))
+            }*/
+            const newFields = await Promise.all(fields.map(async (field, idx) => {
                 const parsed = await resolveField(field, shouldCompile, runtime);
-                newFields.push(unescapeParam(parsed, instruction.args?.at(idx)));
-            }
+                return unescapeParam(parsed, instruction.args?.at(idx));
+            }));
             runtime.self.unwrapped = newFields;
             const output = await instruction.run(runtime);
             switch (output.type) {
                 case Output_1.OutputType.ERROR: {
                     throw new Errors_1.InterpretingError([
                         `"${currentCompiledFunction.name}" returned an error.`,
-                        '|-> Please check the function arguments at:',
                         `|-> Line: ${currentCompiledFunction.line}`,
                         `|-> Source: "${currentCompiledFunction.toString}"`,
+                        `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
                         '|-------------------------------------------------'
                     ].join('\n'));
                 }
@@ -313,11 +335,17 @@ class Interpreter {
                 }
             }
         }
-        parsedFunctions.forEach((text, index) => {
-            const callIndex = texts.indexOf(`(call_${index})`);
-            if (callIndex !== -1)
-                texts[callIndex] = text;
-        });
+        /*parsedFunctions.forEach((text, index) => {
+            const callIndex = texts.indexOf(`(call_${index})`)
+            if (callIndex !== -1) texts[callIndex] = text
+        })*/
+        for (let i = 0; i < texts.length; i++) {
+            const match = texts[i].match(CALL_REGEX);
+            if (match) {
+                const fnIndex = Number(match[1]);
+                texts[i] = parsedFunctions[fnIndex] ?? '';
+            }
+        }
         runtime.setResultString(removeUnsafeText(texts.join('').trim()));
         runtime.setCompiledData(compiledData);
         return runtime;

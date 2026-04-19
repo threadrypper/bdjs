@@ -32,10 +32,21 @@ export declare class Runtime {
      */
     instructions: InstructionManager;
     /**
+     * Creates a new runtime.
+     * @param runtimeName The name of the runtime.
+     * @param options Options for the runtime.
+     */
+    constructor(runtimeName?: string, options?: Partial<Runtime>);
+    /**
      * Gets the compiled arguments of the instruction.
      * @returns {Array<string>} The compiled arguments.
      */
     getCompiledArgs(): string[];
+    /**
+     * Gets the raw arguments of the instruction.
+     * @returns {Array<string>} The raw arguments.
+     */
+    getRawArgs(): string[];
     /**
      * Set the result string of the interpretation phase.
      * @param result The result string.
@@ -64,6 +75,11 @@ export declare class Runtime {
      */
     setEnvironmentVariable(name: string, value: unknown): void;
     /**
+     * Inherit internal variables from a parent runtime.
+     * @param entries
+     */
+    setEnvironmentVariable(entries: MapIterator<[string, unknown]>): void;
+    /**
      * Gets an environment variable.
      * NOT ACCESIBLE USING `$get`.
      * @param {string} name The name of the environment variable.
@@ -80,5 +96,10 @@ export declare class Runtime {
      * @returns {boolean}
      */
     get mustStop(): boolean;
+    /**
+     * Gets the name of the runtime.
+     * @returns {string}
+     */
+    get name(): string;
 }
 export {};
