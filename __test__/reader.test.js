@@ -7,13 +7,8 @@ runtime.instructions.load(INTERNAL_INSTRUCTIONS_DIRECTORY)
 
 console.time('parsing')
 const compiled = Parser.parse(`
-    $switch[3;
-        $case[1;$log[1]]
-        $case[2;$log[2]]
-        $case[3;$log[3]]
-        $case[4;$log[4]]
-        $case[5;$log[5]]
-    ]
+    $c[Logs a math expression result.]
+    $log[Math expression result: $calculate[12+1]]
 `)
 console.timeEnd('parsing')
 
