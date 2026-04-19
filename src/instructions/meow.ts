@@ -1,5 +1,5 @@
-import { createInstruction } from '../utils/createInstruction'
-import { Output } from '../classes/internal/Output'
+import { createInstruction } from '@utils/createInstruction'
+import { Output } from '@internal/Output'
 
 export const data = createInstruction({
     name: '$cat',

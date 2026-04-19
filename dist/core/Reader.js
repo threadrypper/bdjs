@@ -89,6 +89,9 @@ function unescapeParam(value, spec) {
     const allowed = !!spec.unescape;
     return allowed ? unescapeText(value) : value;
 }
+/**
+ * BDJS code parser.
+ */
 class Parser {
     /**
      * Parses BDJS code.
@@ -243,6 +246,12 @@ exports.Parser = Parser;
  * BDJS code interpreter.
  */
 class Interpreter {
+    /**
+     * Runs the compiled BDJS code.
+     * @param {CompiledData} compiledData Compiled BDJS code.
+     * @param {Runtime} runtime Runtime to use.
+     * @returns {Promise<Runtime>}
+     */
     static async run(compiledData, runtime) {
         const parsedFunctions = [];
         const texts = compiledData.strings.map(str => str.value);

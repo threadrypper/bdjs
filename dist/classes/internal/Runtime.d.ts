@@ -1,7 +1,7 @@
 import { CompiledData } from '../../core/Reader';
 import { FunctionField, RawFunction } from '../../core/Structures';
 import { IBDJSInstruction } from './Instruction';
-import type { DiscordClient } from '../../classes/structures/DiscordClient';
+import type { DiscordClient } from '../structures/DiscordClient';
 import { InstructionManager } from '../../managers/InstructionManager';
 interface InstructionSelfArg {
     /**

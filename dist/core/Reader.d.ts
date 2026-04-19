@@ -26,6 +26,9 @@ declare enum ReaderState {
     FunctionName = 1,
     FunctionParameters = 2
 }
+/**
+ * BDJS code parser.
+ */
 export declare class Parser {
     /**
      * Parses BDJS code.
@@ -38,6 +41,12 @@ export declare class Parser {
  * BDJS code interpreter.
  */
 export declare class Interpreter {
+    /**
+     * Runs the compiled BDJS code.
+     * @param {CompiledData} compiledData Compiled BDJS code.
+     * @param {Runtime} runtime Runtime to use.
+     * @returns {Promise<Runtime>}
+     */
     static run(compiledData: CompiledData, runtime: Runtime): Promise<Runtime>;
     /**
      * Parses and interprets BDJS code.

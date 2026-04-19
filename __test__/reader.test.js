@@ -1,18 +1,8 @@
-const { Reader } = require('../dist/core/Reader')
+const { Interpreter, Parser } = require('../dist/core/Reader')
 const { Runtime } = require('../dist/classes/internal/Runtime')
 const { createInstruction } = require('../dist/utils/createInstruction')
 const { Output } = require('../dist/classes/internal/Output')
 const { DataType } = require('../dist/classes/internal/Instruction')
-
-const instruction = createInstruction({
-    name: '$test',
-    description: 'Test instruction',
-    interpret: false,
-    run: () => {
-        console.log('Test')
-        return Output.ok()
-    }
-})
 
 const log = createInstruction({
     name: '$log',
@@ -29,7 +19,7 @@ const log = createInstruction({
         }
     ],
     run: (runtime) => {
-        const args = runtime.getCompiledArgs((field) => field.value)
+        const args = runtime.getCompiledArgs()
         const [value] = args
 
         console.log(value)
@@ -44,22 +34,22 @@ const math = createInstruction({
     brackets: true,
     interpret: true,
     run: (runtime) => {
-        const args = runtime.getCompiledArgs((field) => field.value)
-        const [n1, n2] = args.map((arg) => parseInt(arg))
+        const args = runtime.getCompiledArgs((a) => a.value)
+        const values = args.map((arg) => parseInt(arg))
 
-        return Output.ok(n1 + n2)
+        return Output.ok(values.reduce((a, b) => a + b))
     }
 })
 
 const runtime = new Runtime()
-runtime.instructions.set(instruction.name.slice(1), instruction)
 runtime.instructions.set(log.name.slice(1), log)
 runtime.instructions.set(math.name.slice(1), math)
 
-console.log(runtime.instructions)
+console.time('parsing')
+const compiled = Parser.parse('$log[$sum[12;1]]')
+console.timeEnd('parsing')
 
-const compiled = Reader.compile('$test\n$log[$sum[12;1]]')
-
-Reader.interpret(compiled, runtime)
-    .then(() => console.debug('CODE EXECUTED'))
+console.time('running')
+Interpreter.run(compiled, runtime)
+    .then(() => console.timeEnd('running'))
     .catch((err) => console.error(err));

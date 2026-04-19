@@ -1,7 +1,7 @@
-import { Runtime } from '../classes/internal/Runtime'
+import { Runtime } from '@internal/Runtime'
 import { RawFunction, RawString } from './Structures'
-import { InterpretingError, ReadingError } from '../classes/internal/Errors'
-import { InstructionArgOptions } from '../classes/internal/Instruction'
+import { InterpretingError, ReadingError } from '@internal/Errors'
+import { InstructionArgOptions } from '@internal/Instruction'
 
 /**
  * Internal parser context.
