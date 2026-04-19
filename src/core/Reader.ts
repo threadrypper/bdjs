@@ -89,6 +89,20 @@ enum ReaderState {
 }
 
 /**
+ * Resolves a field value.
+ * @param {string} field - The field value.
+ * @param {boolean} compile - Whether to compile the field value.
+ * @param {Runtime} runtime - The runtime to use.
+ * @returns {Promise<string>}
+ */
+async function resolveField(field: string, compile: boolean, runtime: Runtime) {
+	if (!compile) return field
+
+	const result = await Reader.compileAndInterpret(field, runtime)
+	return result?.getResultString() ?? ''
+}
+
+/**
  * BDJS code reader.
  */
 export class Reader {
@@ -294,9 +308,7 @@ export class Reader {
 				const field = fields[idx]
 				const compile = instruction.interpret
 
-				const parsed = compile
-					? ((await Reader.compileAndInterpret(field, runtime))?.getResultString() ?? '')
-					: field
+				const parsed = await resolveField(field, compile, runtime)
 				newFields.push(Reader.unescapeParam(parsed, instruction.args?.at(idx)))
 			}
 
