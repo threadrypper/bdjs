@@ -1,35 +1,62 @@
-export class Output {
-    #value: string = ''
-    #error: boolean = false
+export enum OutputType {
+    OK = 'ok',
+    ERROR = 'error',
+    WARNING = 'warning',
+    EMPTY = 'empty'
+}
 
-    constructor(value: string, error: boolean = false) {
+export class Output<T = string> {
+    #value?: T
+    #type: OutputType
+    #message?: string
+
+    private constructor(type: OutputType, value?: T, message?: string) {
+        this.#type = type
         this.#value = value
-        this.#error = error
+        this.#message = message
     }
 
-    /**
-     * Creates an OK output.
-     * @param value The value to wrap.
-     * @returns {string}
-     */
-    static ok(value?: string): Output {
-        return new Output(String(value) ?? '')
+    static ok<T>(value?: T): Output<T> {
+        return new Output<T>(OutputType.OK, value)
     }
 
-    /**
-     * Creates an error output.
-     * @param value The value to wrap.
-     * @returns {string}
-     */
-    static error(value?: string): Output {
-        return new Output(String(value) ?? '', true)
+    static error(message: string): Output<unknown> {
+        return new Output(OutputType.ERROR, undefined, message)
     }
 
-    isError() {
-        return this.#error
+    static warning<T>(value: T, message?: string): Output<T> {
+        return new Output(OutputType.WARNING, value, message)
     }
 
-    get value() {
-        return this.#value
+    static empty(): Output<never> {
+        return new Output(OutputType.EMPTY)
+    }
+
+    get value(): T {
+        if (this.isError()) {
+            throw new Error('Tried to access value of an error output')
+        }
+
+        return this.#value as T
+    }
+
+    get type() {
+        return this.#type
+    }
+
+    get message() {
+        return this.#message
+    }
+
+    isOk(): this is Output<T> {
+        return this.#type === OutputType.OK
+    }
+
+    isError(): this is Output<never> {
+        return this.#type === OutputType.ERROR
+    }
+
+    isWarning(): boolean {
+        return this.#type === OutputType.WARNING
     }
 }
