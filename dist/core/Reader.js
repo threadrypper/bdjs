@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interpreter = exports.Parser = void 0;
+const tslib_1 = require("tslib");
 const Structures_1 = require("./Structures");
 const Errors_1 = require("../classes/internal/Errors");
 const Output_1 = require("../classes/internal/Output");
 const normalizeInstructionName_1 = require("../utils/normalizeInstructionName");
+const buildErrorMessage_1 = tslib_1.__importDefault(require("../utils/buildErrorMessage"));
 /**
  * Check if the provided string is word.
  * @param {string} t The string to test.
@@ -266,33 +268,18 @@ class Interpreter {
                 break;
             const instructionName = (0, normalizeInstructionName_1.normalizeInstructionName)(currentCompiledFunction.name);
             const instruction = runtime.instructions.get(instructionName);
-            if (!instruction && !runtime.instructions.builders.has(instructionName))
-                throw new Errors_1.InterpretingError([
-                    `"${currentCompiledFunction.name}" is not a function.`,
-                    '|-> Please provide a valid function name at:',
-                    `|-> Line: ${currentCompiledFunction.line}`,
-                    `|-> Source: "${currentCompiledFunction.toString}"`,
-                    `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.name.length)}`,
-                    '|--------------------------------------------'
-                ].join('\n'));
-            if (!instruction && runtime.instructions.builders.has(instructionName))
-                throw new Errors_1.OutOfScopeError([
-                    `"${currentCompiledFunction.name}" is out of scope.`,
-                    `|-> This function can be used only inside "${runtime.instructions.builders.get(instructionName)?.builderOptions?.allowFor}".`,
-                    `|-> Line: ${currentCompiledFunction.line}`,
-                    `|-> Source: "${currentCompiledFunction.toString}"`,
-                    `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
-                    '|--------------------------------------------'
-                ].join('\n'));
-            if (currentCompiledFunction.closed === false)
-                throw new Errors_1.InterpretingError([
-                    `"${currentCompiledFunction.name}" is not closed.`,
-                    '|-> Please make sure to close function fields at:',
-                    `|-> Line: ${currentCompiledFunction.line}`,
-                    `|-> Source: "${currentCompiledFunction.toString}"`,
-                    `|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
-                    '|-------------------------------------------------'
-                ].join('\n'));
+            if (!instruction && !runtime.instructions.builders.has(instructionName)) {
+                const message = (0, buildErrorMessage_1.default)(`"${currentCompiledFunction.name}" is not a function.`, ['Please provide a valid function name at:'], currentCompiledFunction.toString, currentCompiledFunction.line);
+                throw new Errors_1.InterpretingError(message);
+            }
+            if (!instruction && runtime.instructions.builders.has(instructionName)) {
+                const message = (0, buildErrorMessage_1.default)(`"${currentCompiledFunction.name}" is out of scope.`, [`This function can be used only inside "${runtime.instructions.builders.get(instructionName)?.builderOptions?.allowFor}".`], currentCompiledFunction.toString, currentCompiledFunction.line);
+                throw new Errors_1.OutOfScopeError(message);
+            }
+            if (currentCompiledFunction.closed === false) {
+                const message = (0, buildErrorMessage_1.default)(`"${currentCompiledFunction.name}" is not closed.`, ['Please make sure to close function fields at:'], currentCompiledFunction.toString, currentCompiledFunction.line);
+                throw new Errors_1.InterpretingError(message);
+            }
             runtime.self.data = instruction;
             runtime.self.raw = currentCompiledFunction;
             const fields = runtime.getRawArgs();

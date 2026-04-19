@@ -4,6 +4,7 @@ import { InterpretingError, OutOfScopeError, ReadingError } from '@internal/Erro
 import { InstructionArgOptions } from '@internal/Instruction'
 import { OutputType } from '@internal/Output'
 import { normalizeInstructionName } from '@utils/normalizeInstructionName'
+import buildErrorMessage from '@utils/buildErrorMessage'
 
 /**
  * Internal parser context.
@@ -317,41 +318,35 @@ export class Interpreter {
 
 			const instructionName = normalizeInstructionName(currentCompiledFunction.name)
 			const instruction = runtime.instructions.get(instructionName)
-			if (!instruction && !runtime.instructions.builders.has(instructionName))
-				throw new InterpretingError(
-					[
-						`"${currentCompiledFunction.name}" is not a function.`,
-						'|-> Please provide a valid function name at:',
-						`|-> Line: ${currentCompiledFunction.line}`,
-						`|-> Source: "${currentCompiledFunction.toString}"`,
-						`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.name.length)}`,
-						'|--------------------------------------------'
-					].join('\n')
+			if (!instruction && !runtime.instructions.builders.has(instructionName)) {
+				const message = buildErrorMessage(
+					`"${currentCompiledFunction.name}" is not a function.`,
+					['Please provide a valid function name at:'],
+					currentCompiledFunction.toString,
+					currentCompiledFunction.line
 				)
+				throw new InterpretingError(message)
+			}
 
-			if (!instruction && runtime.instructions.builders.has(instructionName))
-				throw new OutOfScopeError(
-					[
-						`"${currentCompiledFunction.name}" is out of scope.`,
-						`|-> This function can be used only inside "${runtime.instructions.builders.get(instructionName)?.builderOptions?.allowFor}".`,
-						`|-> Line: ${currentCompiledFunction.line}`,
-						`|-> Source: "${currentCompiledFunction.toString}"`,
-						`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
-						'|--------------------------------------------'
-					].join('\n')
+			if (!instruction && runtime.instructions.builders.has(instructionName)) {
+				const message = buildErrorMessage(
+					`"${currentCompiledFunction.name}" is out of scope.`,
+					[`This function can be used only inside "${runtime.instructions.builders.get(instructionName)?.builderOptions?.allowFor}".`],
+					currentCompiledFunction.toString,
+					currentCompiledFunction.line
 				)
+				throw new OutOfScopeError(message)
+			}
 
-			if (currentCompiledFunction.closed === false)
-				throw new InterpretingError(
-					[
-						`"${currentCompiledFunction.name}" is not closed.`,
-						'|-> Please make sure to close function fields at:',
-						`|-> Line: ${currentCompiledFunction.line}`,
-						`|-> Source: "${currentCompiledFunction.toString}"`,
-						`|-> ${' '.repeat(9)}${'^'.repeat(currentCompiledFunction.toString.length)}`,
-						'|-------------------------------------------------'
-					].join('\n')
+			if (currentCompiledFunction.closed === false) {
+				const message = buildErrorMessage(
+					`"${currentCompiledFunction.name}" is not closed.`,
+					['Please make sure to close function fields at:'],
+					currentCompiledFunction.toString,
+					currentCompiledFunction.line
 				)
+				throw new InterpretingError(message)
+			}
 
 			runtime.self.data = instruction!
 			runtime.self.raw = currentCompiledFunction
