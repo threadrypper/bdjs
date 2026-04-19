@@ -1,4 +1,4 @@
-import { IBDJSInstruction } from '../classes/internal/Instruction'
+import { DataType, IBDJSInstruction } from '../classes/internal/Instruction'
 
 /**
  * Creates a new instruction.
@@ -16,5 +16,19 @@ import { IBDJSInstruction } from '../classes/internal/Instruction'
  * ```
  */
 export function createInstruction(instruction: IBDJSInstruction) {
+    if (!Object.prototype.hasOwnProperty.call(instruction, 'brackets')) {
+        instruction.brackets = false
+    }
+    if (!Object.prototype.hasOwnProperty.call(instruction, 'experimental')) {
+        instruction.experimental = undefined
+    }
+    if (!Object.prototype.hasOwnProperty.call(instruction, 'deprecated')) {
+        instruction.deprecated = undefined
+    }
+    if (!Object.prototype.hasOwnProperty.call(instruction, 'output')) {
+        instruction.output = DataType.ANY
+    }
+
+    // Return the instruction as we ensured many properties.
     return instruction
 }
