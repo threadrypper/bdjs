@@ -403,16 +403,19 @@ export class Interpreter {
 			}
 		}
 
-		/*parsedFunctions.forEach((text, index) => {
-			const callIndex = texts.indexOf(`(call_${index})`)
-			if (callIndex !== -1) texts[callIndex] = text
-		})*/
-		for (let i = 0; i < texts.length; i++) {
-			const match = texts[i].match(CALL_REGEX)
-			if (match) {
-				const fnIndex = Number(match[1])
-				texts[i] = parsedFunctions[fnIndex] ?? ''
+		const textIndexMap = new Map<string, number>()
+		texts.forEach((value, i) => {
+			if (value.includes('(call_')) {
+				textIndexMap.set(value, i)
 			}
+		})
+
+		for (let index = 0; index < parsedFunctions.length; index++) {
+			const callString = `(call_${index})`
+			const callIndex = textIndexMap.get(callString)
+			const currentText = parsedFunctions[index]
+
+			if (callIndex !== undefined) texts[callIndex] = currentText
 		}
 
 		runtime.setResultString(removeUnsafeText(texts.join('').trim()))

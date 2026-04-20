@@ -7,7 +7,7 @@ runtime.instructions.load(INTERNAL_INSTRUCTIONS_DIRECTORY)
 
 console.time('parsing')
 const compiled = Parser.parse(`
-    $case[10;$log[10]]
+    $log[Math evaluation result: $calculate[10+10]]
 `)
 console.timeEnd('parsing')
 
