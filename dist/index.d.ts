@@ -8,3 +8,4 @@ export * from './classes/internal/Runtime';
 export * from './utils/createInstruction';
 export * from './utils/recursiveReaddir';
 export * from './utils/getVersion';
+export * from './core/ConditionParser';

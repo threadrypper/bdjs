@@ -11,3 +11,4 @@ tslib_1.__exportStar(require("./classes/internal/Runtime"), exports);
 tslib_1.__exportStar(require("./utils/createInstruction"), exports);
 tslib_1.__exportStar(require("./utils/recursiveReaddir"), exports);
 tslib_1.__exportStar(require("./utils/getVersion"), exports);
+tslib_1.__exportStar(require("./core/ConditionParser"), exports);
