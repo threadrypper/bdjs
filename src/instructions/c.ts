@@ -15,5 +15,5 @@ export const data = createInstruction({
             spread: false
         }
     ],
-    run: () => Output.empty()
+    run: () => Output.okButEmpty()
 })

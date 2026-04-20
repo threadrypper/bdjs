@@ -37,6 +37,6 @@ export const data = createInstruction({
 
         globalCases.set(name, codeToExecute)
 
-        return Output.empty()
+        return Output.okButEmpty()
     }
 })

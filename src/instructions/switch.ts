@@ -52,12 +52,12 @@ export const data = createInstruction({
         runtime.instructions.disableBuilders(shouldLoadCase)
 
         if (!globalCases.has(value)) {
-            return Output.empty()
+            return Output.okButEmpty()
         }
 
         const caseToExecute = globalCases.get(value)!
         await Interpreter.parseAndRun(caseToExecute, runtime)
 
-        return Output.ok()
+        return Output.okButEmpty()
     }
 })

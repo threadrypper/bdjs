@@ -6,7 +6,5 @@ export const data = createInstruction({
     name: '$version',
     description: 'Returns the version of the library.',
     interpret: false,
-    run: () => {
-        return Output.ok(getVersion())
-    }
+    run: () => Output.ok(getVersion())
 })

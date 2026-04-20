@@ -20,6 +20,6 @@ export const data = createInstruction({
 
         console.log(...message)
 
-        return Output.empty()
+        return Output.okButEmpty()
     }
 })

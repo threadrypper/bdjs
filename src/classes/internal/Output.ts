@@ -2,7 +2,7 @@ export enum OutputType {
     OK = 'ok',
     ERROR = 'error',
     WARNING = 'warning',
-    EMPTY = 'empty',
+    OK_BUT_EMPTY = 'okButEmpty',
     STOP = 'stop'
 }
 
@@ -29,8 +29,8 @@ export class Output<T = string> {
         return new Output(OutputType.WARNING, value, message)
     }
 
-    static empty(): Output<never> {
-        return new Output(OutputType.EMPTY)
+    static okButEmpty(): Output<never> {
+        return new Output(OutputType.OK_BUT_EMPTY)
     }
 
     static stop(): Output<never> {
