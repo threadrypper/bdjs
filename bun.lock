@@ -5,7 +5,7 @@
     "": {
       "name": "bdjs",
       "dependencies": {
-        "ascii-table3": "^0.9.0",
+        "ascii-table3": "^1.0.1",
         "cli-color": "^2.0.4",
         "discord.js": "^14.26.2",
         "lodash": "^4.18.1",
@@ -94,7 +94,7 @@
 
     "array-union": ["array-union@2.1.0", "", {}, "sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw=="],
 
-    "ascii-table3": ["ascii-table3@0.9.0", "", { "dependencies": { "printable-characters": "^1.0.42" } }, "sha512-/JcvVCQRTVQHwLI8TCxSeOS9AcCV01MbCJC4plSP5ulygJH+D30lz85nvMcER5k+qoX2fJ1C/i13Zo1/eoMGTw=="],
+    "ascii-table3": ["ascii-table3@1.0.1", "", { "dependencies": { "printable-characters": "^1.0.42" } }, "sha512-xOCMZC8S375W4JajrAxFWPyI1VddfbscW9G5zMfhCySSt2Rvi/rs21jAjopzldTPOaFrOocjyGKibQiGExmLrg=="],
 
     "balanced-match": ["balanced-match@1.0.2", "", {}, "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="],
 
