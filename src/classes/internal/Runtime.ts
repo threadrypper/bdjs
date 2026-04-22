@@ -22,6 +22,11 @@ interface InstructionSelfArg {
 
 export class Runtime {
     /**
+     * Shared data between runtimes. Useful for instructions that need to share data between them.
+     */
+    static sharedData = new Map<string, unknown>()
+
+    /**
      * The discord client.
      */
     client!: DiscordClient
