@@ -7,7 +7,9 @@ runtime.instructions.load(INTERNAL_INSTRUCTIONS_DIRECTORY)
 
 console.time('parsing')
 const compiled = Parser.parse(`
-    $log[Math evaluation result: $calculate[10+10]]
+    $then[$checkCondition[a == a];$log[Math evaluation result: $calculate[10+10]]]
+    $then[$checkCondition[a == b];$log[This should not be logged]]
+    $then[$checkCondition[a != b];$log[This should be logged]]
 `)
 console.timeEnd('parsing')
 
