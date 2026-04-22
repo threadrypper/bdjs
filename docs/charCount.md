@@ -2,7 +2,8 @@
 
 **Description:** Returns the number of characters in a string.
 
-**Usage:** ```
+**Usage:**
+```
 $charCount[String]
 ```
 

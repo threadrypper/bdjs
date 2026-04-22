@@ -2,7 +2,8 @@
 
 **Description:** Checks if a string starts with a specified prefix.
 
-**Usage:** ```
+**Usage:**
+```
 $startsWith[String, Prefix]
 ```
 

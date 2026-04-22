@@ -2,7 +2,8 @@
 
 **Description:** Returns the version of the library.
 
-**Usage:** ```
+**Usage:**
+```
 $version
 ```
 

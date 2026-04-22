@@ -17,5 +17,5 @@ exports.data = (0, createInstruction_1.createInstruction)({
             spread: false
         }
     ],
-    run: () => Output_1.Output.empty()
+    run: () => Output_1.Output.okButEmpty()
 });

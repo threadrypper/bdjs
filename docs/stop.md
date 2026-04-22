@@ -2,7 +2,8 @@
 
 **Description:** Stops the execution of the code.
 
-**Usage:** ```
+**Usage:**
+```
 $stop
 ```
 

@@ -2,7 +2,8 @@
 
 **Description:** Represents a BDJS comment.
 
-**Usage:** ```
+**Usage:**
+```
 $c[Comment]
 ```
 

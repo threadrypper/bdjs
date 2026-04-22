@@ -46,7 +46,16 @@ var MarkdownGenerator;
     function generate(instruction) {
         let markdown = `# ${instruction.name}\n\n`;
         markdown += `**Description:** ${instruction.description}\n\n`;
-        markdown += `**Usage:** \`\`\`\n${instruction.name}${instruction.args ? `[${instruction.args.map(arg => arg.name).join(', ')}]` : ''}\n\`\`\`\n\n`;
+        if (instruction.experimental) {
+            markdown += `:::caution\nThis instruction is experimental and may not work as expected.\n\n`;
+        }
+        else if (instruction.deprecated) {
+            markdown += `:::danger\nThis instruction is deprecated and may be removed in the future.\n\n`;
+        }
+        if (instruction.builder) {
+            markdown += `:::note\nThis instruction is a builder and can be used only inside **${instruction.builderOptions.allowFor}**.\n\n`;
+        }
+        markdown += `**Usage:**\n\`\`\`\n${instruction.name}${instruction.args ? `[${instruction.args.map(arg => arg.name).join(', ')}]` : ''}\n\`\`\`\n\n`;
         if (instruction.args) {
             markdown += `**Arguments:**\n\n`;
             markdown += generateArgumentTable(instruction.args) + `\n\n`;
@@ -63,10 +72,48 @@ var MarkdownGenerator;
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir);
         }
-        console.log(instructions);
         for (const instruction of instructions) {
             fs.writeFileSync(`${outputDir}/${instruction.name.slice(1)}.md`, generate(instruction));
         }
     }
     MarkdownGenerator.generateAll = generateAll;
+    /**
+     * Generates a JSON file with the internal instructions.
+     * @param {string} outputDir The directory to save the JSON file to.
+     * @returns {Promise<void>}
+     */
+    function generateInstructionsAsJSON(outputDir = './docs') {
+        const filename = 'instructions.internal';
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
+        fs.writeFileSync(`${outputDir}/${filename}.json`, JSON.stringify(instructions));
+    }
+    MarkdownGenerator.generateInstructionsAsJSON = generateInstructionsAsJSON;
+    /**
+     * Loads outer instructions from a directory.
+     * @param {string} instructionsDir The directory to load instructions from.
+     * @returns {IBDJSInstruction[]} The loaded instructions.
+     */
+    function loadOuterInstructions(instructionsDir) {
+        const outerInstructions = (0, recursiveReaddir_1.recursiveReaddir)(instructionsDir)
+            .map((dir) => require(dir).data)
+            .filter((instruction) => instruction !== undefined);
+        return outerInstructions;
+    }
+    MarkdownGenerator.loadOuterInstructions = loadOuterInstructions;
+    /**
+     * Generates a JSON file with the outer instructions.
+     * @param {string} instructionsDir The directory to load instructions from.
+     * @param {string} outputDir The directory to save the JSON file to.
+     */
+    function generateOuterInstructionsAsJSON(instructionsDir, outputDir = './docs') {
+        const outerInstructions = loadOuterInstructions(instructionsDir);
+        const filename = 'instructions.custom';
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
+        fs.writeFileSync(`${outputDir}/${filename}.json`, JSON.stringify(outerInstructions));
+    }
+    MarkdownGenerator.generateOuterInstructionsAsJSON = generateOuterInstructionsAsJSON;
 })(MarkdownGenerator || (exports.MarkdownGenerator = MarkdownGenerator = {}));

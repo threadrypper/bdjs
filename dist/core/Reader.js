@@ -311,7 +311,7 @@ class Interpreter {
                     runtime.makeStop();
                     break;
                 }
-                case Output_1.OutputType.EMPTY: {
+                case Output_1.OutputType.OK_BUT_EMPTY: {
                     parsedFunctions.push('');
                     break;
                 }

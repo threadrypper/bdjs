@@ -390,7 +390,7 @@ export class Interpreter {
 					break
 				}
 
-				case OutputType.EMPTY: {
+				case OutputType.OK_BUT_EMPTY: {
 					parsedFunctions.push('')
 					break
 				}

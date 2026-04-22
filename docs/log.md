@@ -2,7 +2,8 @@
 
 **Description:** Logs a message.
 
-**Usage:** ```
+**Usage:**
+```
 $log[Message]
 ```
 

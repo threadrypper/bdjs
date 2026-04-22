@@ -8,7 +8,7 @@ var OutputType;
     OutputType["OK"] = "ok";
     OutputType["ERROR"] = "error";
     OutputType["WARNING"] = "warning";
-    OutputType["EMPTY"] = "empty";
+    OutputType["OK_BUT_EMPTY"] = "okButEmpty";
     OutputType["STOP"] = "stop";
 })(OutputType || (exports.OutputType = OutputType = {}));
 class Output {
@@ -29,8 +29,8 @@ class Output {
     static warning(value, message) {
         return new Output(OutputType.WARNING, value, message);
     }
-    static empty() {
-        return new Output(OutputType.EMPTY);
+    static okButEmpty() {
+        return new Output(OutputType.OK_BUT_EMPTY);
     }
     static stop() {
         return new Output(OutputType.STOP);

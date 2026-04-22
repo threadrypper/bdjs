@@ -2,7 +2,7 @@ export declare enum OutputType {
     OK = "ok",
     ERROR = "error",
     WARNING = "warning",
-    EMPTY = "empty",
+    OK_BUT_EMPTY = "okButEmpty",
     STOP = "stop"
 }
 export declare class Output<T = string> {
@@ -11,7 +11,7 @@ export declare class Output<T = string> {
     static ok<T>(value?: T): Output<T>;
     static error(message: string): Output<unknown>;
     static warning<T>(value: T, message?: string): Output<T>;
-    static empty(): Output<never>;
+    static okButEmpty(): Output<never>;
     static stop(): Output<never>;
     get value(): T;
     get type(): OutputType;

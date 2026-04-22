@@ -3,7 +3,8 @@
 **Description:** Match a value against multiple cases.
 Does not return any value.
 
-**Usage:** ```
+**Usage:**
+```
 $switch[Value, Cases]
 ```
 

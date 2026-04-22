@@ -20,6 +20,6 @@ exports.data = (0, createInstruction_1.createInstruction)({
     run: (runtime) => {
         const message = runtime.getCompiledArgs();
         console.log(...message);
-        return Output_1.Output.empty();
+        return Output_1.Output.okButEmpty();
     }
 });

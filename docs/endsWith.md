@@ -2,7 +2,8 @@
 
 **Description:** Checks if a string ends with a specified suffix.
 
-**Usage:** ```
+**Usage:**
+```
 $endsWith[String, Suffix]
 ```
 

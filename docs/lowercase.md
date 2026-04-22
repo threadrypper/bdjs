@@ -2,7 +2,8 @@
 
 **Description:** Converts a string to lowercase.
 
-**Usage:** ```
+**Usage:**
+```
 $lowercase[String]
 ```
 

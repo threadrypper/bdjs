@@ -2,7 +2,11 @@
 
 **Description:** Executes a block of code if the condition is met.
 
-**Usage:** ```
+:::note
+This instruction is a builder and can be used only inside **$switch**.
+
+**Usage:**
+```
 $case[Name, Code]
 ```
 

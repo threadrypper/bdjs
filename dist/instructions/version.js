@@ -8,7 +8,5 @@ exports.data = (0, createInstruction_1.createInstruction)({
     name: '$version',
     description: 'Returns the version of the library.',
     interpret: false,
-    run: () => {
-        return Output_1.Output.ok((0, getVersion_1.getVersion)());
-    }
+    run: () => Output_1.Output.ok((0, getVersion_1.getVersion)())
 });

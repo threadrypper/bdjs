@@ -47,10 +47,10 @@ exports.data = (0, createInstruction_1.createInstruction)({
         await Reader_1.Interpreter.parseAndRun(casesInside, runtime);
         runtime.instructions.disableBuilders(shouldLoadCase);
         if (!exports.globalCases.has(value)) {
-            return Output_1.Output.empty();
+            return Output_1.Output.okButEmpty();
         }
         const caseToExecute = exports.globalCases.get(value);
         await Reader_1.Interpreter.parseAndRun(caseToExecute, runtime);
-        return Output_1.Output.ok();
+        return Output_1.Output.okButEmpty();
     }
 });

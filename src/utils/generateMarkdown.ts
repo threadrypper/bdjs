@@ -51,7 +51,18 @@ export namespace MarkdownGenerator {
         let markdown = `# ${instruction.name}\n\n`
 
         markdown += `**Description:** ${instruction.description}\n\n`
-        markdown += `**Usage:** \`\`\`\n${instruction.name}${instruction.args ? `[${instruction.args.map(arg => arg.name).join(', ')}]` : ''}\n\`\`\`\n\n`
+
+        if (instruction.experimental) {
+            markdown += `:::caution\nThis instruction is experimental and may not work as expected.\n\n`
+        } else if (instruction.deprecated) {
+            markdown += `:::danger\nThis instruction is deprecated and may be removed in the future.\n\n`
+        }
+
+        if (instruction.builder) {
+            markdown += `:::note\nThis instruction is a builder and can be used only inside **${instruction.builderOptions.allowFor}**.\n\n`
+        }
+
+        markdown += `**Usage:**\n\`\`\`\n${instruction.name}${instruction.args ? `[${instruction.args.map(arg => arg.name).join(', ')}]` : ''}\n\`\`\`\n\n`
         if (instruction.args) {
             markdown += `**Arguments:**\n\n`
             markdown += generateArgumentTable(instruction.args) + `\n\n`
@@ -74,5 +85,49 @@ export namespace MarkdownGenerator {
         for (const instruction of instructions) {
             fs.writeFileSync(`${outputDir}/${instruction.name.slice(1)}.md`, generate(instruction))
         }
+    }
+
+    /**
+     * Generates a JSON file with the internal instructions.
+     * @param {string} outputDir The directory to save the JSON file to.
+     * @returns {Promise<void>}
+     */
+    export function generateInstructionsAsJSON(outputDir = './docs') {
+        const filename = 'instructions.internal'
+
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir)
+        }
+
+        fs.writeFileSync(`${outputDir}/${filename}.json`, JSON.stringify(instructions))
+    }
+
+    /**
+     * Loads outer instructions from a directory.
+     * @param {string} instructionsDir The directory to load instructions from.
+     * @returns {IBDJSInstruction[]} The loaded instructions.
+     */
+    export function loadOuterInstructions(instructionsDir: string) {
+        const outerInstructions = recursiveReaddir(instructionsDir)
+            .map((dir) => require(dir).data)
+            .filter((instruction) => instruction !== undefined) as IBDJSInstruction[]
+
+        return outerInstructions
+    }
+
+    /**
+     * Generates a JSON file with the outer instructions.
+     * @param {string} instructionsDir The directory to load instructions from.
+     * @param {string} outputDir The directory to save the JSON file to.
+     */
+    export function generateOuterInstructionsAsJSON(instructionsDir: string, outputDir = './docs') {
+        const outerInstructions = loadOuterInstructions(instructionsDir)
+        const filename = 'instructions.custom'
+
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir)
+        }
+
+        fs.writeFileSync(`${outputDir}/${filename}.json`, JSON.stringify(outerInstructions))
     }
 }

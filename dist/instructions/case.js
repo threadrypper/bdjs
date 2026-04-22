@@ -36,6 +36,6 @@ exports.data = (0, createInstruction_1.createInstruction)({
         const interpretedName = await Reader_1.Interpreter.parseAndRun(name, runtime);
         name = interpretedName.getResultString();
         switch_1.globalCases.set(name, codeToExecute);
-        return Output_1.Output.empty();
+        return Output_1.Output.okButEmpty();
     }
 });

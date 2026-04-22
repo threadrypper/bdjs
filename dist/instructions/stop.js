@@ -7,7 +7,5 @@ exports.data = (0, createInstruction_1.createInstruction)({
     name: '$stop',
     description: 'Stops the execution of the code.',
     interpret: false,
-    run: () => {
-        return Output_1.Output.stop();
-    }
+    run: () => Output_1.Output.stop()
 });

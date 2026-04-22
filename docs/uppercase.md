@@ -2,7 +2,8 @@
 
 **Description:** Converts a string to uppercase.
 
-**Usage:** ```
+**Usage:**
+```
 $uppercase[String]
 ```
 

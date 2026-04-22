@@ -2,7 +2,8 @@
 
 **Description:** Calculates a mathematical expression.
 
-**Usage:** ```
+**Usage:**
+```
 $calculate[Expression]
 ```
 
