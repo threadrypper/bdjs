@@ -284,13 +284,6 @@ class Interpreter {
             runtime.self.raw = currentCompiledFunction;
             const fields = runtime.getRawArgs();
             const shouldCompile = instruction.interpret;
-            /*const newFields: string[] = []
-
-            for (let idx = 0; idx < fields.length; idx++) {
-                const field = fields[idx]
-                const parsed = await resolveField(field, shouldCompile, runtime)
-                newFields.push(unescapeParam(parsed, instruction.args?.at(idx)))
-            }*/
             const newFields = await Promise.all(fields.map(async (field, idx) => {
                 const parsed = await resolveField(field, shouldCompile, runtime);
                 return unescapeParam(parsed, instruction.args?.at(idx));

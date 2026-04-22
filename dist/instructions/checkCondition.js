@@ -19,7 +19,7 @@ exports.data = (0, createInstruction_1.createInstruction)({
             spread: false
         }
     ],
-    run: async (runtime) => {
+    run: (runtime) => {
         const [condition] = runtime.getCompiledArgs();
         const tokens = ConditionParser_1.ConditionParser.tokenize(condition);
         const ast = ConditionParser_1.ConditionParser.parse(tokens);
