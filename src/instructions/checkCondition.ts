@@ -17,7 +17,7 @@ export const data = createInstruction({
             spread: false
         }
     ],
-    run: async (runtime) => {
+    run: (runtime) => {
         const [condition] = runtime.getCompiledArgs()
 
         const tokens = ConditionParser.tokenize(condition)
