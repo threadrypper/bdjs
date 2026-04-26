@@ -20,6 +20,10 @@ interface InstructionSelfArg {
 export declare class Runtime {
     #private;
     /**
+     * Shared data between runtimes. Useful for instructions that need to share data between them.
+     */
+    static sharedData: Map<string, unknown>;
+    /**
      * The discord client.
      */
     client: DiscordClient;

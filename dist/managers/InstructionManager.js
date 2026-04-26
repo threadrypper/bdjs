@@ -68,8 +68,10 @@ class InstructionManager extends Map {
         const addedBuilders = Array.from(this.values()).filter(isBuilder);
         const currentSize = this.size;
         for (const instruction of addedBuilders) {
-            if (filter(instruction) && this.has((0, normalizeInstructionName_1.normalizeInstructionName)(instruction.name))) {
-                this.delete((0, normalizeInstructionName_1.normalizeInstructionName)(instruction.name));
+            const instructionName = (0, normalizeInstructionName_1.normalizeInstructionName)(instruction.name);
+            const shouldDelete = filter(instruction) && this.has(instructionName);
+            if (shouldDelete) {
+                this.delete(instructionName);
             }
         }
         return this.size < currentSize;

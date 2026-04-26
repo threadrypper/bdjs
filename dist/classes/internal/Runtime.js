@@ -158,3 +158,7 @@ class Runtime {
 }
 exports.Runtime = Runtime;
 _Runtime_code = new WeakMap(), _Runtime_compiled = new WeakMap(), _Runtime_mustStop = new WeakMap(), _Runtime___internal__ = new WeakMap(), _Runtime___name__ = new WeakMap();
+/**
+ * Shared data between runtimes. Useful for instructions that need to share data between them.
+ */
+Runtime.sharedData = new Map();

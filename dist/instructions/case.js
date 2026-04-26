@@ -29,7 +29,7 @@ exports.data = (0, createInstruction_1.createInstruction)({
     ],
     builder: true,
     builderOptions: {
-        allowFor: '$switch'
+        allowFor: (name) => name === '$switch'
     },
     run: async (runtime) => {
         let [name, codeToExecute] = runtime.getRawArgs();

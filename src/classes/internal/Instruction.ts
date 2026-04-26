@@ -93,17 +93,16 @@ export interface BuilderInstruction extends BaseInstruction {
     builder: true
     /**
      * @ignore
+     * @returns {boolean}
      * The options for the builder function.
      */
     builderOptions: {
         /**
-         * The name of the parent instruction that must load this builder.
-         * @example
-         * ```js
-         * '$meow'
-         * ```
+         * Checks if the parent instruction is allowed to use this builder.
+         * @param {string} name The name of the parent instruction.
+         * @returns {boolean}
          */
-        allowFor: string
+        allowFor: (name: string) => boolean
     }
 }
 

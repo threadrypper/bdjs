@@ -27,7 +27,7 @@ export const data = createInstruction({
     ],
     builder: true,
     builderOptions: {
-        allowFor: '$switch'
+        allowFor: (name: string) => name === '$switch'
     },
     run: async (runtime) => {
         let [name, codeToExecute] = runtime.getRawArgs()

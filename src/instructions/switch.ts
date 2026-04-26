@@ -10,15 +10,6 @@ import { INTERNAL_INSTRUCTIONS_DIRECTORY } from 'src/constants'
  */
 export const globalCases = new Map<string, string>()
 
-/**
- * Checks if an instruction should be loaded in the subruntime.
- * @param f The instruction to check.
- * @returns {boolean}
- */
-function shouldLoadCase(f: IBDJSInstruction) {
-    return f.builder === true && f.builderOptions?.allowFor === '$switch'
-}
-
 export const data = createInstruction({
     name: '$switch',
     description: 'Match a value against multiple cases.\nDoes not return any value.',
@@ -47,9 +38,9 @@ export const data = createInstruction({
         const interpretedValue = await Interpreter.parseAndRun(value, runtime)
         value = interpretedValue.getResultString()
 
-        runtime.instructions.enableCachedBuilders(shouldLoadCase)
+        runtime.instructions.enableCachedBuilders(e => e.builderOptions!.allowFor('$switch'))
         await Interpreter.parseAndRun(casesInside, runtime)
-        runtime.instructions.disableBuilders(shouldLoadCase)
+        runtime.instructions.disableBuilders(e => e.builderOptions!.allowFor('$switch'))
 
         if (!globalCases.has(value)) {
             return Output.okButEmpty()

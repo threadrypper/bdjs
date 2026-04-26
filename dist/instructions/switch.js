@@ -9,14 +9,6 @@ const Reader_1 = require("../core/Reader");
  * Global cases for the switch instruction.
  */
 exports.globalCases = new Map();
-/**
- * Checks if an instruction should be loaded in the subruntime.
- * @param f The instruction to check.
- * @returns {boolean}
- */
-function shouldLoadCase(f) {
-    return f.builder === true && f.builderOptions?.allowFor === '$switch';
-}
 exports.data = (0, createInstruction_1.createInstruction)({
     name: '$switch',
     description: 'Match a value against multiple cases.\nDoes not return any value.',
@@ -43,9 +35,9 @@ exports.data = (0, createInstruction_1.createInstruction)({
         exports.globalCases.clear(); // Clear cases from previous switch.
         const interpretedValue = await Reader_1.Interpreter.parseAndRun(value, runtime);
         value = interpretedValue.getResultString();
-        runtime.instructions.enableCachedBuilders(shouldLoadCase);
+        runtime.instructions.enableCachedBuilders(e => e.builderOptions.allowFor('$switch'));
         await Reader_1.Interpreter.parseAndRun(casesInside, runtime);
-        runtime.instructions.disableBuilders(shouldLoadCase);
+        runtime.instructions.disableBuilders(e => e.builderOptions.allowFor('$switch'));
         if (!exports.globalCases.has(value)) {
             return Output_1.Output.okButEmpty();
         }

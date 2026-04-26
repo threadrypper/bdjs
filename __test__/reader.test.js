@@ -10,6 +10,11 @@ const compiled = Parser.parse(`
     $then[$checkCondition[a == a];$log[Math evaluation result: $calculate[10+10]]]
     $then[$checkCondition[a == b];$log[This should not be logged]]
     $then[$checkCondition[a != b];$log[This should be logged]]
+
+    $switch[a;
+        $case[a;$log[a]]
+        $case[b;$log[b]]
+    ]
 `)
 console.timeEnd('parsing')
 

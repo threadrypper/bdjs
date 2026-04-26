@@ -72,10 +72,11 @@ export class InstructionManager extends Map<string, IBDJSInstruction> {
     disableBuilders(filter: (instruction: IBDJSInstruction) => boolean = () => false) {
         const addedBuilders = Array.from(this.values()).filter(isBuilder)
         const currentSize = this.size
-
         for (const instruction of addedBuilders) {
-            if (filter(instruction) && this.has(normalizeInstructionName(instruction.name))) {
-                this.delete(normalizeInstructionName(instruction.name))
+            const instructionName = normalizeInstructionName(instruction.name)
+            const shouldDelete = filter(instruction) && this.has(instructionName)
+            if (shouldDelete) {
+                this.delete(instructionName)
             }
         }
 
