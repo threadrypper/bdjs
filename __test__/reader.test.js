@@ -22,3 +22,10 @@ console.time('running')
 Interpreter.run(compiled, runtime)
     .then(() => console.timeEnd('running'))
     .catch((err) => console.error(err));
+
+`
+// este
+(name: string) => name === '$switch'
+// o este
+(name: string) => name === ['$switch', '$parent', '$test', '$calculate', '$loop']
+`

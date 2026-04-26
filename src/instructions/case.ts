@@ -4,6 +4,12 @@ import { Output } from '@internal/Output'
 import { Interpreter } from '@core/Reader'
 import { globalCases } from './switch'
 
+/**
+ * @internal
+ * Instructions that can contain $case.
+ */
+export const allowed = ['$switch']
+
 export const data = createInstruction({
     name: '$case',
     description: 'Executes a block of code if the condition is met.',
@@ -27,7 +33,7 @@ export const data = createInstruction({
     ],
     builder: true,
     builderOptions: {
-        allowFor: (name: string) => name === '$switch'
+        allowFor: (name: string) => allowed.includes(name)
     },
     run: async (runtime) => {
         let [name, codeToExecute] = runtime.getRawArgs()
