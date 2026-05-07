@@ -2,8 +2,6 @@ import { createInstruction } from '@utils/createInstruction'
 import { DataType, IBDJSInstruction } from '@internal/Instruction'
 import { Output } from '@internal/Output'
 import { Interpreter } from '@core/Reader'
-import { Runtime } from '@internal/Runtime'
-import { INTERNAL_INSTRUCTIONS_DIRECTORY } from 'src/constants'
 
 /**
  * Global cases for the switch instruction.

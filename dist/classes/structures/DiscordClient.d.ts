@@ -1,4 +1,5 @@
 import { Client, type ClientOptions, ClientEvents } from 'discord.js';
+import { CommandManager } from '../../managers/CommandManager';
 /**
  * The channel where the errors will be sent.
  */
@@ -58,6 +59,7 @@ export type DiscordClientSetupOptions = PrefixedDiscordClientSetupOptions | Unpr
  */
 export declare class DiscordClient<Ready extends boolean = boolean> extends Client<Ready> {
     readonly extraOptions: DiscordClientSetupOptions;
+    commands: CommandManager<keyof ClientEvents>;
     constructor(extraOptions: DiscordClientSetupOptions);
 }
 export {};

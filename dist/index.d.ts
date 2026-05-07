@@ -10,3 +10,5 @@ export * from './utils/recursiveReaddir';
 export * from './utils/getVersion';
 export * from './core/ConditionParser';
 export * from './utils/generateMarkdown';
+export * from './managers/CommandManager';
+export * from './core/BaseEventHandler';

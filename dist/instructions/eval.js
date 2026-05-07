@@ -19,7 +19,7 @@ exports.data = (0, createInstruction_1.createInstruction)({
         }
     ],
     run: async (runtime) => {
-        const [code] = runtime.getCompiledArgs();
+        const [code] = runtime.getRawArgs();
         const runtimeResult = await Reader_1.Interpreter.parseAndRun(code, runtime);
         const resultString = runtimeResult.getResultString().trim();
         if (resultString === '') {

@@ -17,7 +17,7 @@ export const data = createInstruction({
         }
     ],
     run: async (runtime) => {
-        const [code] = runtime.getCompiledArgs()
+        const [code] = runtime.getRawArgs()
 
         const runtimeResult = await Interpreter.parseAndRun(code, runtime)
         const resultString = runtimeResult.getResultString().trim()
@@ -25,7 +25,7 @@ export const data = createInstruction({
         if (resultString === '') {
             return Output.okButEmpty()
         }
-        
+
         return Output.ok(resultString)
     }
 })

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordClient = void 0;
 const discord_js_1 = require("discord.js");
+const CommandManager_1 = require("../../managers/CommandManager");
 /**
  * The channel where the errors will be sent.
  */
@@ -18,6 +19,7 @@ class DiscordClient extends discord_js_1.Client {
     constructor(extraOptions) {
         super(extraOptions);
         this.extraOptions = extraOptions;
+        this.commands = new CommandManager_1.CommandManager();
     }
 }
 exports.DiscordClient = DiscordClient;

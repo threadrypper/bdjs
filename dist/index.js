@@ -13,3 +13,5 @@ tslib_1.__exportStar(require("./utils/recursiveReaddir"), exports);
 tslib_1.__exportStar(require("./utils/getVersion"), exports);
 tslib_1.__exportStar(require("./core/ConditionParser"), exports);
 tslib_1.__exportStar(require("./utils/generateMarkdown"), exports);
+tslib_1.__exportStar(require("./managers/CommandManager"), exports);
+tslib_1.__exportStar(require("./core/BaseEventHandler"), exports);
